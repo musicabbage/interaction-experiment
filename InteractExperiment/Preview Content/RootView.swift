@@ -24,7 +24,7 @@ enum Menu: Int, CaseIterable, Identifiable {
 
 struct RootView: View {
     @State private var selectItem: Menu?
-    
+    @State private var showCreateSheet: Bool = false
     
     var body: some View {
         NavigationSplitView(sidebar: {
@@ -34,13 +34,22 @@ struct RootView: View {
         }, detail: {
             switch selectItem {
             case nil:
-                Text("select from menu")
+                Button("Create a new experiment", action: {
+                    showCreateSheet.toggle()
+                })
+                .sheet(isPresented: $showCreateSheet, content: {
+                    CreateConfigurationView()
+                })
+                
             case .configurations:
                 ConfigurationsView()
             case .experiments:
                 ExperimentsView()
             }
         })
+#if os(macOS)
+        .frame(minWidth: 800, minHeight: 600)
+#endif
     }
 }
 
