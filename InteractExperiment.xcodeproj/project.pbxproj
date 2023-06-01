@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		8BADE42D2A2C9C7F0087C74D /* PopupView in Frameworks */ = {isa = PBXBuildFile; productRef = 8BADE42C2A2C9C7F0087C74D /* PopupView */; };
 		8BADE4302A2CA3650087C74D /* ToastView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BADE42F2A2CA3650087C74D /* ToastView.swift */; };
+		8B6477F92A267FD60071F582 /* ColorExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B6477F82A267FD60071F582 /* ColorExtensions.swift */; };
 		8BAF3C682A1FB28E00C0A4CE /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BAF3C672A1FB28E00C0A4CE /* RootView.swift */; };
 		8BB3659E2A1F9F2400DE2B5C /* InteractExperimentApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BB3659D2A1F9F2400DE2B5C /* InteractExperimentApp.swift */; };
 		8BB365A02A1F9F2400DE2B5C /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BB3659F2A1F9F2400DE2B5C /* ContentView.swift */; };
@@ -20,6 +21,7 @@
 
 /* Begin PBXFileReference section */
 		8BADE42F2A2CA3650087C74D /* ToastView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastView.swift; sourceTree = "<group>"; };
+		8B6477F82A267FD60071F582 /* ColorExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorExtensions.swift; sourceTree = "<group>"; };
 		8BAF3C672A1FB28E00C0A4CE /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = RootView.swift; path = "Preview Content/RootView.swift"; sourceTree = "<group>"; };
 		8BB3659A2A1F9F2400DE2B5C /* InteractExperiment.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = InteractExperiment.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8BB3659D2A1F9F2400DE2B5C /* InteractExperimentApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InteractExperimentApp.swift; sourceTree = "<group>"; };
