@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct CreateConfigurationView: View {
+struct CreateConfigurationView<ViewModel>: View where ViewModel: CreateConfigurationViewModelProtocol {
     enum PickerState: String, Identifiable {
         case familiriarisation
         case stimulus
@@ -16,14 +16,16 @@ struct CreateConfigurationView: View {
     }
     
     @State private var inputImage: UIImage?
-    @State private var familirImages: [UIImage] = []
-    @State private var stimulusImages: [UIImage] = []
     @State private var pickerState: PickerState?
+    @StateObject private var viewModel: ViewModel
     
     @Environment(\.dismiss) var dismiss
     
     private let maxStimulusCount: Int = 10
     
+    init(viewModel: ViewModel) {
+        _viewModel = StateObject(wrappedValue: viewModel)
+    }
     
     var body: some View {
         NavigationStack {
@@ -31,8 +33,8 @@ struct CreateConfigurationView: View {
             Form {
                 Section {
                     HStack {
-                        ForEach(0...familirImages.count, id: \.self) { index in
-                            if index == familirImages.count {
+                        ForEach(0...viewModel.familiarImages.count, id: \.self) { index in
+                            if index == viewModel.familiarImages.count {
                                 Button {
                                     pickerState = .familiriarisation
                                 } label: {
@@ -47,31 +49,32 @@ struct CreateConfigurationView: View {
                                 .background(Color.button.lightgray)
                                 .cornerRadius(8)
                             } else {
-                                Image(uiImage: familirImages[index])
+                                viewModel.familiarImages[index].image
                                     .resizable()
                                     .scaledToFill()
                                     .frame(width: 80, height: 80)
                                     .cornerRadius(8)
                                     .clipped()
+//                                ImageItemView(selected: <#T##Bool#>, image: <#T##UIImage#>)
                             }
                         }
                     }
                 } header: {
-                    Text("Familiriarisation")
+                    Text("Familiarisation")
                 }
                 
                 Section {
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack {
-                            ForEach(0..<stimulusImages.count, id: \.self) { index in
-                                Image(uiImage: stimulusImages[index])
+                            ForEach(0..<viewModel.stimulusImages.count, id: \.self) { index in
+                                viewModel.stimulusImages[index].image
                                     .resizable()
                                     .scaledToFill()
                                     .frame(width: 80, height: 80)
                                     .cornerRadius(8)
                                     .clipped()
                             }
-                            if stimulusImages.count < maxStimulusCount {
+                            if viewModel.stimulusImages.count < maxStimulusCount {
                                 Button {
                                     pickerState = .stimulus
                                 } label: {
@@ -90,7 +93,7 @@ struct CreateConfigurationView: View {
                     }
                 } header: {
                     HStack {
-                        Text("Stimulus (\(stimulusImages.count)/\(maxStimulusCount))")
+                        Text("Stimulus (\(viewModel.stimulusImages.count)/\(maxStimulusCount))")
                             .padding(.init(top: 0, leading: 0, bottom: 0, trailing: 10))
                         Button("delete") {
                             
@@ -141,9 +144,11 @@ struct CreateConfigurationView: View {
         guard let inputImage, let pickerState else { return }
         switch pickerState {
         case .familiriarisation:
-            familirImages.append(inputImage)
+//            familirImages.append(inputImage)
+            viewModel.appendFamiliarization(image: .init(uiImage: inputImage))
         case .stimulus:
-            stimulusImages.append(inputImage)
+//            stimulusImages.append(inputImage)
+            viewModel.appendStimulus(image: .init(uiImage: inputImage))
         }
         
     }
@@ -152,6 +157,7 @@ struct CreateConfigurationView: View {
 
 struct CreateConfigurationView_Previews: PreviewProvider {
     static var previews: some View {
-        CreateConfigurationView()
+        CreateConfigurationView(viewModel: ViewModel())
+//        CreateConfigurationView(viewModel: CreateConfigurationView<<#ViewModel: CreateConfigurationViewModelProtocol#>>.ViewModel())
     }
 }
