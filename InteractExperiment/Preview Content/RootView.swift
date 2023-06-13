@@ -38,7 +38,7 @@ struct RootView: View {
                     showCreateSheet.toggle()
                 })
                 .sheet(isPresented: $showCreateSheet, content: {
-                    CreateConfigurationView(viewModel: ViewModel())
+                    CreateConfigurationView(viewModel: CreateConfigurationViewModel())
                 })
                 
             case .configurations:

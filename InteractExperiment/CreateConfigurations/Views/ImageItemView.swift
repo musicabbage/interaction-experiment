@@ -9,12 +9,26 @@ import SwiftUI
 
 struct ImageItemView: View {
     
-    @Binding var selected: Bool
+    @State private var selected: Bool = false
+    @Binding var selectedIndexes: IndexSet
+
+    let index: Int
+    let image: UIImage
     
-    var image: UIImage
+//    init(selected: Bool, selectedIndexes: IndexSet, index: Int, image: UIImage) {
+//        self.selected = selected
+//        self.selectedIndexes = selectedIndexes
+//        self.index = index
+//        self.image = image
+//    }
+//    init(selectedIndexes: IndexSet, index: Int, image: UIImage) {
+//        self.selectedIndexes = selectedIndexes
+//        self.index = index
+//        self.image = image
+//    }
     
     var body: some View {
-        ZStack {
+        ZStack(alignment: .center) {
             Button {
                 selected.toggle()
             } label: {
@@ -23,19 +37,25 @@ struct ImageItemView: View {
                     .scaledToFill()
                     .clipped()
             }
-            Image(systemName: selected ? "checkmark.circle.fill" : "circle")
+            .frame(width: 80, height: 80)
+            .cornerRadius(8)
+            
+            Image(systemName: selected ? "checkmark.circle.fill" : "circle.fill")
                 .foregroundStyle(Color.gray)
-                .position(x: 105, y: 15)
+                .position(x: 65, y: 20)
         }
-        .frame(width: 80, height: 80)
-        .cornerRadius(8)
+        .onChange(of: selected) { selected in
+            if selected {
+                selectedIndexes.insert(index)
+            } else {
+                selectedIndexes.remove(index)
+            }
+        }
     }
 }
 
 struct ImageItemView_Previews: PreviewProvider {
     static var previews: some View {
-        ImageItemView(selected: .constant(true), image: UIImage(named: "TestStimulus")!)
-            .padding(15)
-            .background(Color.gray)
+        ImageItemView(selectedIndexes: .constant([]), index: 0, image: .init(named: "TestStimulus")!)
     }
 }
