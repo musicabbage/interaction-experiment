@@ -43,6 +43,7 @@ struct CreateConfigurationView<ViewModel>: View where ViewModel: CreateConfigura
                             .padding(.init(top: 0, leading: 0, bottom: 0, trailing: 10))
                         Button("delete") {
                             viewModel.deleteImages(indexes: selectedImage, type: .stimulus)
+                            selectedImage.removeAll()
                         }
                         .padding(.init(top: 2, leading: 4, bottom: 2, trailing: 4))
                         .font(.footnote)

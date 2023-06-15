@@ -9,23 +9,13 @@ import SwiftUI
 
 struct ImageItemView: View {
     
+    private var checked: Bool { selectedIndexes.contains(index) }
+    
     @State private var selected: Bool = false
     @Binding var selectedIndexes: IndexSet
 
     let index: Int
     let image: UIImage
-    
-//    init(selected: Bool, selectedIndexes: IndexSet, index: Int, image: UIImage) {
-//        self.selected = selected
-//        self.selectedIndexes = selectedIndexes
-//        self.index = index
-//        self.image = image
-//    }
-//    init(selectedIndexes: IndexSet, index: Int, image: UIImage) {
-//        self.selectedIndexes = selectedIndexes
-//        self.index = index
-//        self.image = image
-//    }
     
     var body: some View {
         ZStack(alignment: .center) {
@@ -35,20 +25,27 @@ struct ImageItemView: View {
                 Image(uiImage: image)
                     .resizable()
                     .scaledToFill()
-                    .clipped()
+                    .frame(width: 80, height: 80)
+                    .clipShape(RoundedRectangle(cornerRadius: 6))
             }
-            .frame(width: 80, height: 80)
-            .cornerRadius(8)
             
-            Image(systemName: selected ? "checkmark.circle.fill" : "circle.fill")
-                .foregroundStyle(Color.gray)
-                .position(x: 65, y: 20)
+            Image(systemName: checked ? "checkmark.circle.fill" : "circle.fill")
+                .resizable()
+                .foregroundColor(checked ? .checkBox.checked : .checkBox.unchecked)
+                .background(checked ? .white : .clear)
+                .clipShape(Circle())
+                .overlay(
+                    Circle()
+                        .stroke(Color.white, lineWidth: 2)
+                )
+                .frame(width: 20, height: 20)
+                .position(x: 60, y: 25)
         }
         .onChange(of: selected) { selected in
-            if selected {
-                selectedIndexes.insert(index)
-            } else {
+            if checked {
                 selectedIndexes.remove(index)
+            } else {
+                selectedIndexes.insert(index)
             }
         }
     }
