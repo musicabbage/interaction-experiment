@@ -39,6 +39,7 @@ class ExperimentImages: ObservableObject {
 protocol CreateConfigurationViewModelProtocol: ObservableObject {
     var familiarImages: ExperimentImages { get }
     var stimulusImages: ExperimentImages { get }
+    var viewState: CreateConfigurationViewModel.ViewState { get }
     
     func append(image: UIImage, type: ExperimentImages.ImageType)
     func deleteImages(indexes: IndexSet, type: ExperimentImages.ImageType)
@@ -46,15 +47,32 @@ protocol CreateConfigurationViewModelProtocol: ObservableObject {
 }
 
 @MainActor class CreateConfigurationViewModel: CreateConfigurationViewModelProtocol {
+    
+    enum ViewState: Equatable {
+        case none
+        case savedAndContinue
+        case error(String)
+        
+        var message: String {
+            switch self {
+            case .none:
+                return ""
+            case .savedAndContinue:
+                return "Save success"
+            case let .error(message):
+                return message
+            }
+        }
+    }
+    
     @Published private(set) var familiarImages: ExperimentImages = ExperimentImages(type: .familiarisation)
     @Published private(set) var stimulusImages: ExperimentImages = ExperimentImages(type: .stimulus)
-    
+    @Published private(set) var viewState: ViewState = .none
     @Published private var configurations: ConfigurationModel
     
     init(configurations: ConfigurationModel) {
         self.configurations = configurations
         
-        setupBindings()
     }
     
     convenience init() {
@@ -80,5 +98,23 @@ protocol CreateConfigurationViewModelProtocol: ObservableObject {
     }
     
     func save() {
+        do {
+            let model = ConfigurationModel(id: UUID().uuidString)
+
+            var isDirectory = ObjCBool(false)
+            let fileExisted = FileManager.default.fileExists(atPath: model.folderURL.path, isDirectory: &isDirectory)
+            if !(fileExisted && isDirectory.boolValue) {
+                try FileManager.default.createDirectory(at: model.folderURL, withIntermediateDirectories: true)
+            }
+            print(model.folderURL)
+            if let familiarisationImage = self.familiarImages.images.first,
+               let familiarisationImageData = familiarisationImage.image.pngData() {
+                try familiarisationImageData.write(to: model.folderURL.appending(component: familiarisationImage.uuid))
+            }
+            viewState = .savedAndContinue
+        } catch {
+            print(error)
+            viewState = .error("save failed")
+        }
     }
 }

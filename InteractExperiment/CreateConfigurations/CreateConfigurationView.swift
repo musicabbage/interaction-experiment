@@ -12,6 +12,7 @@ struct CreateConfigurationView<ViewModel>: View where ViewModel: CreateConfigura
     @State private var selectedImage: IndexSet = []
     @State private var newFamiliarisationImage: UIImage?
     @State private var newStimulusImage: UIImage?
+    @State private var showErrorToast: Bool = false
     
     @ObservedObject private var viewModel: ViewModel
     
@@ -28,7 +29,9 @@ struct CreateConfigurationView<ViewModel>: View where ViewModel: CreateConfigura
             
             Form {
                 Section {
-                    ExperimentImageListView(images: viewModel.familiarImages, selectedImage: .constant([]), inputImage: $newFamiliarisationImage)
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        ExperimentImageListView(images: viewModel.familiarImages, selectedImage: .constant([]), inputImage: $newFamiliarisationImage)
+                    }
                 } header: {
                     Text("Familiarisation")
                 }
@@ -69,7 +72,7 @@ struct CreateConfigurationView<ViewModel>: View where ViewModel: CreateConfigura
                 }
                 ToolbarItem(placement: .bottomBar) {
                     Button("save and start a new experiment") {
-                        
+                        viewModel.save()
                     }
                     .font(.body)
                     .padding(.init(top: 8, leading: 8, bottom: 8, trailing: 8))
@@ -80,6 +83,7 @@ struct CreateConfigurationView<ViewModel>: View where ViewModel: CreateConfigura
             }
 #endif
         }
+        .toast(isPresented: $showErrorToast, type: .error, message: viewModel.viewState.message)
         .onChange(of: newFamiliarisationImage) { image in
             guard let image else { return }
             viewModel.append(image: image, type: .familiarisation)
@@ -87,6 +91,16 @@ struct CreateConfigurationView<ViewModel>: View where ViewModel: CreateConfigura
         .onChange(of: newStimulusImage) { image in
             guard let image else { return }
             viewModel.append(image: image, type: .stimulus)
+        }
+        .onChange(of: viewModel.viewState) { viewState in
+            switch viewState {
+            case .savedAndContinue:
+                dismiss()
+            case .error:
+                showErrorToast = true
+            default:
+                break
+            }
         }
 #if os(macOS)
         .background(Color.red)
