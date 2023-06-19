@@ -16,6 +16,7 @@ struct ImageItemView: View {
 
     let index: Int
     let image: UIImage
+    let allowMultiSelect: Bool
     
     var body: some View {
         ZStack(alignment: .center) {
@@ -27,19 +28,25 @@ struct ImageItemView: View {
                     .scaledToFill()
                     .frame(width: 80, height: 80)
                     .clipShape(RoundedRectangle(cornerRadius: 6))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 6)
+                            .stroke(Color.gray, lineWidth: 0.5)
+                    )
             }
             
-            Image(systemName: checked ? "checkmark.circle.fill" : "circle.fill")
-                .resizable()
-                .foregroundColor(checked ? .checkBox.checked : .checkBox.unchecked)
-                .background(checked ? .white : .clear)
-                .clipShape(Circle())
-                .overlay(
-                    Circle()
-                        .stroke(Color.white, lineWidth: 2)
-                )
-                .frame(width: 20, height: 20)
-                .position(x: 60, y: 25)
+            if allowMultiSelect {
+                Image(systemName: checked ? "checkmark.circle.fill" : "circle.fill")
+                    .resizable()
+                    .foregroundColor(checked ? .checkBox.checked : .checkBox.unchecked)
+                    .background(checked ? .white : .clear)
+                    .clipShape(Circle())
+                    .overlay(
+                        Circle()
+                            .stroke(Color.white, lineWidth: 2)
+                    )
+                    .frame(width: 20, height: 20)
+                    .position(x: 60, y: 25)
+            }
         }
         .onChange(of: selected) { selected in
             if checked {
@@ -53,6 +60,6 @@ struct ImageItemView: View {
 
 struct ImageItemView_Previews: PreviewProvider {
     static var previews: some View {
-        ImageItemView(selectedIndexes: .constant([]), index: 0, image: .init(named: "TestStimulus")!)
+        ImageItemView(selectedIndexes: .constant([]), index: 0, image: .init(named: "TestStimulus")!, allowMultiSelect: true)
     }
 }

@@ -9,19 +9,22 @@ import SwiftUI
 
 struct CreateConfigurationView<ViewModel>: View where ViewModel: CreateConfigurationViewModelProtocol {
     
+    @State private var selectedFamiliarisation: IndexSet = []
     @State private var selectedImage: IndexSet = []
     @State private var newFamiliarisationImage: UIImage?
     @State private var newStimulusImage: UIImage?
     @State private var showErrorToast: Bool = false
+    @State private var instructionText: String = ""
+    @FocusState private var instructionFocused: Bool
     
     @ObservedObject private var viewModel: ViewModel
     
-    @Environment(\.dismiss) var dismiss
+    @Environment(\.dismiss) private var dismiss
     
-    private let maxStimulusCount: Int = 10
     
     init(viewModel: ViewModel) {
         self.viewModel = viewModel
+        _instructionText = .init(initialValue: viewModel.configurations.instruction)
     }
     
     var body: some View {
@@ -30,7 +33,7 @@ struct CreateConfigurationView<ViewModel>: View where ViewModel: CreateConfigura
             Form {
                 Section {
                     ScrollView(.horizontal, showsIndicators: false) {
-                        ExperimentImageListView(images: viewModel.familiarImages, selectedImage: .constant([]), inputImage: $newFamiliarisationImage)
+                        ExperimentImageListView(images: viewModel.familiarImages, selectedImage: $selectedFamiliarisation, inputImage: $newFamiliarisationImage, multiSelect: false)
                     }
                 } header: {
                     Text("Familiarisation")
@@ -38,11 +41,11 @@ struct CreateConfigurationView<ViewModel>: View where ViewModel: CreateConfigura
                 
                 Section {
                     ScrollView(.horizontal, showsIndicators: false) {
-                        ExperimentImageListView(images: viewModel.stimulusImages, selectedImage: $selectedImage, inputImage: $newStimulusImage)
+                        ExperimentImageListView(images: viewModel.stimulusImages, selectedImage: $selectedImage, inputImage: $newStimulusImage, multiSelect: true)
                     }
                 } header: {
                     HStack {
-                        Text("Stimulus (\(viewModel.stimulusImages.images.count)/\(maxStimulusCount))")
+                        Text("Stimulus")
                             .padding(.init(top: 0, leading: 0, bottom: 0, trailing: 10))
                         Button("delete") {
                             viewModel.deleteImages(indexes: selectedImage, type: .stimulus)
@@ -55,6 +58,28 @@ struct CreateConfigurationView<ViewModel>: View where ViewModel: CreateConfigura
                         .clipShape(RoundedRectangle(cornerRadius: 3))
                     }
                 }
+                
+                Section {
+                    TextEditor(text: $instructionText)
+                        .focused($instructionFocused)
+                        .toolbar {
+                            ToolbarItemGroup(placement: .keyboard) {
+                                Spacer()
+                                Button("Done") {
+                                    instructionFocused = false
+                                    viewModel.update(instruction: instructionText)
+                                }
+                            }
+                        }
+                        .lineSpacing(1)
+                        .padding([.top, .bottom], 10)
+                        
+                } header: {
+                    Text("Instruction")
+                }
+            }
+            .onTapGesture {
+                
             }
 #if os(macOS)
             .frame(maxWidth: .infinity)
