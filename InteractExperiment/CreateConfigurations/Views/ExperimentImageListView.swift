@@ -8,25 +8,19 @@
 import SwiftUI
 
 struct ExperimentImageListView: View {
-    enum PickerState: String, Identifiable {
-        case familiarisation
-        case stimulus
-        
-        var id: String { self.rawValue }
-    }
     
-    @State private var pickerState: PickerState?
+    @State private var showPicker: Bool
     @ObservedObject private(set) var images: ExperimentImages
-    @Binding private(set) var selectedImage: IndexSet
+    @Binding private(set) var selectedIndexes: IndexSet
     @Binding var inputImage: UIImage?
     
     private let multiSelect: Bool
     
-    init(pickerState: PickerState? = nil, images: ExperimentImages, selectedImage: Binding<IndexSet>, inputImage: Binding<UIImage?>, multiSelect: Bool) {
-        _pickerState = .init(initialValue: pickerState)
-        self.images = images
-        _selectedImage = .init(projectedValue: selectedImage)
+    init(images: ExperimentImages, selectedImage: Binding<IndexSet>, inputImage: Binding<UIImage?>, multiSelect: Bool) {
+        _showPicker = .init(initialValue: false)
+        _selectedIndexes = .init(projectedValue: selectedImage)
         _inputImage = .init(projectedValue: inputImage)
+        self.images = images
         self.multiSelect = multiSelect
     }
     
@@ -35,7 +29,7 @@ struct ExperimentImageListView: View {
             ForEach(0..<(images.images.count + ((multiSelect || images.images.isEmpty) ? 1 : 0)), id: \.self) { index in
                 if index == images.images.count {
                     Button {
-                        pickerState = .familiarisation
+                        showPicker = true
                     } label: {
                         Image(systemName: "plus")
                             .font(.title)
@@ -45,16 +39,27 @@ struct ExperimentImageListView: View {
                     .background(Color.button.lightgray)
                     .cornerRadius(8)
                 } else {
-                    ImageItemView(selectedIndexes: $selectedImage, index: index, image: images.images[index].image, allowMultiSelect: multiSelect)
+                    ImageItemView(selectedIndexes: $selectedIndexes, index: index, image: images.images[index].image, allowMultiSelect: multiSelect)
+                        .selectImage { index in
+                            if multiSelect {
+                                if selectedIndexes.contains(index) {
+                                    selectedIndexes.remove(index)
+                                } else {
+                                    selectedIndexes.insert(index)
+                                }
+                            } else {
+                                showPicker = true
+                            }
+                        }
                 }
             }
         }
-        .sheet(item: $pickerState, content: { state in
+        .sheet(isPresented: $showPicker, content: {
             ImagePicker(image: $inputImage)
         })
-        .onChange(of: selectedImage) { newValue in
+        .onChange(of: selectedIndexes) { newValue in
             guard !multiSelect else { return }
-            pickerState = .familiarisation
+            showPicker = true
         }
     }
 }

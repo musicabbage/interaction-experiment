@@ -9,19 +9,19 @@ import SwiftUI
 
 struct ImageItemView: View {
     
-    private var checked: Bool { selectedIndexes.contains(index) }
-    
     @State private var selected: Bool = false
     @Binding var selectedIndexes: IndexSet
-
+    
     let index: Int
     let image: UIImage
     let allowMultiSelect: Bool
+    var action: ((Int) -> Void)?
     
     var body: some View {
         ZStack(alignment: .center) {
             Button {
-                selected.toggle()
+                guard let action else { return }
+                action(index)
             } label: {
                 Image(uiImage: image)
                     .resizable()
@@ -35,10 +35,10 @@ struct ImageItemView: View {
             }
             
             if allowMultiSelect {
-                Image(systemName: checked ? "checkmark.circle.fill" : "circle.fill")
+                Image(systemName: selected ? "checkmark.circle.fill" : "circle.fill")
                     .resizable()
-                    .foregroundColor(checked ? .checkBox.checked : .checkBox.unchecked)
-                    .background(checked ? .white : .clear)
+                    .foregroundColor(selected ? .checkBox.checked : .checkBox.unchecked)
+                    .background(selected ? .white : .clear)
                     .clipShape(Circle())
                     .overlay(
                         Circle()
@@ -48,13 +48,17 @@ struct ImageItemView: View {
                     .position(x: 60, y: 25)
             }
         }
-        .onChange(of: selected) { selected in
-            if checked {
-                selectedIndexes.remove(index)
-            } else {
-                selectedIndexes.insert(index)
-            }
+        .onChange(of: selectedIndexes) { indexes in
+            selected = selectedIndexes.contains(index)
         }
+    }
+}
+
+extension ImageItemView {
+    func selectImage(perform action: @escaping (Int) -> Void) -> Self {
+        var copy = self
+        copy.action = action
+        return copy
     }
 }
 
