@@ -11,8 +11,6 @@ struct CreateConfigurationView<ViewModel>: View where ViewModel: CreateConfigura
     
     @State private var selectedFamiliarisation: IndexSet = []
     @State private var selectedImage: IndexSet = []
-    @State private var newFamiliarisationImage: UIImage?
-    @State private var newStimulusImage: UIImage?
     @State private var showErrorToast: Bool = false
     @State private var instructionText: String = ""
     @FocusState private var instructionFocused: Bool
@@ -33,7 +31,13 @@ struct CreateConfigurationView<ViewModel>: View where ViewModel: CreateConfigura
             Form {
                 Section {
                     ScrollView(.horizontal, showsIndicators: false) {
-                        ExperimentImageListView(images: viewModel.familiarImages, selectedImage: $selectedFamiliarisation, inputImage: $newFamiliarisationImage, multiSelect: false)
+                        //familiarisation
+                        ExperimentImageListView(images: viewModel.familiarImages,
+                                                selectedImage: $selectedFamiliarisation,
+                                                multiSelect: false)
+                        .onAddNewImage { image in
+                            viewModel.append(image: image, type: .familiarisation)
+                        }
                     }
                 } header: {
                     Text("Familiarisation")
@@ -41,7 +45,13 @@ struct CreateConfigurationView<ViewModel>: View where ViewModel: CreateConfigura
                 
                 Section {
                     ScrollView(.horizontal, showsIndicators: false) {
-                        ExperimentImageListView(images: viewModel.stimulusImages, selectedImage: $selectedImage, inputImage: $newStimulusImage, multiSelect: true)
+                        //stimulus
+                        ExperimentImageListView(images: viewModel.stimulusImages,
+                                                selectedImage: $selectedImage,
+                                                multiSelect: true)
+                        .onAddNewImage { image in
+                            viewModel.append(image: image, type: .stimulus)
+                        }
                     }
                 } header: {
                     HStack {
@@ -109,14 +119,6 @@ struct CreateConfigurationView<ViewModel>: View where ViewModel: CreateConfigura
 #endif
         }
         .toast(isPresented: $showErrorToast, type: .error, message: viewModel.viewState.message)
-        .onChange(of: newFamiliarisationImage) { image in
-            guard let image else { return }
-            viewModel.append(image: image, type: .familiarisation)
-        }
-        .onChange(of: newStimulusImage) { image in
-            guard let image else { return }
-            viewModel.append(image: image, type: .stimulus)
-        }
         .onChange(of: viewModel.viewState) { viewState in
             switch viewState {
             case .savedAndContinue:
