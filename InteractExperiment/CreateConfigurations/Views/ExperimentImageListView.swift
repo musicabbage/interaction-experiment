@@ -40,7 +40,7 @@ struct ExperimentImageListView: View {
                     .cornerRadius(8)
                 } else {
                     ImageItemView(selectedIndexes: $selectedIndexes, index: index, image: images.images[index].image, allowMultiSelect: multiSelect)
-                        .selectImage { index in
+                        .onSelectImage { index in
                             if multiSelect {
                                 if selectedIndexes.contains(index) {
                                     selectedIndexes.remove(index)

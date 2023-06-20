@@ -15,13 +15,13 @@ struct ImageItemView: View {
     let index: Int
     let image: UIImage
     let allowMultiSelect: Bool
-    var action: ((Int) -> Void)?
+    var tapClosure: ((Int) -> Void)?
     
     var body: some View {
         ZStack(alignment: .center) {
             Button {
-                guard let action else { return }
-                action(index)
+                guard let tapClosure else { return }
+                tapClosure(index)
             } label: {
                 Image(uiImage: image)
                     .resizable()
@@ -55,9 +55,9 @@ struct ImageItemView: View {
 }
 
 extension ImageItemView {
-    func selectImage(perform action: @escaping (Int) -> Void) -> Self {
+    func onSelectImage(perform action: @escaping (Int) -> Void) -> Self {
         var copy = self
-        copy.action = action
+        copy.tapClosure = action
         return copy
     }
 }
