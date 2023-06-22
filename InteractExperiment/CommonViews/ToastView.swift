@@ -54,19 +54,4 @@ extension View {
                     .type(.floater())
             }
     }
-
-//    public func popup<PopupContent: View>(
-//        isPresented: Binding<Bool>,
-//        @ViewBuilder view: @escaping () -> PopupContent,
-//        customize: @escaping (Popup<PopupContent>.PopupParameters) -> Popup<PopupContent>.PopupParameters
-//        ) -> some View {
-//            self.modifier(
-//                FullscreenPopup<Int, PopupContent>(
-//                    isPresented: isPresented,
-//                    isBoolMode: true,
-//                    params: customize(Popup<PopupContent>.PopupParameters()),
-//                    view: view,
-//                    itemView: nil)
-//            )
-//        }
 }
