@@ -116,8 +116,6 @@ protocol CreateConfigurationViewModelProtocol: ObservableObject {
             if !(fileExisted && isDirectory.boolValue) {
                 try FileManager.default.createDirectory(at: folderURL, withIntermediateDirectories: true)
             }
-            print("configuration folder:: \(folderURL)")
-            
             //save images
             if let familiarisationImage = self.familiarImages.images.first,
                let familiarisationImageData = familiarisationImage.image.pngData() {
@@ -140,7 +138,6 @@ protocol CreateConfigurationViewModelProtocol: ObservableObject {
             
             viewState = isDraft ? .draftSaved : .savedAndContinue
         } catch {
-            print(error)
             viewState = .error("save failed")
         }
     }
