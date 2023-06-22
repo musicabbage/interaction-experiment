@@ -15,9 +15,9 @@ enum Menu: Int, CaseIterable, Identifiable {
     var title: String {
         switch self {
         case .configurations:
-            return "Configurations"
+            return "New Experiments"
         case .experiments:
-            return "Experiments History"
+            return "Previous Experiments"
         }
     }
 }
