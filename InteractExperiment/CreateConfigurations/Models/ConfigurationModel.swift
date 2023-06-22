@@ -7,8 +7,9 @@
 
 import Foundation
 
-struct ConfigurationModel {
+struct ConfigurationModel: Codable {
     let id: String
+    var isDraft: Bool = false
     var instruction: String = """
 When you are ready to start, press 'N' to open the recording pad.\n
 When you are finished drawing, press ESC to close the recording pad.
@@ -16,7 +17,11 @@ When you are finished drawing, press ESC to close the recording pad.
     var familiarImages: [String] = []
     var stimulusImages: [String] = []
     var folderURL: URL {
-        FileManager.documentsDirectory.appending(path: id, directoryHint: .isDirectory)
+        let path = isDraft ? "draft/\(id)" : id
+        return FileManager.documentsDirectory.appending(path: path, directoryHint: .isDirectory)
+    }
+    var configURL: URL {
+        folderURL.appending(path: "config")
     }
 }
 

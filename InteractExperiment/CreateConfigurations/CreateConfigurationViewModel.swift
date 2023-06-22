@@ -49,13 +49,14 @@ protocol CreateConfigurationViewModelProtocol: ObservableObject {
     func append(image: UIImage, type: ExperimentImages.ImageType)
     func deleteImages(indexes: IndexSet, type: ExperimentImages.ImageType)
     func update(instruction: String)
-    func save()
+    func save(asDraft isDraft: Bool)
 }
 
 @MainActor class CreateConfigurationViewModel: CreateConfigurationViewModelProtocol {
     
     enum ViewState: Equatable {
         case none
+        case draftSaved
         case savedAndContinue
         case error(String)
         
@@ -63,7 +64,7 @@ protocol CreateConfigurationViewModelProtocol: ObservableObject {
             switch self {
             case .none:
                 return ""
-            case .savedAndContinue:
+            case .savedAndContinue, .draftSaved:
                 return "Save success"
             case let .error(message):
                 return message
@@ -107,18 +108,20 @@ protocol CreateConfigurationViewModelProtocol: ObservableObject {
         configurations.instruction = instruction
     }
     
-    func save() {
+    func save(asDraft isDraft: Bool = false) {
         do {
             var isDirectory = ObjCBool(false)
-            let fileExisted = FileManager.default.fileExists(atPath: configurations.folderURL.path, isDirectory: &isDirectory)
+            let folderURL = configurations.folderURL
+            let fileExisted = FileManager.default.fileExists(atPath: folderURL.path(), isDirectory: &isDirectory)
             if !(fileExisted && isDirectory.boolValue) {
-                try FileManager.default.createDirectory(at: configurations.folderURL, withIntermediateDirectories: true)
+                try FileManager.default.createDirectory(at: folderURL, withIntermediateDirectories: true)
             }
-            print("configuration folder:: \(configurations.folderURL)")
+            print("configuration folder:: \(folderURL)")
             
+            //save images
             if let familiarisationImage = self.familiarImages.images.first,
                let familiarisationImageData = familiarisationImage.image.pngData() {
-                try familiarisationImageData.write(to: configurations.folderURL.appending(component: familiarisationImage.uuid))
+                try familiarisationImageData.write(to: folderURL.appending(component: familiarisationImage.uuid))
                 configurations.familiarImages = [familiarisationImage.uuid]
             }
             var stimulusList: [String] = []
@@ -126,12 +129,16 @@ protocol CreateConfigurationViewModelProtocol: ObservableObject {
                 guard let stimulusImageData = stimulus.image.pngData() else {
                     throw CocoaError(.fileWriteUnknown)
                 }
-                try stimulusImageData.write(to: configurations.folderURL.appending(component: stimulus.uuid))
+                try stimulusImageData.write(to: folderURL.appending(component: stimulus.uuid))
                 stimulusList.append(stimulus.uuid)
             }
             configurations.stimulusImages = stimulusList
             
-            viewState = .savedAndContinue
+            //encode configurations
+            let configurationData = try JSONEncoder().encode(configurations)
+            try configurationData.write(to: configurations.configURL)
+            
+            viewState = isDraft ? .draftSaved : .savedAndContinue
         } catch {
             print(error)
             viewState = .error("save failed")

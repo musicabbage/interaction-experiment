@@ -19,7 +19,6 @@ struct CreateConfigurationView<ViewModel>: View where ViewModel: CreateConfigura
     
     @Environment(\.dismiss) private var dismiss
     
-    
     init(viewModel: ViewModel) {
         self.viewModel = viewModel
         _instructionText = .init(initialValue: viewModel.configurations.instruction)
@@ -102,12 +101,12 @@ struct CreateConfigurationView<ViewModel>: View where ViewModel: CreateConfigura
                 }
                 ToolbarItem(placement: .primaryAction) {
                     Button("Save") {
-                        viewModel.save()
+                        viewModel.save(asDraft: true)
                     }
                 }
                 ToolbarItem(placement: .bottomBar) {
                     Button("save and start a new experiment") {
-                        viewModel.save()
+                        viewModel.save(asDraft: false)
                     }
                     .font(.body)
                     .padding(.init(top: 8, leading: 8, bottom: 8, trailing: 8))
@@ -121,7 +120,7 @@ struct CreateConfigurationView<ViewModel>: View where ViewModel: CreateConfigura
         .toast(isPresented: $showErrorToast, type: .error, message: viewModel.viewState.message)
         .onChange(of: viewModel.viewState) { viewState in
             switch viewState {
-            case .savedAndContinue:
+            case .savedAndContinue, .draftSaved:
                 dismiss()
             case .error:
                 showErrorToast = true
