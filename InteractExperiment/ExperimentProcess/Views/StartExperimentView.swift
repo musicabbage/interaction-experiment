@@ -22,7 +22,7 @@ struct StartExperimentView<ViewModel>: View where ViewModel: ExperimentViewModel
                 InstructionView(instructionText: viewModel.configuration.instruction)
             }
         }
-        .alert("ParticipantId", isPresented: $showParticipantIdAlert) {
+        .alert("Participant ID", isPresented: $showParticipantIdAlert) {
             ParticipantIdAlertView()
                 .onConfirmParticipantId { participantId in
                     viewModel.updateParticipantId(participantId)
