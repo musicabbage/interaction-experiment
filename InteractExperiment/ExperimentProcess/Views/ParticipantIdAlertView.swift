@@ -8,23 +8,29 @@
 import SwiftUI
 
 struct ParticipantIdAlertView: View {
-    @State private var isAuthenticating = false
-    @State private var participantId = ""
-    @State private var isConfirmCancel = false
-    @Environment(\.dismiss) private var dismiss
+    @State private var participantId: String = ""
+    var confirmClosure: ((String) -> Void)?
     
     var body: some View {
         VStack {
             TextField("", text: $participantId)
-                .textInputAutocapitalization(.never)
             Button("OK", action: continueProcess)
         }
     }
 }
 
+extension ParticipantIdAlertView {
+    func onConfirmParticipantId(perform action: @escaping(String) -> Void) -> Self {
+        var copy = self
+        copy.confirmClosure = action
+        return copy
+    }
+}
+
 private extension ParticipantIdAlertView {
     func continueProcess() {
-        
+        guard let confirmClosure else { return }
+        confirmClosure(participantId)
     }
 }
 

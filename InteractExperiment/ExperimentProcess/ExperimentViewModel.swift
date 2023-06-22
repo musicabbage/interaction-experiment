@@ -11,6 +11,8 @@ protocol ExperimentViewModelProtocol: ObservableObject {
     var configuration: ConfigurationModel { get }
     var model: ExperimentModel { get }
     var viewState: ExperimentViewModel.ViewState { get }
+    
+    func updateParticipantId(_ participantId: String)
 }
 
 class ExperimentViewModel: ExperimentViewModelProtocol {
@@ -18,6 +20,7 @@ class ExperimentViewModel: ExperimentViewModelProtocol {
     enum ViewState {
         case none
         case showParticipantId
+        case instruction
     }
     
     private(set) var configuration: ConfigurationModel
@@ -32,6 +35,11 @@ class ExperimentViewModel: ExperimentViewModelProtocol {
         if model.participantId.isEmpty {
             viewState = .showParticipantId
         }
+    }
+    
+    func updateParticipantId(_ participantId: String) {
+        model.participantId = participantId
+        viewState = .instruction
     }
 }
 

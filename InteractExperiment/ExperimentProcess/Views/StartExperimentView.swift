@@ -19,17 +19,22 @@ struct StartExperimentView<ViewModel>: View where ViewModel: ExperimentViewModel
     var body: some View {
         VStack {
             if !showParticipantIdAlert {
-                Text(viewModel.configuration.instruction)
+                InstructionView(instructionText: viewModel.configuration.instruction)
             }
         }
-        .alert("ParticipantId", isPresented: $showParticipantIdAlert) { ParticipantIdAlertView() }
+        .alert("ParticipantId", isPresented: $showParticipantIdAlert) {
+            ParticipantIdAlertView()
+                .onConfirmParticipantId { participantId in
+                    viewModel.updateParticipantId(participantId)
+                }
+        }
         .onAppear {
             showParticipantIdAlert = true
         }
         .onChange(of: viewModel.viewState) { viewState in
             switch viewState {
-            case .showParticipantId:
-                showParticipantIdAlert = true
+            case .instruction:
+                showParticipantIdAlert = false
             default:
                 break
             }
