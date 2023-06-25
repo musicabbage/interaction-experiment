@@ -97,6 +97,7 @@
 		8BADE42E2A2CA34A0087C74D /* CommonViews */ = {
 			isa = PBXGroup;
 			children = (
+				8B95C0192A27E5B60094C925 /* ImagePicker.swift */,
 				8BADE42F2A2CA3650087C74D /* ToastView.swift */,
 			);
 			path = CommonViews;
@@ -156,7 +157,6 @@
 				8BE8087F2A23A79F0057CC35 /* ExperimentsView.swift */,
 				8B119AC52A46F77D0021C564 /* RootView */,
 				8BADE42E2A2CA34A0087C74D /* CommonViews */,
-				8B95C0192A27E5B60094C925 /* ImagePicker.swift */,
 				8BADE4322A2D11F90087C74D /* CreateConfigurations */,
 				8BE16A282A406A1200A83B9E /* ExperimentProcess */,
 				8B6477F72A267FB60071F582 /* Extensions */,
