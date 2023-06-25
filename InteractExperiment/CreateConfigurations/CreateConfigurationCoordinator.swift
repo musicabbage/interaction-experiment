@@ -8,30 +8,41 @@
 import Foundation
 import SwiftUI
 
-class CreateConfigurationCoordinator {
-    private let navigationModel: NavigationModel
-    private var viewModel: (any CreateConfigurationViewModelProtocol)!
+class CreateConfigFlowState: ObservableObject {
+    @Binding var path: NavigationPath
+    @Published var dismiss: Bool?
     
-    init(navigation: NavigationModel) {
-        self.navigationModel = navigation
+    init(path: Binding<NavigationPath>, dismiss: Bool? = nil) {
+        _path = .init(projectedValue: path)
+        self.dismiss = dismiss
     }
     
-    @MainActor func startCreatingConfiguration() -> some View {
-        let viewModel = CreateConfigurationViewModel()
-        let createConfigurationView = CreateConfigurationView(viewModel: viewModel)
-            .onDisappear { [unowned self] in
-                guard viewModel.viewState == .savedAndContinue else { return }
-                let configPath = viewModel.configurations.configURL.path()
-                self.navigationModel.processPath.append(.instruction(configPath))
-                self.navigationModel.columnVisibility = .detailOnly
-            }
-        self.viewModel = viewModel
-        return createConfigurationView
+    static var mock: CreateConfigFlowState {
+        CreateConfigFlowState(path: .constant(.init()))
     }
 }
 
-private extension CreateConfigurationView {
-    func setupViewModelBindings() {
-        
+struct CreateConfigurationCoordinator: View {
+    
+    @Environment(\.dismiss) private var dismiss
+    @StateObject var state: CreateConfigFlowState
+    
+    private let viewModel: CreateConfigurationViewModel = .init()
+
+    init(navigationPath: Binding<NavigationPath>) {
+        _state = .init(wrappedValue: .init(path: navigationPath))
+    }
+    
+    var body: some View {
+        CreateConfigurationView(flowState: state, viewModel: viewModel)
+            .onChange(of: state.dismiss) { newValue in
+                guard newValue == true else { return }
+                dismiss()
+            }
+            .onDisappear {
+                guard viewModel.viewState == .savedAndContinue else { return }
+                let configPath = viewModel.configurations.configURL.path()
+                state.path.append(RootFlowLink.startExperiment(configPath))
+            }
     }
 }
