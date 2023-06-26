@@ -14,7 +14,7 @@ Each view should be clean and only present UI and data. The business logic is st
 
 To separate the UI and the business logic, a view model is initialized by a coordinator and then injected into the created views. Additionally, the FlowState is used to bind user actions from the UI to the coordinator.
 
-```swift=
+```swift
 struct CreateConfigurationCoordinator: View {
 
     @StateObject var state: CreateConfigFlowState
@@ -34,7 +34,7 @@ To route to this coordinator, just create this coordinator like this:
 
 #### Perform push/present behaviours
 Push and present behaviours are triggered by a `FlowState`, such as:
-```swift=
+```swift
 class CreateConfigFlowState: ObservableObject {
     // 1
     @Binding var path: NavigationPath 
@@ -75,7 +75,7 @@ NavigationStack(path: $state.path) {
 5. FlowLink conforms to `Hashable` and `Identifiable` protocols to enable its usage in NavigationPath.
 
 With a FlowState, a coordinator can perform a push/present action with the following code:
-```swift=
+```swift
 struct CreateConfigurationCoordinator: View {
     NavigationStack(path: $state.path) {
         CreateConfigurationView(flowState: state, viewModel: viewModel)
@@ -155,8 +155,8 @@ state.path.append(ChildFlowLink.someLink)
 ```
 
 Put them together, the architecture with coordinators can be described by the following diagram:
-![](https://hackmd.io/_uploads/BkDy3-vd3.png)
 
+![Coordinator](https://github.com/musicabbage/interaction-experiment/assets/8994570/06456f2c-a7c4-4c80-a79b-00c5655239b0)
 
 
 > *I used these articles as references to construct this coordinator structure.* 👇
