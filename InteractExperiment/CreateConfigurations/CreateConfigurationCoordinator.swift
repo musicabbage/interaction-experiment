@@ -8,30 +8,27 @@
 import Foundation
 import SwiftUI
 
-class CreateConfigurationCoordinator {
-    private let navigationModel: NavigationModel
-    private var viewModel: (any CreateConfigurationViewModelProtocol)!
+struct CreateConfigurationCoordinator: View {
     
-    init(navigation: NavigationModel) {
-        self.navigationModel = navigation
+    @Environment(\.dismiss) private var dismiss
+    @StateObject var state: CreateConfigFlowState
+    
+    private let viewModel: CreateConfigurationViewModel = .init()
+
+    init(navigationPath: Binding<NavigationPath>) {
+        _state = .init(wrappedValue: .init(path: navigationPath))
     }
     
-    @MainActor func startCreatingConfiguration() -> some View {
-        let viewModel = CreateConfigurationViewModel()
-        let createConfigurationView = CreateConfigurationView(viewModel: viewModel)
-            .onDisappear { [unowned self] in
+    var body: some View {
+        CreateConfigurationView(flowState: state, viewModel: viewModel)
+            .onChange(of: state.dismiss) { newValue in
+                guard newValue == true else { return }
+                dismiss()
+            }
+            .onDisappear {
                 guard viewModel.viewState == .savedAndContinue else { return }
                 let configPath = viewModel.configurations.configURL.path()
-                self.navigationModel.processPath.append(.instruction(configPath))
-                self.navigationModel.columnVisibility = .detailOnly
+                state.path.append(RootFlowLink.startExperiment(configPath))
             }
-        self.viewModel = viewModel
-        return createConfigurationView
-    }
-}
-
-private extension CreateConfigurationView {
-    func setupViewModelBindings() {
-        
     }
 }

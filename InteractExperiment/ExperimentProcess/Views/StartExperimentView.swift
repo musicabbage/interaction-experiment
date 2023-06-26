@@ -10,7 +10,6 @@ import SwiftUI
 struct StartExperimentView<ViewModel>: View where ViewModel: ExperimentViewModelProtocol {
     @State private var showParticipantIdAlert: Bool = false
     @ObservedObject private var viewModel: ViewModel
-    @Environment(\.isPresented) private var isPresented
     
     init(viewModel: ViewModel) {
         self.viewModel = viewModel
@@ -31,7 +30,7 @@ struct StartExperimentView<ViewModel>: View where ViewModel: ExperimentViewModel
         .onAppear {
             showParticipantIdAlert = true
         }
-        .onChange(of: viewModel.viewState) { viewState in
+        .onReceive(viewModel.viewState) { viewState in
             switch viewState {
             case .instruction:
                 showParticipantIdAlert = false
@@ -40,7 +39,6 @@ struct StartExperimentView<ViewModel>: View where ViewModel: ExperimentViewModel
             }
         }
     }
-    
 }
 
 struct StartExperimentView_Previews: PreviewProvider {

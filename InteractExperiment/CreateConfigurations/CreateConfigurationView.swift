@@ -16,12 +16,12 @@ struct CreateConfigurationView<ViewModel>: View where ViewModel: CreateConfigura
     @FocusState private var instructionFocused: Bool
     
     @ObservedObject private var viewModel: ViewModel
+    @ObservedObject var flowState: CreateConfigFlowState
     
-    @Environment(\.dismiss) private var dismiss
-    
-    init(viewModel: ViewModel) {
-        self.viewModel = viewModel
+    init(flowState: CreateConfigFlowState, viewModel: ViewModel) {
         _instructionText = .init(initialValue: viewModel.configurations.instruction)
+        self.flowState = flowState
+        self.viewModel = viewModel
     }
     
     var body: some View {
@@ -96,7 +96,7 @@ struct CreateConfigurationView<ViewModel>: View where ViewModel: CreateConfigura
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") {
-                        dismiss()
+                        flowState.dismiss = true
                     }
                 }
                 ToolbarItem(placement: .primaryAction) {
@@ -121,7 +121,7 @@ struct CreateConfigurationView<ViewModel>: View where ViewModel: CreateConfigura
         .onChange(of: viewModel.viewState) { viewState in
             switch viewState {
             case .savedAndContinue, .draftSaved:
-                dismiss()
+                flowState.dismiss = true
             case .error:
                 showErrorToast = true
             default:
@@ -138,6 +138,6 @@ struct CreateConfigurationView<ViewModel>: View where ViewModel: CreateConfigura
 
 struct CreateConfigurationView_Previews: PreviewProvider {
     static var previews: some View {
-        CreateConfigurationView(viewModel: CreateConfigurationViewModel())
+        CreateConfigurationView(flowState: .mock, viewModel: CreateConfigurationViewModel())
     }
 }

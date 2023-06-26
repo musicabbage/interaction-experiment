@@ -11,7 +11,7 @@ import SwiftUI
 struct InteractExperimentApp: App {
     var body: some Scene {
         WindowGroup {
-            RootView()
+            RootCoordinator()
         }
     }
 }

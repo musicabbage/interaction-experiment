@@ -6,11 +6,12 @@
 //
 
 import Foundation
+import Combine
 
 protocol ExperimentViewModelProtocol: ObservableObject {
     var configuration: ConfigurationModel { get }
     var model: ExperimentModel { get }
-    var viewState: ExperimentViewModel.ViewState { get }
+    var viewState: AnyPublisher<ExperimentViewModel.ViewState, Never> { get }
     
     func updateParticipantId(_ participantId: String)
 }
@@ -23,23 +24,23 @@ class ExperimentViewModel: ExperimentViewModelProtocol {
         case instruction
     }
     
+    private let viewStateSubject: PassthroughSubject<ViewState, Never>
     private(set) var configuration: ConfigurationModel
     private(set) var model: ExperimentModel
     
-    @Published private(set) var viewState: ViewState = .none
+    let viewState: AnyPublisher<ViewState, Never>
     
     init(configuration: ConfigurationModel, model: ExperimentModel) {
         self.configuration = configuration
         self.model = model
         
-        if model.participantId.isEmpty {
-            viewState = .showParticipantId
-        }
+        viewStateSubject = PassthroughSubject<ViewState, Never>()
+        viewState = viewStateSubject.eraseToAnyPublisher()
     }
     
     func updateParticipantId(_ participantId: String) {
         model.participantId = participantId
-        viewState = .instruction
+        viewStateSubject.send(.instruction)
     }
 }
 
