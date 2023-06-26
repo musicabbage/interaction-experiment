@@ -27,7 +27,8 @@ struct RootCoordinator: View {
 }
 
 private extension RootCoordinator {
-    @ViewBuilder private func navigationDestination(process: RootFlowLink) -> some View {
+    @ViewBuilder
+    private func navigationDestination(process: RootFlowLink) -> some View {
         switch process {
         case let .startExperiment(configPath):
             if let data = try? Data(contentsOf: URL(filePath: configPath)),

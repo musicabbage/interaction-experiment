@@ -8,20 +8,6 @@
 import Foundation
 import SwiftUI
 
-class CreateConfigFlowState: ObservableObject {
-    @Binding var path: NavigationPath
-    @Published var dismiss: Bool?
-    
-    init(path: Binding<NavigationPath>, dismiss: Bool? = nil) {
-        _path = .init(projectedValue: path)
-        self.dismiss = dismiss
-    }
-    
-    static var mock: CreateConfigFlowState {
-        CreateConfigFlowState(path: .constant(.init()))
-    }
-}
-
 struct CreateConfigurationCoordinator: View {
     
     @Environment(\.dismiss) private var dismiss
