@@ -7,6 +7,12 @@
 
 import SwiftUI
 
+enum ExperimentFlowLink: Hashable, Identifiable {
+    case familiarisation(ConfigurationModel, ExperimentModel)
+    
+    var id: String { String(describing: self) }
+}
+
 class StartExperimentFlowState: ObservableObject {
     @Binding var path: NavigationPath
     @Published var showParticipantId: Bool = false

@@ -11,12 +11,10 @@ struct StartExperimentCoordinator: View {
     @StateObject var state: StartExperimentFlowState
     
     private let configurations: ConfigurationModel
-    private let viewModel: ExperimentViewModel
     
     init(navigationPath: Binding<NavigationPath>, configurations: ConfigurationModel) {
         _state = .init(wrappedValue: .init(path: navigationPath))
         self.configurations = configurations
-        self.viewModel = ExperimentViewModel(configuration: configurations, model: ExperimentModel())
     }
     
     var body: some View {

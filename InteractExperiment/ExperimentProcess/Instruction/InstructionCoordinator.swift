@@ -8,16 +8,16 @@
 import SwiftUI
 
 struct InstructionCoordinator: View {
+    @StateObject var state: InstructionFlowState
+    
     let configurations: ConfigurationModel
     let experimentModel: ExperimentModel
-    
-//    let action: ExperimentFlowAction
     
     var body: some View {
         let viewModel = InstructionViewModel(configurations: configurations, experiment: experimentModel)
         InstructionView(viewModel: viewModel)
             .onTapGesture {
-//                action.tapInstruction()
+                state.path.append(ExperimentFlowLink.familiarisation(configurations, experimentModel))
             }
     }
 }

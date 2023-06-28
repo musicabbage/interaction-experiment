@@ -14,6 +14,8 @@
 		8B6477F62A2674570071F582 /* CreateConfigurationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B6477F52A2674570071F582 /* CreateConfigurationView.swift */; };
 		8B6477F92A267FD60071F582 /* ColorExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B6477F82A267FD60071F582 /* ColorExtensions.swift */; };
 		8B905C332A49BA15006A9A53 /* CreateConfigurationFlowState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B905C322A49BA15006A9A53 /* CreateConfigurationFlowState.swift */; };
+		8B905C352A49CB68006A9A53 /* ExperimentCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B905C342A49CB68006A9A53 /* ExperimentCoordinator.swift */; };
+		8B905C372A49CB6F006A9A53 /* ExperimentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B905C362A49CB6F006A9A53 /* ExperimentView.swift */; };
 		8B95C01A2A27E5B60094C925 /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B95C0192A27E5B60094C925 /* ImagePicker.swift */; };
 		8BADE42D2A2C9C7F0087C74D /* PopupView in Frameworks */ = {isa = PBXBuildFile; productRef = 8BADE42C2A2C9C7F0087C74D /* PopupView */; };
 		8BADE4302A2CA3650087C74D /* ToastView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BADE42F2A2CA3650087C74D /* ToastView.swift */; };
@@ -47,6 +49,8 @@
 		8B6477F52A2674570071F582 /* CreateConfigurationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateConfigurationView.swift; sourceTree = "<group>"; };
 		8B6477F82A267FD60071F582 /* ColorExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorExtensions.swift; sourceTree = "<group>"; };
 		8B905C322A49BA15006A9A53 /* CreateConfigurationFlowState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateConfigurationFlowState.swift; sourceTree = "<group>"; };
+		8B905C342A49CB68006A9A53 /* ExperimentCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExperimentCoordinator.swift; sourceTree = "<group>"; };
+		8B905C362A49CB6F006A9A53 /* ExperimentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExperimentView.swift; sourceTree = "<group>"; };
 		8B95C0192A27E5B60094C925 /* ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
 		8BADE42F2A2CA3650087C74D /* ToastView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastView.swift; sourceTree = "<group>"; };
 		8BADE4332A2D12720087C74D /* ImageItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageItemView.swift; sourceTree = "<group>"; };
@@ -189,9 +193,9 @@
 		8BE16A282A406A1200A83B9E /* ExperimentProcess */ = {
 			isa = PBXGroup;
 			children = (
-				8BE16A2D2A4083F500A83B9E /* ExperimentViewModel.swift */,
 				8BE6C0F42A4C613B00B3C8E2 /* StartExperimentCoordinator.swift */,
 				8BE6C0F62A4C6AE000B3C8E2 /* StartExperimentFlowState.swift */,
+				8BE6C0F82A4C80AD00B3C8E2 /* Experiment */,
 				8BF7439A2A4B1D8200787997 /* Instruction */,
 				8BE16A302A4084D300A83B9E /* Views */,
 				8BE16A2F2A4084C700A83B9E /* Models */,
@@ -213,6 +217,16 @@
 				8BE16A2B2A4076EF00A83B9E /* ParticipantIdAlertView.swift */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		8BE6C0F82A4C80AD00B3C8E2 /* Experiment */ = {
+			isa = PBXGroup;
+			children = (
+				8B905C362A49CB6F006A9A53 /* ExperimentView.swift */,
+				8BE16A2D2A4083F500A83B9E /* ExperimentViewModel.swift */,
+				8B905C342A49CB68006A9A53 /* ExperimentCoordinator.swift */,
+			);
+			path = Experiment;
 			sourceTree = "<group>";
 		};
 		8BF7439A2A4B1D8200787997 /* Instruction */ = {
@@ -311,8 +325,10 @@
 				8BE6C0F72A4C6AE000B3C8E2 /* StartExperimentFlowState.swift in Sources */,
 				8BE8087E2A23A7820057CC35 /* ConfigurationsView.swift in Sources */,
 				8B2E59D82A33679700726D6C /* ExperimentImageListView.swift in Sources */,
+				8B905C352A49CB68006A9A53 /* ExperimentCoordinator.swift in Sources */,
 				8BB3659E2A1F9F2400DE2B5C /* InteractExperimentApp.swift in Sources */,
 				8BBB17FC2A48AF3600BB5E7B /* RootFlowState.swift in Sources */,
+				8B905C372A49CB6F006A9A53 /* ExperimentView.swift in Sources */,
 				8BADE4372A2D18F10087C74D /* ConfigurationModel.swift in Sources */,
 				8BADE43A2A2D1C310087C74D /* CreateConfigurationViewModel.swift in Sources */,
 				8BADE4302A2CA3650087C74D /* ToastView.swift in Sources */,

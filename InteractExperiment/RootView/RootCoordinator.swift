@@ -18,7 +18,8 @@ struct RootCoordinator: View {
         } detail: {
             NavigationStack(path: $state.path) {
                 RootView(flowState: state)
-                    .navigationDestination(for: RootFlowLink.self, destination: navigationDestination)
+                    .navigationDestination(for: RootFlowLink.self, destination: rootNavDestination)
+                    .navigationDestination(for: ExperimentFlowLink.self, destination: experimentNavDestination)
                     .sheet(item: $state.presentedItem, content: presentContent)
                     .fullScreenCover(item: $state.coverItem, content: coverContent)
             }
@@ -28,7 +29,7 @@ struct RootCoordinator: View {
 
 private extension RootCoordinator {
     @ViewBuilder
-    private func navigationDestination(process: RootFlowLink) -> some View {
+    private func rootNavDestination(process: RootFlowLink) -> some View {
         switch process {
         case let .configCreated(configPath):
             if let data = try? Data(contentsOf: URL(filePath: configPath)),
@@ -39,7 +40,17 @@ private extension RootCoordinator {
             }
         case let .startExperiment(configurations, participantId):
             let experiment = ExperimentModel(participantId: participantId)
-            InstructionCoordinator(configurations: configurations, experimentModel: experiment)
+            InstructionCoordinator(state: .init(path: $state.path), configurations: configurations, experimentModel: experiment)
+        default:
+            Text("not implemented process")
+        }
+    }
+    
+    @ViewBuilder
+    private func experimentNavDestination(process: ExperimentFlowLink) -> some View {
+        switch process {
+        case let .familiarisation(configurations, experiment):
+            ExperimentCoordinator(navigationPath: $state.path, configurations: configurations, experiment: experiment)
         default:
             Text("not implemented process")
         }
