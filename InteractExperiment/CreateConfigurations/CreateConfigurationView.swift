@@ -117,8 +117,8 @@ struct CreateConfigurationView<ViewModel>: View where ViewModel: CreateConfigura
             }
 #endif
         }
-        .toast(isPresented: $showErrorToast, type: .error, message: viewModel.viewState.message)
-        .onChange(of: viewModel.viewState) { viewState in
+        .toast(isPresented: $showErrorToast, type: .error, message: viewModel.currentViewState.message)
+        .onReceive(viewModel.viewState) { viewState in
             switch viewState {
             case .savedAndContinue, .draftSaved:
                 flowState.dismiss = true
