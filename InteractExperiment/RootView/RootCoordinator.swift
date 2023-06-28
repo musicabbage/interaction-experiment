@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct RootCoordinator: View {
-    @ObservedObject var state: RootFlowState = .init()
+    @StateObject var state: RootFlowState = .init()
     
     var body: some View {
         NavigationSplitView {
@@ -30,14 +30,16 @@ private extension RootCoordinator {
     @ViewBuilder
     private func navigationDestination(process: RootFlowLink) -> some View {
         switch process {
-        case let .startExperiment(configPath):
+        case let .configCreated(configPath):
             if let data = try? Data(contentsOf: URL(filePath: configPath)),
                let configurations = try? JSONDecoder().decode(ConfigurationModel.self, from: data) {
-                let viewModel = ExperimentViewModel(configuration: configurations, model: ExperimentModel())
-                StartExperimentView(viewModel: viewModel)
+                StartExperimentCoordinator(navigationPath: $state.path, configurations: configurations)
             } else {
                 Text("instruction get config error")
             }
+        case let .startExperiment(configurations, participantId):
+            let experiment = ExperimentModel(participantId: participantId)
+            InstructionCoordinator(configurations: configurations, experimentModel: experiment)
         default:
             Text("not implemented process")
         }

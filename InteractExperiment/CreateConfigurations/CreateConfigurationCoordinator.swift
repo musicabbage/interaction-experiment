@@ -28,7 +28,7 @@ struct CreateConfigurationCoordinator: View {
             .onDisappear {
                 guard viewModel.currentViewState == .savedAndContinue else { return }
                 let configPath = viewModel.configurations.configURL.path()
-                state.path.append(RootFlowLink.startExperiment(configPath))
+                state.path.append(RootFlowLink.configCreated(configPath))
             }
     }
 }

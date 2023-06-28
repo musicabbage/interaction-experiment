@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct ConfigurationModel: Codable {
+struct ConfigurationModel: Codable, Identifiable, Hashable {
     let id: String
     var isDraft: Bool = false
     var instruction: String = """

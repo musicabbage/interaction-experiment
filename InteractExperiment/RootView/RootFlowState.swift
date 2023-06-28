@@ -9,8 +9,9 @@ import SwiftUI
 
 enum RootFlowLink: Hashable, Identifiable {
     case createConfig
-    case startExperiment(String) //config path
-
+    case configCreated(String) //config path
+    case startExperiment(ConfigurationModel, String) //configurations, participant id
+    
     var id: String { String(describing: self) }
 }
 
