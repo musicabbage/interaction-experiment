@@ -12,7 +12,9 @@ struct InstructionView: View {
     
     var body: some View {
         VStack {
-            Text(viewModel.experiment.participantId)
+            Text("Hi, \(viewModel.experiment.participantId)")
+                .font(.title)
+                .padding(12)
             Text(viewModel.configurations.instruction)
                 .font(.title)
         }

@@ -22,5 +22,6 @@ struct ExperimentCoordinator: View {
     var body: some View {
         let viewModel = ExperimentViewModel(configuration: configurations, experiment: experiment)
         ExperimentView(viewModel: viewModel)
+            .toolbar(.hidden, for: .navigationBar)
     }
 }

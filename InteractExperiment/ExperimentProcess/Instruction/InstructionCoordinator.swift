@@ -16,6 +16,7 @@ struct InstructionCoordinator: View {
     var body: some View {
         let viewModel = InstructionViewModel(configurations: configurations, experiment: experimentModel)
         InstructionView(viewModel: viewModel)
+            .toolbar(.hidden, for: .navigationBar)
             .onTapGesture {
                 state.path.append(ExperimentFlowLink.familiarisation(configurations, experimentModel))
             }

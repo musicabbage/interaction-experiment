@@ -8,10 +8,11 @@
 import SwiftUI
 
 struct RootCoordinator: View {
+    @State var columnVisibility: NavigationSplitViewVisibility = .automatic
     @StateObject var state: RootFlowState = .init()
     
     var body: some View {
-        NavigationSplitView {
+        NavigationSplitView(columnVisibility: $columnVisibility) {
             List(Menu.allCases) { item in
                 NavigationLink(item.title, value: item)
             }
@@ -23,6 +24,7 @@ struct RootCoordinator: View {
                     .sheet(item: $state.presentedItem, content: presentContent)
                     .fullScreenCover(item: $state.coverItem, content: coverContent)
             }
+            
         }
     }
 }
@@ -34,7 +36,7 @@ private extension RootCoordinator {
         case let .configCreated(configPath):
             if let data = try? Data(contentsOf: URL(filePath: configPath)),
                let configurations = try? JSONDecoder().decode(ConfigurationModel.self, from: data) {
-                StartExperimentCoordinator(navigationPath: $state.path, configurations: configurations)
+                StartExperimentCoordinator(navigationPath: $state.path, columnVisibility: $columnVisibility, configurations: configurations)
             } else {
                 Text("instruction get config error")
             }
