@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 import UIKit
+import Combine
 
 struct ImageInfo: Identifiable {
     let uuid: String = UUID().uuidString
@@ -44,7 +45,8 @@ protocol CreateConfigurationViewModelProtocol: ObservableObject {
     var familiarImages: ExperimentImages { get }
     var stimulusImages: ExperimentImages { get }
     var configurations: ConfigurationModel { get }
-    var viewState: CreateConfigurationViewModel.ViewState { get }
+    var viewState: AnyPublisher<CreateConfigurationViewModel.ViewState, Never> { get }
+    var currentViewState: CreateConfigurationViewModel.ViewState { get }
     
     func append(image: UIImage, type: ExperimentImages.ImageType)
     func deleteImages(indexes: IndexSet, type: ExperimentImages.ImageType)
@@ -52,8 +54,7 @@ protocol CreateConfigurationViewModelProtocol: ObservableObject {
     func save(asDraft isDraft: Bool)
 }
 
-@MainActor class CreateConfigurationViewModel: CreateConfigurationViewModelProtocol {
-    
+class CreateConfigurationViewModel: CreateConfigurationViewModelProtocol {
     enum ViewState: Equatable {
         case none
         case draftSaved
@@ -74,11 +75,15 @@ protocol CreateConfigurationViewModelProtocol: ObservableObject {
     
     @Published private(set) var familiarImages: ExperimentImages = ExperimentImages(type: .familiarisation)
     @Published private(set) var stimulusImages: ExperimentImages = ExperimentImages(type: .stimulus)
-    @Published private(set) var viewState: ViewState = .none
     @Published private(set) var configurations: ConfigurationModel
+    
+    private let viewStateSubject: CurrentValueSubject<CreateConfigurationViewModel.ViewState, Never> = .init(.none)
+    let viewState: AnyPublisher<ViewState, Never>
+    var currentViewState: ViewState { viewStateSubject.value }
     
     init(configurations: ConfigurationModel) {
         self.configurations = configurations
+        self.viewState = viewStateSubject.eraseToAnyPublisher()
     }
     
     convenience init() {
@@ -136,9 +141,9 @@ protocol CreateConfigurationViewModelProtocol: ObservableObject {
             let configurationData = try JSONEncoder().encode(configurations)
             try configurationData.write(to: configurations.configURL)
             
-            viewState = isDraft ? .draftSaved : .savedAndContinue
+            viewStateSubject.send(isDraft ? .draftSaved : .savedAndContinue)
         } catch {
-            viewState = .error("save failed")
+            viewStateSubject.send(.error("\(error)"))
         }
     }
 }

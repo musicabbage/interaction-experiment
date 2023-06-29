@@ -14,6 +14,7 @@ struct ParticipantIdAlertView: View {
     var body: some View {
         VStack {
             TextField("", text: $participantId)
+                .textInputAutocapitalization(.never)
             Button("OK", action: continueProcess)
         }
     }
