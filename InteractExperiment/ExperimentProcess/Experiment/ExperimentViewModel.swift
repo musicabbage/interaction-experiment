@@ -9,7 +9,7 @@ import Foundation
 import Combine
 import UIKit
 
-protocol ExperimentViewModelProtocol: ObservableObject {
+protocol ExperimentViewModelProtocol {
     var configuration: ConfigurationModel { get }
     var experiment: ExperimentModel { get }
     var viewState: AnyPublisher<ExperimentViewModel.ViewState, Never> { get }

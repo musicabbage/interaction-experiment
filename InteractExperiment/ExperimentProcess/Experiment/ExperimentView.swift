@@ -7,13 +7,13 @@
 
 import SwiftUI
 
-struct ExperimentView<ViewModel: ExperimentViewModelProtocol>: View {
+struct ExperimentView: View {
     
     @State private var image: UIImage?
     
-    private let viewModel: ViewModel
+    private let viewModel: ExperimentViewModelProtocol
     
-    init(viewModel: ViewModel) {
+    init(viewModel: ExperimentViewModelProtocol) {
         self.viewModel = viewModel
     }
     
