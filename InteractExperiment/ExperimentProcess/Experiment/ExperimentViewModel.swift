@@ -21,7 +21,7 @@ class ExperimentViewModel: ExperimentViewModelProtocol {
     
     enum ViewState {
         case none
-        case displayImage(UIImage)
+        case showStimulus(UIImage)
         case startStimulus
         case error(String)
     }
@@ -39,7 +39,7 @@ class ExperimentViewModel: ExperimentViewModelProtocol {
         viewStateSubject = .init(.none)
         viewState = viewStateSubject.eraseToAnyPublisher()
         if let image = fetchImage() {
-            viewStateSubject.send(.displayImage(image))
+            viewStateSubject.send(.showStimulus(image))
         } else {
             viewStateSubject.send(.error("cannot find the image..."))
         }

@@ -40,7 +40,7 @@ struct ExperimentView: View {
         }
         .onReceive(viewModel.viewState) { viewState in
             switch viewState {
-            case let .displayImage(image):
+            case let .showStimulus(image):
                 self.image = image
             case .startStimulus:
                 finishClosure()
