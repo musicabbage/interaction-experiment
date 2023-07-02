@@ -11,6 +11,7 @@ struct ExperimentView: View {
     
     @State private var image: UIImage?
     @State private var showDrawing: Bool = false
+    @State private var lines: [Line] = []
     
     private let viewModel: ExperimentViewModelProtocol
     var finishClosure: (() -> Void) = { }
@@ -22,7 +23,7 @@ struct ExperimentView: View {
     var body: some View {
         ZStack {
             if showDrawing {
-                InputPane()
+                InputPane(lines: $lines)
                     .gesture(
                         MagnificationGesture()
                             .onChanged({ value in
@@ -41,6 +42,7 @@ struct ExperimentView: View {
         .onReceive(viewModel.viewState) { viewState in
             switch viewState {
             case let .showStimulus(image):
+                showDrawing = false
                 self.image = image
             case .startStimulus:
                 finishClosure()

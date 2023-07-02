@@ -14,8 +14,13 @@ struct Line {
 
 struct InputPane: View {
     
-    @State private var lines: [Line] = []
+    @Binding private var lines: [Line]
     @State private var selectedColor = Color.black
+    
+    init(lines: Binding<[Line]>, selectedColor: SwiftUI.Color = Color.black) {
+        _lines = .init(projectedValue: lines)
+        self.selectedColor = selectedColor
+    }
     
     var body: some View {
         VStack {
@@ -85,7 +90,7 @@ struct InputPane: View {
 
 struct InputPane_Previews: PreviewProvider {
     static var previews: some View {
-        InputPane()
+        InputPane(lines: .constant([]))
     }
 }
 

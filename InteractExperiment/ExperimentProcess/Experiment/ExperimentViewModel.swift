@@ -52,6 +52,13 @@ class ExperimentViewModel: ExperimentViewModelProtocol {
         case .familiarisation:
             experiment.familiarisationInput.append(.init())
             viewStateSubject.send(.startStimulus)
+        case let .stimulus(index):
+            experiment.stimulusInput.append(.init())
+            if let image = fetchImage() {
+                viewStateSubject.send(.showStimulus(image))
+            } else {
+                viewStateSubject.send(.error("fetch image failed"))
+            }
         default:
             break
         }
