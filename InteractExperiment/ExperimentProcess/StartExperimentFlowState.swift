@@ -9,6 +9,7 @@ import SwiftUI
 
 enum ExperimentFlowLink: Hashable, Identifiable {
     case familiarisation(ConfigurationModel, InteractLogModel)
+    case stimulus(ConfigurationModel, InteractLogModel)
     
     var id: String { String(describing: self) }
 }

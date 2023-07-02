@@ -51,7 +51,8 @@ private extension RootCoordinator {
     @ViewBuilder
     private func experimentNavDestination(process: ExperimentFlowLink) -> some View {
         switch process {
-        case let .familiarisation(configurations, experiment):
+        case let .familiarisation(configurations, experiment),
+            let .stimulus(configurations, experiment):
             ExperimentCoordinator(navigationPath: $state.path, configurations: configurations, experiment: experiment)
         default:
             Text("not implemented process")

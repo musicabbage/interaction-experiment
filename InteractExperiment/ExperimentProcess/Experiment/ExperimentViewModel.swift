@@ -14,6 +14,7 @@ protocol ExperimentViewModelProtocol {
     var experiment: InteractLogModel { get }
     var viewState: AnyPublisher<ExperimentViewModel.ViewState, Never> { get }
     
+    func showStimulus()
 }
 
 class ExperimentViewModel: ExperimentViewModelProtocol {
@@ -21,6 +22,7 @@ class ExperimentViewModel: ExperimentViewModelProtocol {
     enum ViewState {
         case none
         case displayImage(UIImage)
+        case startStimulus
         case error(String)
     }
     
@@ -40,6 +42,18 @@ class ExperimentViewModel: ExperimentViewModelProtocol {
             viewStateSubject.send(.displayImage(image))
         } else {
             viewStateSubject.send(.error("cannot find the image..."))
+        }
+    }
+    
+    func showStimulus() {
+        
+        // TODO: append real InputData
+        switch experiment.state {
+        case .familiarisation:
+            experiment.familiarisationInput.append(.init())
+            viewStateSubject.send(.startStimulus)
+        default:
+            break
         }
     }
 }

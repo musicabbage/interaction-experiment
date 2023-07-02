@@ -13,6 +13,7 @@ struct ExperimentView: View {
     @State private var showDrawing: Bool = false
     
     private let viewModel: ExperimentViewModelProtocol
+    var finishClosure: (() -> Void) = { }
     
     init(viewModel: ExperimentViewModelProtocol) {
         self.viewModel = viewModel
@@ -20,10 +21,14 @@ struct ExperimentView: View {
     
     var body: some View {
         ZStack {
-            if let image {
-                if showDrawing {
-                    InputPane()
-                }
+            if showDrawing {
+                InputPane()
+                    .gesture(
+                        MagnificationGesture()
+                            .onChanged({ value in
+                                guard value > 0.85 && value < 1.1 else { return }
+                                viewModel.showStimulus()
+                            }))
             }
             
             if let image, showDrawing == false {
@@ -37,10 +42,20 @@ struct ExperimentView: View {
             switch viewState {
             case let .displayImage(image):
                 self.image = image
+            case .startStimulus:
+                finishClosure()
             default:
                 break
             }
         }
+    }
+}
+
+extension ExperimentView {
+    func onFinished(perform action: @escaping() -> Void) -> Self {
+        var copy = self
+        copy.finishClosure = action
+        return copy
     }
 }
 
