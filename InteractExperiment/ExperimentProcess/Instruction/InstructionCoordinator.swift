@@ -11,7 +11,7 @@ struct InstructionCoordinator: View {
     @StateObject var state: InstructionFlowState
     
     let configurations: ConfigurationModel
-    let experimentModel: ExperimentModel
+    let experimentModel: InteractLogModel
     
     var body: some View {
         let viewModel = InstructionViewModel(configurations: configurations, experiment: experimentModel)

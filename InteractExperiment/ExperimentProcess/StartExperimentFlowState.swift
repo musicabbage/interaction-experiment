@@ -8,7 +8,7 @@
 import SwiftUI
 
 enum ExperimentFlowLink: Hashable, Identifiable {
-    case familiarisation(ConfigurationModel, ExperimentModel)
+    case familiarisation(ConfigurationModel, InteractLogModel)
     
     var id: String { String(describing: self) }
 }

@@ -11,7 +11,7 @@ import UIKit
 
 protocol ExperimentViewModelProtocol {
     var configuration: ConfigurationModel { get }
-    var experiment: ExperimentModel { get }
+    var experiment: InteractLogModel { get }
     var viewState: AnyPublisher<ExperimentViewModel.ViewState, Never> { get }
     
 }
@@ -26,11 +26,11 @@ class ExperimentViewModel: ExperimentViewModelProtocol {
     
     private let viewStateSubject: CurrentValueSubject<ViewState, Never>
     private(set) var configuration: ConfigurationModel
-    private(set) var experiment: ExperimentModel
+    private(set) var experiment: InteractLogModel
     
     let viewState: AnyPublisher<ViewState, Never>
     
-    init(configuration: ConfigurationModel, experiment: ExperimentModel) {
+    init(configuration: ConfigurationModel, experiment: InteractLogModel) {
         self.configuration = configuration
         self.experiment = experiment
         
