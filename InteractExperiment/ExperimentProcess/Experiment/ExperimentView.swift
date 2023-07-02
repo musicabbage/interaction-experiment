@@ -10,6 +10,7 @@ import SwiftUI
 struct ExperimentView: View {
     
     @State private var image: UIImage?
+    @State private var showDrawing: Bool = false
     
     private let viewModel: ExperimentViewModelProtocol
     
@@ -20,7 +21,16 @@ struct ExperimentView: View {
     var body: some View {
         ZStack {
             if let image {
+                if showDrawing {
+                    InputPane()
+                }
+            }
+            
+            if let image, showDrawing == false {
                 Image(uiImage: image)
+                    .onTapGesture {
+                        showDrawing = true
+                    }
             }
         }
         .onReceive(viewModel.viewState) { viewState in
