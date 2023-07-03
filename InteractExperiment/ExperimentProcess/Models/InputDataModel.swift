@@ -8,5 +8,5 @@
 import Foundation
 
 struct InputDataModel: Codable, Hashable {
-    
+    //TODO: log data
 }
