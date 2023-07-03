@@ -30,9 +30,7 @@ struct ExperimentView: View {
                                 guard value > 0.85 && value < 1.1 else { return }
                                 viewModel.showStimulus()
                             }))
-            }
-            
-            if let image, showDrawing == false {
+            } else if let image {
                 Image(uiImage: image)
                     .onTapGesture {
                         showDrawing = true
