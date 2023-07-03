@@ -54,8 +54,11 @@ private extension RootCoordinator {
         case let .familiarisation(configurations, experiment),
             let .stimulus(configurations, experiment):
             ExperimentCoordinator(navigationPath: $state.path, configurations: configurations, experiment: experiment)
-        default:
-            Text("not implemented process")
+        case let .endTrial(configurations, experiment):
+            EndExperimentCoordinator(navigationPath: $state.path, configurations: configurations, experiment: experiment)
+                .onDisappear {
+                    columnVisibility = .automatic
+                }
         }
     }
     
