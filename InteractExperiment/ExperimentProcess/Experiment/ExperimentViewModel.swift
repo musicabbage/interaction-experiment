@@ -22,7 +22,8 @@ class ExperimentViewModel: ExperimentViewModelProtocol {
     enum ViewState {
         case none
         case showStimulus(UIImage)
-        case startStimulus
+        case endFamiliarisation
+        case endTrial
         case error(String)
     }
     
@@ -51,11 +52,18 @@ class ExperimentViewModel: ExperimentViewModelProtocol {
         switch experiment.state {
         case .familiarisation:
             experiment.familiarisationInput.append(.init())
-            viewStateSubject.send(.startStimulus)
+            viewStateSubject.send(.endFamiliarisation)
         case let .stimulus(index):
+            guard experiment.stimulusInput.count < configuration.stimulusImages.count else {
+                viewStateSubject.send(.endTrial)
+                return
+            }
+            
             experiment.stimulusInput.append(.init())
             if let image = fetchImage() {
                 viewStateSubject.send(.showStimulus(image))
+            } else if index >= configuration.stimulusImages.count {
+                viewStateSubject.send(.endTrial)
             } else {
                 viewStateSubject.send(.error("fetch image failed"))
             }

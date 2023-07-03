@@ -42,7 +42,7 @@ struct ExperimentView: View {
             case let .showStimulus(image):
                 showDrawing = false
                 self.image = image
-            case .startStimulus:
+            case .endFamiliarisation, .endTrial:
                 finishClosure()
             default:
                 break

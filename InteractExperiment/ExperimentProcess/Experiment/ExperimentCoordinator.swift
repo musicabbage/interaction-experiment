@@ -21,9 +21,17 @@ struct ExperimentCoordinator: View {
     var body: some View {
         ExperimentView(viewModel: viewModel)
             .onFinished(perform: {
-                let configurations = viewModel.configuration
-                let experiment = viewModel.experiment
-                state.path.append(ExperimentFlowLink.stimulus(configurations, experiment))
+                switch viewModel.experiment.state {
+                case .instruction, .familiarisation:
+                    let configurations = viewModel.configuration
+                    let experiment = viewModel.experiment
+                    state.path.append(ExperimentFlowLink.stimulus(configurations, experiment))
+                case .stimulus:
+                    //TODO: show end message
+                    break
+                default:
+                    break
+                }
             })
             .toolbar(.hidden, for: .navigationBar)
     }
