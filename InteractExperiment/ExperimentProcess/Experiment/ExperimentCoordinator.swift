@@ -10,18 +10,29 @@ import SwiftUI
 
 struct ExperimentCoordinator: View {
     
+    @StateObject var state: ExperimentFlowState
+    private let viewModel: ExperimentViewModel
     
-    private let configurations: ConfigurationModel
-    private let experiment: ExperimentModel
-    
-    init(navigationPath: Binding<NavigationPath>, configurations: ConfigurationModel, experiment: ExperimentModel) {
-        self.configurations = configurations
-        self.experiment = experiment
+    init(navigationPath: Binding<NavigationPath>, configurations: ConfigurationModel, experiment: InteractLogModel) {
+        _state = .init(wrappedValue: .init(path: navigationPath))
+        self.viewModel = ExperimentViewModel(configuration: configurations, experiment: experiment)
     }
     
     var body: some View {
-        let viewModel = ExperimentViewModel(configuration: configurations, experiment: experiment)
         ExperimentView(viewModel: viewModel)
+            .onFinished(perform: {
+                switch viewModel.experiment.state {
+                case .instruction, .familiarisation:
+                    let configurations = viewModel.configuration
+                    let experiment = viewModel.experiment
+                    state.path.append(ExperimentFlowLink.stimulus(configurations, experiment))
+                case .stimulus:
+                    //TODO: show end message
+                    break
+                default:
+                    break
+                }
+            })
             .toolbar(.hidden, for: .navigationBar)
     }
 }
