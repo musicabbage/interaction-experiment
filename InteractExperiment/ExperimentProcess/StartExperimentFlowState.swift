@@ -17,15 +17,13 @@ enum ExperimentFlowLink: Hashable, Identifiable {
 
 class StartExperimentFlowState: ObservableObject {
     @Binding var path: NavigationPath
-    @Binding var columnVisibility: NavigationSplitViewVisibility
     @Published var showParticipantId: Bool = false
     
-    init(path: Binding<NavigationPath>, columnVisibility: Binding<NavigationSplitViewVisibility>) {
+    init(path: Binding<NavigationPath>) {
         _path = .init(projectedValue: path)
-        _columnVisibility = .init(projectedValue: columnVisibility)
     }
     
     static var mock: StartExperimentFlowState {
-        .init(path: .constant(.init()), columnVisibility: .constant(.automatic))
+        .init(path: .constant(.init()))
     }
 }

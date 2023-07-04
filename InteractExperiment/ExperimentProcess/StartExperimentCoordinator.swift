@@ -12,8 +12,8 @@ struct StartExperimentCoordinator: View {
     
     private let configurations: ConfigurationModel
     
-    init(navigationPath: Binding<NavigationPath>, columnVisibility: Binding<NavigationSplitViewVisibility>, configurations: ConfigurationModel) {
-        _state = .init(wrappedValue: .init(path: navigationPath, columnVisibility: columnVisibility))
+    init(navigationPath: Binding<NavigationPath>, configurations: ConfigurationModel) {
+        _state = .init(wrappedValue: .init(path: navigationPath))
         self.configurations = configurations
     }
     
@@ -24,7 +24,6 @@ struct StartExperimentCoordinator: View {
         .toolbar(.hidden, for: .navigationBar)
         .onAppear {
             state.showParticipantId = true
-            state.columnVisibility = .detailOnly
         }
         .alert("Participant ID", isPresented: $state.showParticipantId, actions: alertView)
     }
