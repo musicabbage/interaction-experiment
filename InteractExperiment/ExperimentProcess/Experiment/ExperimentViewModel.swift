@@ -36,6 +36,9 @@ class ExperimentViewModel: ExperimentViewModelProtocol {
     init(configuration: ConfigurationModel, experiment: InteractLogModel) {
         self.configuration = configuration
         self.experiment = experiment
+        if experiment.state == .familiarisation {
+            self.experiment.trialStart = Date.now
+        }
         
         viewStateSubject = .init(.none)
         viewState = viewStateSubject.eraseToAnyPublisher()
@@ -75,6 +78,13 @@ private extension ExperimentViewModel {
             experiment.familiarisationInput.append(.init())
             viewStateSubject.send(.endFamiliarisation)
         case let .stimulus(index):
+            guard experiment.stimulusInput.count < configuration.stimulusImages.count else {
+                experiment.trialEnd = Date.now
+                writeFile()
+                viewStateSubject.send(.endTrial)
+                return
+            }
+            
             experiment.stimulusInput.append(.init())
             if let image = fetchImage(index: index) {
                 viewStateSubject.send(.showStimulus(image))
@@ -119,6 +129,22 @@ private extension ExperimentViewModel {
         //encode configurations
         let configurationData = try JSONEncoder().encode(experiment)
         try configurationData.write(to: folderURL.appendingPathComponent(experiment.id))
+    }
+    
+    func writeFile() {
+        let writer = InteractLogWriter()
+        let path = configuration.folderURL.appending(path: "result")
+        var isDirectory = ObjCBool(false)
+        do {
+            let fileExisted = FileManager.default.fileExists(atPath: path.path(), isDirectory: &isDirectory)
+            if !(fileExisted && isDirectory.boolValue) {
+                try FileManager.default.createDirectory(at: path, withIntermediateDirectories: true)
+            }
+            
+            try writer.write(log: experiment, toFolder: path)
+        } catch {
+            viewStateSubject.send(.error("write log data failed..."))
+        }
     }
 }
 
