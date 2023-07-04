@@ -26,9 +26,14 @@ struct ExperimentCoordinator: View {
                     let configurations = viewModel.configuration
                     let experiment = viewModel.experiment
                     state.path.append(ExperimentFlowLink.stimulus(configurations, experiment))
-                case .stimulus:
-                    //TODO: show end message
-                    break
+                case let .stimulus(index):
+                    let configurations = viewModel.configuration
+                    let experiment = viewModel.experiment
+                    if index == 0 {
+                        state.path.append(ExperimentFlowLink.stimulus(configurations, experiment))
+                    } else if index == configurations.stimulusImages.count {
+                        state.path.append(ExperimentFlowLink.endTrial(configurations, experiment))
+                    }
                 default:
                     break
                 }
