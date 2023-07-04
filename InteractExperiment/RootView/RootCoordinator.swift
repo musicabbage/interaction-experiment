@@ -24,7 +24,6 @@ struct RootCoordinator: View {
                     .sheet(item: $state.presentedItem, content: presentContent)
                     .fullScreenCover(item: $state.coverItem, content: coverContent)
             }
-            
         }
     }
 }
@@ -36,7 +35,10 @@ private extension RootCoordinator {
         case let .configCreated(configPath):
             if let data = try? Data(contentsOf: URL(filePath: configPath)),
                let configurations = try? JSONDecoder().decode(ConfigurationModel.self, from: data) {
-                StartExperimentCoordinator(navigationPath: $state.path, columnVisibility: $columnVisibility, configurations: configurations)
+                StartExperimentCoordinator(navigationPath: $state.path, configurations: configurations)
+                    .onAppear {
+                        columnVisibility = .detailOnly
+                    }
             } else {
                 Text("instruction get config error")
             }
