@@ -26,6 +26,7 @@ struct ExperimentView: View {
     var body: some View {
         ZStack {
             if showDrawing {
+//<<<<<<< HEAD
                 ZStack {
                     InputPane(lines: $lines, selectedColour: $strokeColour)
                     ExperimentGestureView()
@@ -71,8 +72,44 @@ struct ExperimentView: View {
                     }
                 }
                 .tabViewStyle(PageTabViewStyle())
+//=======
+//                InputPane(lines: $lines)
+//                    .gesture(
+//                        MagnificationGesture()
+//                            .onChanged({ value in
+//                                guard value > 0.85 && value < 1.1 else { return }
+//                                if viewModel.experiment.state == .familiarisation {
+//                                    viewModel.appendFamiliarisationInputs()
+//                                } else {
+//                                    viewModel.appendStimulusInputs()
+//                                }
+//                                viewModel.showStimulus()
+//                            }))
+//            } else if let image {
+//                Image(uiImage: image)
+//                    .onTapGesture {
+//                        showDrawing = true
+//>>>>>>> 8d05a05 (chore: add log for familiarisation and stimulus on/off actions)
+//                    }
+//                }
+//                .tabViewStyle(PageTabViewStyle())
             }
         }
+        .onAppear {
+            if viewModel.experiment.state == .familiarisation {
+                viewModel.appendLogAction(.drawingEnabled)
+            }
+        }
+        .onChange(of: showDrawing, perform: { isShow in
+            guard isShow else { return }
+            if viewModel.experiment.state == .familiarisation {
+                let fileName = viewModel.configuration.familiarImages.first ?? ""
+                viewModel.appendLogAction(.familiarisation(false, fileName))
+            } else if case let .stimulus(index) = viewModel.experiment.state {
+                let fileName = viewModel.configuration.stimulusImages[index]
+                viewModel.appendLogAction(.stimulus(false, fileName))
+            }
+        })
         .onReceive(viewModel.viewState) { viewState in
             switch viewState {
             case let .showStimulus(image):

@@ -9,6 +9,39 @@ import Foundation
 
 struct InteractLogModel: Codable, Identifiable, Hashable {
     
+    struct ActionModel: Codable, Hashable {
+        enum Action: Codable, Hashable {
+            case drawingEnabled
+            case familiarisation(Bool, String)
+            case stimulus(Bool, String)
+            
+            var key: String {
+                switch self {
+                case .drawingEnabled:
+                    return "DrawingEnabled"
+                case let .familiarisation(isOn, name):
+                    return "Familiarisation\( isOn ? "On" : "Off" )_\(name)"
+                case let .stimulus(isOn, name):
+                    return "Stimulus\( isOn ? "On" : "Off" )_\(name)"
+                }
+            }
+        }
+        
+        let timestamp: Date
+        let action: Action
+        
+        init(action: Action) {
+            self.timestamp = .now
+            self.action = action
+        }
+        
+        init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: InteractLogModel.ActionModel.CodingKeys.self)
+            self.timestamp = try container.decode(Date.self, forKey: .timestamp)
+            self.action = try container.decode(Action.self, forKey: .action)
+        }
+    }
+    
     enum State: Codable, Hashable {
         case none, instruction, familiarisation, stimulus(Int)
     }
@@ -32,6 +65,7 @@ struct InteractLogModel: Codable, Identifiable, Hashable {
     let configId: String
     let experimentStart: Date
     private(set) var participantId: String = ""
+    private(set) var actions: [ActionModel] = []
     var trialStart: Date?
     var trialEnd: Date?
     
@@ -74,6 +108,10 @@ struct InteractLogModel: Codable, Identifiable, Hashable {
     
     static func == (lhs: InteractLogModel, rhs: InteractLogModel) -> Bool {
         lhs.state == rhs.state && lhs.id == rhs.id
+    }
+    
+    mutating func append(action: ActionModel) {
+        actions.append(action)
     }
 }
 

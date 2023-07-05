@@ -15,6 +15,7 @@ protocol ExperimentViewModelProtocol {
     var viewState: AnyPublisher<ExperimentViewModel.ViewState, Never> { get }
     
     func showNextStimulus()
+    func appendLogAction(_ action: InteractLogModel.ActionModel.Action)
 }
 
 class ExperimentViewModel: ExperimentViewModelProtocol {
@@ -67,6 +68,10 @@ class ExperimentViewModel: ExperimentViewModelProtocol {
             }
         }
     }
+    
+    func appendLogAction(_ action: InteractLogModel.ActionModel.Action) {
+        experiment.append(action: .init(action: action))
+    }
 }
 
 private extension ExperimentViewModel {
@@ -79,17 +84,14 @@ private extension ExperimentViewModel {
             viewStateSubject.send(.endFamiliarisation)
         case let .stimulus(index):
             guard experiment.stimulusInput.count < configuration.stimulusImages.count else {
-                experiment.trialEnd = Date.now
-                writeFile()
-                viewStateSubject.send(.endTrial)
+                endTrial()
                 return
             }
             
+            appendLogAction(.stimulus(true, configuration.stimulusImages[index]))
             experiment.stimulusInput.append(.init())
             if let image = fetchImage(index: index) {
                 viewStateSubject.send(.showStimulus(image))
-            } else if index >= configuration.stimulusImages.count {
-                viewStateSubject.send(.endTrial)
             } else {
                 viewStateSubject.send(.error("fetch image failed"))
             }
@@ -98,6 +100,16 @@ private extension ExperimentViewModel {
         }
     }
     
+    func appendFamiliarisationInputs() {
+        experiment.familiarisationInput.append(.init())
+    }
+    
+    func appendStimulusInputs() {
+        experiment.stimulusInput.append(.init())
+    }
+}
+
+private extension ExperimentViewModel {
     func fetchImage(index: Int) -> UIImage? {
         var imageName: String?
         switch experiment.state {
@@ -129,6 +141,12 @@ private extension ExperimentViewModel {
         //encode configurations
         let configurationData = try JSONEncoder().encode(experiment)
         try configurationData.write(to: folderURL.appendingPathComponent(experiment.id))
+    }
+    
+    func endTrial() {
+        experiment.trialEnd = Date.now
+        writeFile()
+        viewStateSubject.send(.endTrial)
     }
     
     func writeFile() {

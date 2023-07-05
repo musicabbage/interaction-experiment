@@ -47,6 +47,13 @@ struct InteractLogWriter: LogWriterProtocol {
             logString.append("Trial End            :\n")
         }
         
+        //action
+        logString.append("\n")
+        
+        log.actions.enumerated().forEach { (index, model) in
+            logString.append("\(index);\(model.timestamp.timeIntervalSince1970);0;0;\(model.action.key)\n")
+        }
+        
         if let logData = logString.data(using: .utf8) {
             //{Name} (Trial {trial number}){experiment start date}
             //> ex. Anonymous Participant (Trial 1) 2023-07-04 - 18-48-10.txt
