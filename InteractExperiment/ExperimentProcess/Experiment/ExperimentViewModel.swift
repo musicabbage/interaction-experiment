@@ -170,7 +170,7 @@ private extension ExperimentViewModel {
                 try FileManager.default.createDirectory(at: path, withIntermediateDirectories: true)
             }
             
-            try writer.write(log: experiment, toFolder: path)
+            try writer.write(log: experiment, configurations: configuration, toFolder: path)
         } catch {
             viewStateSubject.send(.error("write log data failed..."))
         }

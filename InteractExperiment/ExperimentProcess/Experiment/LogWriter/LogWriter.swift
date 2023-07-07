@@ -8,5 +8,5 @@
 import Foundation
 
 protocol LogWriterProtocol {
-    func write(log: InteractLogModel, toFolder folderPath: URL) throws
+    func write(log: InteractLogModel, configurations: ConfigurationModel, toFolder folderPath: URL) throws
 }

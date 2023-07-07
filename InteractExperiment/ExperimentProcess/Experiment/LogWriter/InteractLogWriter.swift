@@ -8,7 +8,7 @@
 import Foundation
 
 struct InteractLogWriter: LogWriterProtocol {
-    func write(log: InteractLogModel, toFolder folderPath: URL) throws {
+    func write(log: InteractLogModel, configurations: ConfigurationModel, toFolder folderPath: URL) throws {
         var logString = ""
         /**
          Name                 :Anonymous Participant
@@ -30,8 +30,8 @@ struct InteractLogWriter: LogWriterProtocol {
         logString.append("Stroke Colour        :\("0,0,0,255")\n")
         logString.append("Background Colour    :\("255,255,255,255")\n")
         logString.append("Stroke Width         :\("1")\n")
-        logString.append("Stimulus Files       :\("")\n")
-        logString.append("Familiarisation File :\("")\n")
+        logString.append("Stimulus Files       :\(imageFileNames(configurations.stimulusImages))\n")
+        logString.append("Familiarisation File :\(imageFileNames(configurations.familiarImages))\n")
         logString.append("Input Mask File      :\("")\n")
         logString.append("Drawing Pad Size     :\("")\n")
         logString.append("Trial Number         :\(log.trialNumber)\n")
@@ -70,3 +70,10 @@ struct InteractLogWriter: LogWriterProtocol {
     }
 }
 
+private extension InteractLogWriter {
+    func imageFileNames(_ images: [String]) -> String {
+        var result = images.reduce("") { $0 + $1 + "," }
+        result.removeLast()
+        return result
+    }
+}
