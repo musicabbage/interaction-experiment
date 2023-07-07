@@ -15,6 +15,8 @@ protocol ExperimentViewModelProtocol {
     var viewState: AnyPublisher<ExperimentViewModel.ViewState, Never> { get }
     
     func showNextStimulus()
+    func appendFamiliarisationInputs(_ inputs: [LineAction])
+    func appendStimulusInputs(_ inputs: [LineAction])
     func appendLogAction(_ action: InteractLogModel.ActionModel.Action)
 }
 
@@ -72,6 +74,24 @@ class ExperimentViewModel: ExperimentViewModelProtocol {
     func appendLogAction(_ action: InteractLogModel.ActionModel.Action) {
         experiment.append(action: .init(action: action))
     }
+    
+    func appendFamiliarisationInputs(_ inputs: [LineAction]) {
+        let actions = inputs.map { input in
+            let action = InteractLogModel.ActionModel.Action.drawing(input.isStart, input.point.x, input.point.y)
+            return InteractLogModel.ActionModel(action: action)
+        }
+        experiment.familiarisationInput.append(actions)
+        actions.forEach { appendLogAction($0.action) }
+    }
+    
+    func appendStimulusInputs(_ inputs: [LineAction]) {
+        let actions = inputs.map { input in
+            let action = InteractLogModel.ActionModel.Action.drawing(input.isStart, input.point.x, input.point.y)
+            return InteractLogModel.ActionModel(action: action)
+        }
+        experiment.stimulusInput.append(actions)
+        actions.forEach { appendLogAction($0.action) }
+    }
 }
 
 private extension ExperimentViewModel {
@@ -80,7 +100,6 @@ private extension ExperimentViewModel {
         // TODO: append real InputData
         switch experiment.state {
         case .familiarisation:
-            experiment.familiarisationInput.append(.init())
             viewStateSubject.send(.endFamiliarisation)
         case let .stimulus(index):
             guard experiment.stimulusInput.count < configuration.stimulusImages.count else {
@@ -98,14 +117,6 @@ private extension ExperimentViewModel {
         default:
             break
         }
-    }
-    
-    func appendFamiliarisationInputs() {
-        experiment.familiarisationInput.append(.init())
-    }
-    
-    func appendStimulusInputs() {
-        experiment.stimulusInput.append(.init())
     }
 }
 

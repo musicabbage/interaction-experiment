@@ -12,13 +12,21 @@ struct Line {
     var color: Color
 }
 
+struct LineAction {
+    let isStart: Bool
+    let point: CGPoint
+}
+
 struct InputPane: View {
+    typealias DrawingAction = InteractLogModel.ActionModel.Action
     
     @Binding private var lines: [Line]
+    @Binding private var drawingActions: [LineAction]
     @Binding private var selectedColour: Color
     
-    init(lines: Binding<[Line]>, selectedColour: Binding<Color>) {
+    init(lines: Binding<[Line]>, drawingActions: Binding<[LineAction]>, selectedColour: Binding<Color>) {
         _lines = .init(projectedValue: lines)
+        _drawingActions = .init(projectedValue: drawingActions)
         _selectedColour = .init(projectedValue: selectedColour)
     }
     
@@ -48,6 +56,7 @@ struct InputPane: View {
                         let position = value.location
                         
                         if value.translation == .zero {
+                            drawingActions.append(.init(isStart: true, point: position))
                             lines.append(Line(points: [position], color: selectedColour))
                         } else {
                             guard let lastIdx = lines.indices.last else {
@@ -56,6 +65,11 @@ struct InputPane: View {
 
                             lines[lastIdx].points.append(position)
                         }
+                    })
+                    .onEnded({ value in
+                        print("end drag > \(value.location)")
+                        let position = value.location
+                        drawingActions.append(.init(isStart: false, point: position))
                     })
             )
         }
@@ -90,7 +104,7 @@ struct InputPane: View {
 
 struct InputPane_Previews: PreviewProvider {
     static var previews: some View {
-        InputPane(lines: .constant([]), selectedColour: .constant(.blue))
+        InputPane(lines: .constant([]), drawingActions: .constant([]), selectedColour: .constant(.blue))
     }
 }
 

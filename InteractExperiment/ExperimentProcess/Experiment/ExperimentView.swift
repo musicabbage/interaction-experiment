@@ -15,6 +15,7 @@ struct ExperimentView: View {
     @State private var strokeColour: Color = .black
     @State private var stimulus: [UIImage] = []
     @State private var stimulusTabIndex: Int = 0
+    @State private var drawingActions: [LineAction] = []
     
     private let viewModel: ExperimentViewModelProtocol
     var finishClosure: (() -> Void) = { }
@@ -26,9 +27,8 @@ struct ExperimentView: View {
     var body: some View {
         ZStack {
             if showDrawing {
-//<<<<<<< HEAD
                 ZStack {
-                    InputPane(lines: $lines, selectedColour: $strokeColour)
+                    InputPane(lines: $lines, drawingActions: $drawingActions, selectedColour: $strokeColour)
                     ExperimentGestureView()
                         .onDrag { state, point in
                             switch state {
@@ -72,27 +72,6 @@ struct ExperimentView: View {
                     }
                 }
                 .tabViewStyle(PageTabViewStyle())
-//=======
-//                InputPane(lines: $lines)
-//                    .gesture(
-//                        MagnificationGesture()
-//                            .onChanged({ value in
-//                                guard value > 0.85 && value < 1.1 else { return }
-//                                if viewModel.experiment.state == .familiarisation {
-//                                    viewModel.appendFamiliarisationInputs()
-//                                } else {
-//                                    viewModel.appendStimulusInputs()
-//                                }
-//                                viewModel.showStimulus()
-//                            }))
-//            } else if let image {
-//                Image(uiImage: image)
-//                    .onTapGesture {
-//                        showDrawing = true
-//>>>>>>> 8d05a05 (chore: add log for familiarisation and stimulus on/off actions)
-//                    }
-//                }
-//                .tabViewStyle(PageTabViewStyle())
             }
         }
         .onAppear {

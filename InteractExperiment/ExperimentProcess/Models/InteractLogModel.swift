@@ -12,6 +12,7 @@ struct InteractLogModel: Codable, Identifiable, Hashable {
     struct ActionModel: Codable, Hashable {
         enum Action: Codable, Hashable {
             case drawingEnabled
+            case drawing(Bool, CGFloat, CGFloat)
             case familiarisation(Bool, String)
             case stimulus(Bool, String)
             
@@ -19,6 +20,8 @@ struct InteractLogModel: Codable, Identifiable, Hashable {
                 switch self {
                 case .drawingEnabled:
                     return "DrawingEnabled"
+                case let .drawing(isStart, _, _):
+                    return "Button\( isStart ? "Down" : "Released" )"
                 case let .familiarisation(isOn, name):
                     return "Familiarisation\( isOn ? "On" : "Off" )_\(name)"
                 case let .stimulus(isOn, name):
@@ -69,10 +72,10 @@ struct InteractLogModel: Codable, Identifiable, Hashable {
     var trialStart: Date?
     var trialEnd: Date?
     
-    var familiarisationInput: [InputDataModel] = []
-    var stimulusInput: [InputDataModel] = []
+    var familiarisationInput: [[ActionModel]] = []
+    var stimulusInput: [[ActionModel]] = []
     var stimulusIndex: Int = 0
-    
+
     var state: State {
         //TODO: check return state
         if participantId.isEmpty {
@@ -94,11 +97,11 @@ struct InteractLogModel: Codable, Identifiable, Hashable {
     
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.familiarisationInput = try container.decode([[ActionModel]].self, forKey: .familiarisationInput)
+        self.stimulusInput = try container.decode([[ActionModel]].self, forKey: .stimulusInput)
         self.participantId = try container.decode(String.self, forKey: .participantId)
         self.id = try container.decode(String.self, forKey: .id)
         self.configId = try container.decode(String.self, forKey: .configId)
-        self.familiarisationInput = try container.decode([InputDataModel].self, forKey: .familiarisationInput)
-        self.stimulusInput = try container.decode([InputDataModel].self, forKey: .stimulusInput)
         self.stimulusIndex = try container.decode(Int.self, forKey: .stimulusIndex)
         self.experimentStart = try container.decode(Date.self, forKey: .experimentStart)
         self.trialNumber = try container.decode(Int.self, forKey: .trialNumber)
