@@ -26,8 +26,13 @@ struct RootView: View {
 
     @State private var selectItem: Menu?
     @State private var showCreateSheet: Bool = false
-    @StateObject private var createConfigViewModel = CreateConfigurationViewModel()
-    @StateObject var flowState: RootFlowState = RootFlowState()
+    @ObservedObject var flowState: RootFlowState
+    
+    private let createConfigViewModel = CreateConfigurationViewModel()
+    
+    init(flowState: RootFlowState) {
+        self.flowState = flowState
+    }
     
     var body: some View {
         Button("Create a new experiment", action: {
@@ -38,6 +43,6 @@ struct RootView: View {
 
 struct RootView_Previews: PreviewProvider {
     static var previews: some View {
-        RootView()
+        RootView(flowState: .init())
     }
 }
