@@ -10,6 +10,7 @@ import SwiftUI
 extension Color {
     static let button = Color.Button()
     static let checkBox = Color.CheckBox()
+    static let text = Color.Text()
     
     struct Button {
         let lightgray = Color("LightGrayBackground")
@@ -20,5 +21,9 @@ extension Color {
     struct CheckBox {
         let unchecked = Color("CheckBox_unchecked")
         let checked = Color.blue
+    }
+    
+    struct Text {
+        let sectionTitle = Color("SectionTitle")
     }
 }
