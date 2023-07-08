@@ -28,7 +28,6 @@ struct RootView: View {
     @State private var showCreateSheet: Bool = false
     @ObservedObject var flowState: RootFlowState
     
-    private let createConfigViewModel = CreateConfigurationViewModel()
     
     init(flowState: RootFlowState) {
         self.flowState = flowState
