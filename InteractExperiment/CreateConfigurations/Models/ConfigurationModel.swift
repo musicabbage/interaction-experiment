@@ -18,7 +18,7 @@ When you are finished drawing, press ESC to close the recording pad.
     var stimulusImages: [String] = []
     var folderURL: URL {
         let path = isDraft ? "draft/\(id)" : id
-        return FileManager.documentsDirectory.appending(path: path, directoryHint: .isDirectory)
+        return FileManager.configsDirectory.appending(path: path, directoryHint: .isDirectory)
     }
     var configURL: URL {
         folderURL.appending(path: "config")

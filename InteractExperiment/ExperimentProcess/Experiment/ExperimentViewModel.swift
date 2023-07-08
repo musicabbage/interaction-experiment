@@ -55,7 +55,12 @@ class ExperimentViewModel: ExperimentViewModelProtocol {
             viewStateSubject.send(.endFamiliarisation)
         case let .stimulus(index):
             guard experiment.stimulusInput.count < configuration.stimulusImages.count else {
-                viewStateSubject.send(.endTrial)
+                do {
+                    try saveExperiment()
+                    viewStateSubject.send(.endTrial)
+                } catch {
+                    viewStateSubject.send(.error("save experiment error...\n \(error.localizedDescription)"))
+                }
                 return
             }
             
@@ -93,6 +98,19 @@ private extension ExperimentViewModel {
         }
         
         return UIImage(data: imageData)
+    }
+    
+    func saveExperiment() throws {
+        var isDirectory = ObjCBool(false)
+        let folderURL = FileManager.experimentsDirectory
+        let fileExisted = FileManager.default.fileExists(atPath: folderURL.path(), isDirectory: &isDirectory)
+        if !(fileExisted && isDirectory.boolValue) {
+            try FileManager.default.createDirectory(at: folderURL, withIntermediateDirectories: true)
+        }
+        
+        //encode configurations
+        let configurationData = try JSONEncoder().encode(experiment)
+        try configurationData.write(to: folderURL.appendingPathComponent(experiment.id))
     }
 }
 
