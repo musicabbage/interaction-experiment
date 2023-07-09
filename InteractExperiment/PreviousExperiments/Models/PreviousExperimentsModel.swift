@@ -12,6 +12,7 @@ struct PreviousExperimentsModel: Identifiable {
     let id: String
     let date: Date
     let participantId: String
+    let configurationURL: URL
     let familiarisationsURLs: [URL]
     let stimulusURLs: [URL]
     
@@ -19,6 +20,7 @@ struct PreviousExperimentsModel: Identifiable {
         id = experiment.id
         date = .now
         participantId = experiment.participantId
+        configurationURL = configurations.configURL
         familiarisationsURLs = configurations.familiarImages.map { configurations.folderURL.appendingPathComponent($0) }
         stimulusURLs = configurations.stimulusImages.map { configurations.folderURL.appendingPathComponent($0) }
     }

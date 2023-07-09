@@ -35,13 +35,13 @@ struct RootView: View {
     
     var body: some View {
         PreviousExperimentsView(viewModel: PreviousExperimentsViewModel())
-            .onUseExperiment(perform: { experimentId in
-                print(experimentId)
+            .onUseExperiment(perform: { configPath in
+                state.path.append(RootFlowLink.configCreated(configPath))
             })
             .toolbar {
                 ToolbarItem(placement: .bottomBar) {
                     Button("start a new experiment") {
-                        flowState.presentedItem = .createConfig
+                        state.presentedItem = .createConfig
                     }
                     .actionButtonStyle()
                     .padding([.bottom], 64)

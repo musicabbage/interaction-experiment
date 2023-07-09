@@ -59,9 +59,9 @@ struct PreviousExperimentsView: View {
                             }
                             VStack {
                                 Button("Use", action: {
-                                    useClosure(experiment.id)
+                                    useClosure(experiment.configurationURL.path())
                                 })
-                                    .actionButtonStyle()
+                                .actionButtonStyle()
                             }
                             .padding(12)
                             
