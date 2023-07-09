@@ -26,11 +26,11 @@ struct RootView: View {
 
     @State private var selectItem: Menu?
     @State private var showCreateSheet: Bool = false
-    @ObservedObject var flowState: RootFlowState
+    @ObservedObject var state: RootFlowState
     
     
     init(flowState: RootFlowState) {
-        self.flowState = flowState
+        self.state = flowState
     }
     
     var body: some View {
