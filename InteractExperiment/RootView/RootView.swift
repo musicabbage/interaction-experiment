@@ -28,7 +28,6 @@ struct RootView: View {
     @State private var showCreateSheet: Bool = false
     @ObservedObject var state: RootFlowState
     
-    
     init(flowState: RootFlowState) {
         self.state = flowState
     }

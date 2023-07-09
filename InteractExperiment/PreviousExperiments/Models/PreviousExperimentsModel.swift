@@ -45,8 +45,6 @@ struct PreviousExperimentsModel: Identifiable {
                 print(error)
             }
         })
-//        familiarisationsURLs = configurations.familiarImages.map { configurations.folderURL.appendingPathComponent($0) }
-//        stimulusURLs = configurations.stimulusImages.map { configurations.folderURL.appendingPathComponent($0) }
     }
 }
 
