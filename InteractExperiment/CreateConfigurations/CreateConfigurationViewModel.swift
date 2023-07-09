@@ -109,7 +109,7 @@ class CreateConfigurationViewModel: CreateConfigurationViewModelProtocol {
             viewStateSubject.send(.updateFamiliarisationImages(familiarImages))
         case .stimulus:
             stimulusImages.add(image: image)
-            viewStateSubject.send(.updateStimulusImages(familiarImages))
+            viewStateSubject.send(.updateStimulusImages(stimulusImages))
         }
     }
     
