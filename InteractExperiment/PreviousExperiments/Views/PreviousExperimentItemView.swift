@@ -39,8 +39,8 @@ struct PreviousExperimentItemView: View {
                         actionClosure(.use)
                     })
                     .actionButtonStyle()
-                    .frame(width: 220)
                 }
+                .frame(width: 220)
             }
             .padding(16)
             .frame(height: 320)
