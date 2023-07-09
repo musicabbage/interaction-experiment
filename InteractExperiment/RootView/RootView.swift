@@ -35,7 +35,7 @@ struct RootView: View {
     
     var body: some View {
         PreviousExperimentsView(viewModel: PreviousExperimentsViewModel())
-            .onUseExperiment(perform: { configPath in
+            .onUseConfiguration(perform: { configPath in
                 state.path.append(RootFlowLink.configCreated(configPath))
             })
             .toolbar {

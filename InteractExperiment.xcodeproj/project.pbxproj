@@ -10,6 +10,7 @@
 		8B119AC72A46F7900021C564 /* RootCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B119AC62A46F7900021C564 /* RootCoordinator.swift */; };
 		8B13B52D2A51CCEA004E98A8 /* InputDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B13B52C2A51CCEA004E98A8 /* InputDataModel.swift */; };
 		8B152A0E2A43191300D666AF /* CreateConfigurationCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B152A0D2A43191300D666AF /* CreateConfigurationCoordinator.swift */; };
+		8B17FF442A5ADFE800DF3B69 /* PreviousExperimentItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B17FF432A5ADFE800DF3B69 /* PreviousExperimentItemView.swift */; };
 		8B19F4722A52099600433112 /* ExperimentFlowState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B19F4712A52099600433112 /* ExperimentFlowState.swift */; };
 		8B2E59D82A33679700726D6C /* ExperimentImageListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B2E59D72A33679700726D6C /* ExperimentImageListView.swift */; };
 		8B5ACB882A2E0452002F5AA9 /* FileManagerExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B5ACB872A2E0452002F5AA9 /* FileManagerExtensions.swift */; };
@@ -57,6 +58,7 @@
 		8B119AC62A46F7900021C564 /* RootCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootCoordinator.swift; sourceTree = "<group>"; };
 		8B13B52C2A51CCEA004E98A8 /* InputDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputDataModel.swift; sourceTree = "<group>"; };
 		8B152A0D2A43191300D666AF /* CreateConfigurationCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateConfigurationCoordinator.swift; sourceTree = "<group>"; };
+		8B17FF432A5ADFE800DF3B69 /* PreviousExperimentItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviousExperimentItemView.swift; sourceTree = "<group>"; };
 		8B19F4712A52099600433112 /* ExperimentFlowState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExperimentFlowState.swift; sourceTree = "<group>"; };
 		8B2E59D72A33679700726D6C /* ExperimentImageListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExperimentImageListView.swift; sourceTree = "<group>"; };
 		8B5ACB872A2E0452002F5AA9 /* FileManagerExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileManagerExtensions.swift; sourceTree = "<group>"; };
@@ -123,11 +125,20 @@
 			path = RootView;
 			sourceTree = "<group>";
 		};
+		8B17FF452A5ADFED00DF3B69 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				8B17FF432A5ADFE800DF3B69 /* PreviousExperimentItemView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
 		8B604D0F2A587AC100E1AEE7 /* PreviousExperiments */ = {
 			isa = PBXGroup;
 			children = (
 				8B604D102A587AF200E1AEE7 /* PreviousExperimentsView.swift */,
 				8BE108002A59AA440014ECEA /* PreviousExperimentsViewModel.swift */,
+				8B17FF452A5ADFED00DF3B69 /* Views */,
 				8BA49F652A59799200148687 /* Models */,
 			);
 			path = PreviousExperiments;
@@ -416,6 +427,7 @@
 				8B5ACB882A2E0452002F5AA9 /* FileManagerExtensions.swift in Sources */,
 				8BADE4342A2D12720087C74D /* ImageItemView.swift in Sources */,
 				8B93F2472A4EEADD0026E41D /* InputPane.swift in Sources */,
+				8B17FF442A5ADFE800DF3B69 /* PreviousExperimentItemView.swift in Sources */,
 				8B119AC72A46F7900021C564 /* RootCoordinator.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -13,6 +13,7 @@ struct PreviousExperimentsView: View {
     
     private let viewModel: PreviousExperimentsViewModelProtocol
     var useClosure: ((String) -> Void) = { _ in }
+    var deleteClosure: ((String) -> Void) = { _ in }
     
     init(viewModel: PreviousExperimentsViewModelProtocol) {
         self.viewModel = viewModel
@@ -25,50 +26,19 @@ struct PreviousExperimentsView: View {
             ScrollView {
                 LazyVStack {
                     ForEach(experiments) { experiment in
-                        HStack(alignment: .top) {
-                            VStack(alignment: .leading) {
-                                HStack {
-                                    Text("\(experiment.date)")
-                                    Text(experiment.participantId)
-                                }
-                                .padding([.bottom], 8)
-                                Text("Familiarisation")
-                                    .foregroundColor(.text.sectionTitle)
-                                ScrollView {
-                                    LazyHStack {
-                                        ForEach(experiment.familiarisationsURLs, id: \.self) { imageURL in
-                                            if let imageData = try? Data(contentsOf: imageURL),
-                                               let image = UIImage(data: imageData) {
-                                                ImageItemView(selectedIndexes: .constant([]), index: 0, image: image, allowMultiSelect: false)
-                                            }
-                                        }
-                                    }
-                                }
-                                Text("Stimulus")
-                                    .foregroundColor(.text.sectionTitle)
-                                ScrollView {
-                                    LazyHStack {
-                                        ForEach(experiment.stimulusURLs, id: \.self) { imageURL in
-                                            if let imageData = try? Data(contentsOf: imageURL),
-                                               let image = UIImage(data: imageData) {
-                                                ImageItemView(selectedIndexes: .constant([]), index: 0, image: image, allowMultiSelect: false)
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                            VStack {
-                                Button("Use", action: {
+                        PreviousExperimentItemView(experiment: experiment)
+                            .onTapAction(perform: { action in
+                                switch action {
+                                case .use:
                                     useClosure(experiment.configurationURL.path())
-                                })
-                                .actionButtonStyle()
-                            }
-                            .padding(12)
-                            
-                        }
-                        .padding([.bottom], 24)
+                                case .delete:
+                                    let experimentPath = FileManager.experimentsDirectory.appending(path: experiment.id).path()
+                                    deleteClosure(experimentPath)
+                                }
+                            })
                     }
                 }
+                .padding(22)
             }
         }
         .onReceive(viewModel.viewState) { viewState in
@@ -83,9 +53,15 @@ struct PreviousExperimentsView: View {
 }
 
 extension PreviousExperimentsView {
-    func onUseExperiment(perform action: @escaping(String) -> Void) -> Self {
+    func onUseConfiguration(perform action: @escaping(String) -> Void) -> Self {
         var copy = self
         copy.useClosure = action
+        return copy
+    }
+    
+    func onDeleteExperiment(perform action: @escaping(String) -> Void) -> Self {
+        var copy = self
+        copy.deleteClosure = action
         return copy
     }
 }

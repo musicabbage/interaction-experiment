@@ -11,9 +11,10 @@ extension Color {
     static let button = Color.Button()
     static let checkBox = Color.CheckBox()
     static let text = Color.Text()
+    static let background = Color.Background()
     
     struct Button {
-        let lightgray = Color("LightGrayBackground")
+        let lightgray = Color("LightGrayButtonBackground")
         let gray = Color("GrayButton")
         let red = Color("RedButton")
     }
@@ -25,5 +26,9 @@ extension Color {
     
     struct Text {
         let sectionTitle = Color("SectionTitle")
+    }
+    
+    struct Background {
+        let lightgray = Color("LightGrayBackground")
     }
 }
