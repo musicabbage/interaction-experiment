@@ -98,7 +98,7 @@ class CreateConfigurationViewModel: CreateConfigurationViewModelProtocol {
     }
     
     convenience init() {
-        self.init(configurations: .init(id: UUID().uuidString))
+        self.init(configurations: .init())
     }
     
     func append(image: UIImage, type: ExperimentImages.ImageType) {

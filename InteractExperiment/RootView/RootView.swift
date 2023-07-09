@@ -34,9 +34,19 @@ struct RootView: View {
     }
     
     var body: some View {
-        Button("Create a new experiment", action: {
-            flowState.presentedItem = .createConfig
-        })
+        PreviousExperimentsView(viewModel: PreviousExperimentsViewModel())
+            .onUseExperiment(perform: { experimentId in
+                print(experimentId)
+            })
+            .toolbar {
+                ToolbarItem(placement: .bottomBar) {
+                    Button("start a new experiment") {
+                        flowState.presentedItem = .createConfig
+                    }
+                    .actionButtonStyle()
+                    .padding([.bottom], 64)
+                }
+            }
     }
 }
 

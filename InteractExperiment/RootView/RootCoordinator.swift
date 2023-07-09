@@ -43,7 +43,7 @@ private extension RootCoordinator {
                 Text("instruction get config error")
             }
         case let .startExperiment(configurations, participantId):
-            let experiment = InteractLogModel(participantId: participantId)
+            let experiment = InteractLogModel(participantId: participantId, configId: configurations.id)
             InstructionCoordinator(state: .init(path: $state.path), configurations: configurations, experimentModel: experiment)
         default:
             Text("not implemented process")
