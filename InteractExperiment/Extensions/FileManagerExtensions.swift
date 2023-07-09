@@ -12,4 +12,12 @@ extension FileManager {
         let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
         return paths[0]
     }
+    
+    static var configsDirectory: URL {
+        documentsDirectory.appendingPathComponent("configs")
+    }
+    
+    static var experimentsDirectory: URL {
+        documentsDirectory.appendingPathComponent("experiments")
+    }
 }

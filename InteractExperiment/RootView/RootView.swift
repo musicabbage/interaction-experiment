@@ -26,18 +26,31 @@ struct RootView: View {
 
     @State private var selectItem: Menu?
     @State private var showCreateSheet: Bool = false
-    @StateObject private var createConfigViewModel = CreateConfigurationViewModel()
-    @StateObject var flowState: RootFlowState = RootFlowState()
+    @ObservedObject var state: RootFlowState
+    
+    init(flowState: RootFlowState) {
+        self.state = flowState
+    }
     
     var body: some View {
-        Button("Create a new experiment", action: {
-            flowState.presentedItem = .createConfig
-        })
+        PreviousExperimentsView(viewModel: PreviousExperimentsViewModel())
+            .onUseConfiguration(perform: { configPath in
+                state.path.append(RootFlowLink.configCreated(configPath))
+            })
+            .toolbar {
+                ToolbarItem(placement: .bottomBar) {
+                    Button("start a new experiment") {
+                        state.presentedItem = .createConfig
+                    }
+                    .actionButtonStyle()
+                    .padding([.bottom], 64)
+                }
+            }
     }
 }
 
 struct RootView_Previews: PreviewProvider {
     static var previews: some View {
-        RootView()
+        RootView(flowState: .init())
     }
 }

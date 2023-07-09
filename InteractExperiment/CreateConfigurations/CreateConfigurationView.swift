@@ -13,10 +13,12 @@ struct CreateConfigurationView<ViewModel>: View where ViewModel: CreateConfigura
     @State private var selectedImage: IndexSet = []
     @State private var showErrorToast: Bool = false
     @State private var instructionText: String = ""
+    @State private var familiarImages: ExperimentImages = ExperimentImages(type: .familiarisation)
+    @State private var stimulusImages: ExperimentImages = ExperimentImages(type: .stimulus)
     @FocusState private var instructionFocused: Bool
-    
-    @ObservedObject private var viewModel: ViewModel
     @ObservedObject var flowState: CreateConfigFlowState
+    
+    private let viewModel: ViewModel
     
     init(flowState: CreateConfigFlowState, viewModel: ViewModel) {
         _instructionText = .init(initialValue: viewModel.configurations.instruction)
@@ -31,7 +33,7 @@ struct CreateConfigurationView<ViewModel>: View where ViewModel: CreateConfigura
                 Section {
                     ScrollView(.horizontal, showsIndicators: false) {
                         //familiarisation
-                        ExperimentImageListView(images: viewModel.familiarImages,
+                        ExperimentImageListView(images: familiarImages,
                                                 selectedImage: $selectedFamiliarisation,
                                                 multiSelect: false)
                         .onAddNewImage { image in
@@ -45,7 +47,7 @@ struct CreateConfigurationView<ViewModel>: View where ViewModel: CreateConfigura
                 Section {
                     ScrollView(.horizontal, showsIndicators: false) {
                         //stimulus
-                        ExperimentImageListView(images: viewModel.stimulusImages,
+                        ExperimentImageListView(images: stimulusImages,
                                                 selectedImage: $selectedImage,
                                                 multiSelect: true)
                         .onAddNewImage { image in
@@ -108,11 +110,7 @@ struct CreateConfigurationView<ViewModel>: View where ViewModel: CreateConfigura
                     Button("save and start a new experiment") {
                         viewModel.save(asDraft: false)
                     }
-                    .font(.body)
-                    .padding(.init(top: 8, leading: 8, bottom: 8, trailing: 8))
-                    .foregroundColor(.white)
-                    .background(Color.blue)
-                    .clipShape(RoundedRectangle(cornerSize: .init(width: 6, height: 6)))
+                    .actionButtonStyle()
                 }
             }
 #endif
@@ -124,6 +122,10 @@ struct CreateConfigurationView<ViewModel>: View where ViewModel: CreateConfigura
                 flowState.dismiss = true
             case .error:
                 showErrorToast = true
+            case let .updateFamiliarisationImages(images):
+                familiarImages = images
+            case let .updateStimulusImages(images):
+                stimulusImages = images
             default:
                 break
             }

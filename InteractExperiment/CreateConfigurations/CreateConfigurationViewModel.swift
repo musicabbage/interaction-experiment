@@ -16,13 +16,23 @@ struct ImageInfo: Identifiable {
     var id: String { uuid }
 }
 
-class ExperimentImages: ObservableObject {
+class ExperimentImages: ObservableObject, Equatable {
     enum ImageType {
         case familiarisation, stimulus
     }
     
     @Published private(set) var images: [ImageInfo] = []
     private let type: ImageType
+    
+    static func == (lhs: ExperimentImages, rhs: ExperimentImages) -> Bool {
+        guard lhs.type == rhs.type else {
+            return false
+        }
+        
+        let imageSetL = lhs.images.reduce(into: Set<String>()) { $0.formUnion([$1.uuid]) }
+        let imageSetR = rhs.images.reduce(into: Set<String>()) { $0.formUnion([$1.uuid]) }
+        return imageSetL == imageSetR
+    }
     
     init(type: ImageType) {
         self.type = type
@@ -41,9 +51,7 @@ class ExperimentImages: ObservableObject {
     }
 }
 
-protocol CreateConfigurationViewModelProtocol: ObservableObject {
-    var familiarImages: ExperimentImages { get }
-    var stimulusImages: ExperimentImages { get }
+protocol CreateConfigurationViewModelProtocol {
     var configurations: ConfigurationModel { get }
     var viewState: AnyPublisher<CreateConfigurationViewModel.ViewState, Never> { get }
     var currentViewState: CreateConfigurationViewModel.ViewState { get }
@@ -59,23 +67,26 @@ class CreateConfigurationViewModel: CreateConfigurationViewModelProtocol {
         case none
         case draftSaved
         case savedAndContinue
+        case updateFamiliarisationImages(ExperimentImages)
+        case updateStimulusImages(ExperimentImages)
+        
         case error(String)
         
         var message: String {
             switch self {
-            case .none:
-                return ""
             case .savedAndContinue, .draftSaved:
                 return "Save success"
             case let .error(message):
                 return message
+            default:
+                return ""
             }
         }
     }
     
-    @Published private(set) var familiarImages: ExperimentImages = ExperimentImages(type: .familiarisation)
-    @Published private(set) var stimulusImages: ExperimentImages = ExperimentImages(type: .stimulus)
-    @Published private(set) var configurations: ConfigurationModel
+    private var familiarImages: ExperimentImages = ExperimentImages(type: .familiarisation)
+    private var stimulusImages: ExperimentImages = ExperimentImages(type: .stimulus)
+    private(set) var configurations: ConfigurationModel
     
     private let viewStateSubject: CurrentValueSubject<CreateConfigurationViewModel.ViewState, Never> = .init(.none)
     let viewState: AnyPublisher<ViewState, Never>
@@ -87,7 +98,7 @@ class CreateConfigurationViewModel: CreateConfigurationViewModelProtocol {
     }
     
     convenience init() {
-        self.init(configurations: .init(id: UUID().uuidString))
+        self.init(configurations: .init())
     }
     
     func append(image: UIImage, type: ExperimentImages.ImageType) {
@@ -95,8 +106,10 @@ class CreateConfigurationViewModel: CreateConfigurationViewModelProtocol {
         case .familiarisation:
             familiarImages.reset()
             familiarImages.add(image: image)
+            viewStateSubject.send(.updateFamiliarisationImages(familiarImages))
         case .stimulus:
             stimulusImages.add(image: image)
+            viewStateSubject.send(.updateStimulusImages(stimulusImages))
         }
     }
     

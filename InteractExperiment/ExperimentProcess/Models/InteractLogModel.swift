@@ -15,6 +15,7 @@ struct InteractLogModel: Codable, Identifiable, Hashable {
     
     private(set) var participantId: String = ""
     let id: String
+    let configId: String
     var familiarisationInput: [InputDataModel] = []
     var stimulusInput: [InputDataModel] = []
     
@@ -29,8 +30,9 @@ struct InteractLogModel: Codable, Identifiable, Hashable {
         }
     }
     
-    init(participantId: String) {
+    init(participantId: String, configId: String) {
         self.id = UUID().uuidString
+        self.configId = configId
         self.participantId = participantId
     }
     
@@ -39,6 +41,7 @@ struct InteractLogModel: Codable, Identifiable, Hashable {
         self.familiarisationInput = try container.decode([InputDataModel].self, forKey: .familiarisationInput)
         self.participantId = try container.decode(String.self, forKey: .participantId)
         self.id = try container.decode(String.self, forKey: .id)
+        self.configId = try container.decode(String.self, forKey: .configId)
     }
     
     static func == (lhs: InteractLogModel, rhs: InteractLogModel) -> Bool {
@@ -48,6 +51,6 @@ struct InteractLogModel: Codable, Identifiable, Hashable {
 
 extension InteractLogModel {
     static var mock: InteractLogModel {
-        InteractLogModel(participantId: "test_id")
+        InteractLogModel(participantId: "test_id", configId: "test_config_id")
     }
 }
