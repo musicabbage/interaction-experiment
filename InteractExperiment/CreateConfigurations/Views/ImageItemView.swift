@@ -64,6 +64,6 @@ extension ImageItemView {
 
 struct ImageItemView_Previews: PreviewProvider {
     static var previews: some View {
-        ImageItemView(selectedIndexes: .constant([]), index: 0, image: .init(named: "TestStimulus")!, allowMultiSelect: true)
+        ImageItemView(selectedIndexes: .constant([]), index: 0, image: .mockFamiliarisationImage, allowMultiSelect: true)
     }
 }
