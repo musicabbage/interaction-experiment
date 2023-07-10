@@ -12,7 +12,7 @@ struct Line {
     var color: Color
 }
 
-struct LineAction {
+struct LineAction: Equatable {
     let isStart: Bool
     let point: CGPoint
 }

@@ -53,9 +53,9 @@ struct InteractLogWriter: LogWriterProtocol {
         log.actions.enumerated().forEach { (index, model) in
             switch model.action {
             case let .drawing(_, x, y):
-                logString.append("\(index);\(model.timestamp.timeIntervalSince1970);\(x);\(y);\(model.action.key)\n")
+                logString.append("\(index);\(Int(model.timestamp));\(x);\(y);\(model.action.key)\n")
             default:
-                logString.append("\(index);\(model.timestamp.timeIntervalSince1970);0;0;\(model.action.key)\n")
+                logString.append("\(index);\(Int(model.timestamp));0;0;\(model.action.key)\n")
             }
         }
         

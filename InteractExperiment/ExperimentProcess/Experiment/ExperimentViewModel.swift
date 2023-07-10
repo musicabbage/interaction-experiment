@@ -15,6 +15,7 @@ protocol ExperimentViewModelProtocol {
     var viewState: AnyPublisher<ExperimentViewModel.ViewState, Never> { get }
     
     func showNextStimulus()
+    func appendSnapshot(image: UIImage)
     func appendFamiliarisationInputs(_ inputs: [LineAction])
     func appendStimulusInputs(_ inputs: [LineAction])
     func appendLogAction(_ action: InteractLogModel.ActionModel.Action)
@@ -24,6 +25,7 @@ class ExperimentViewModel: ExperimentViewModelProtocol {
     
     enum ViewState {
         case none
+        case loading
         case showStimulus(UIImage)
         case endFamiliarisation
         case endTrial
@@ -44,7 +46,7 @@ class ExperimentViewModel: ExperimentViewModelProtocol {
         }
         
         viewStateSubject = .init(.none)
-        viewState = viewStateSubject.eraseToAnyPublisher()
+        viewState = viewStateSubject.receive(on: DispatchQueue.main).eraseToAnyPublisher()
         if let image = fetchImage(index: experiment.stimulusIndex) {
             viewStateSubject.send(.showStimulus(image))
         } else {
@@ -91,6 +93,15 @@ class ExperimentViewModel: ExperimentViewModelProtocol {
         }
         experiment.stimulusInput.append(actions)
         actions.forEach { appendLogAction($0.action) }
+    }
+    
+    func appendSnapshot(image: UIImage) {
+        do {
+            let snapshot = try InteractLogModel.ImageModel(image: image)
+            experiment.snapshots.append(snapshot)
+        } catch {
+            print(error)
+        }
     }
 }
 
@@ -155,25 +166,50 @@ private extension ExperimentViewModel {
     }
     
     func endTrial() {
-        experiment.trialEnd = Date.now
-        writeFile()
-        viewStateSubject.send(.endTrial)
+        viewStateSubject.send(.loading)
+        Task {
+            do {
+                experiment.trialEnd = Date.now
+                try await writeLogFiles()
+                viewStateSubject.send(.endTrial)
+            } catch {
+                viewStateSubject.send(.error("save experiment error...\n \(error.localizedDescription)"))
+            }
+        }
     }
     
-    func writeFile() {
+    func writeLogFiles() async throws {
         let writer = InteractLogWriter()
-        let path = configuration.folderURL.appending(path: "result")
+        let folderURL = FileManager.experimentsDirectory.appending(path: experiment.id)
         var isDirectory = ObjCBool(false)
-        do {
-            let fileExisted = FileManager.default.fileExists(atPath: path.path(), isDirectory: &isDirectory)
-            if !(fileExisted && isDirectory.boolValue) {
-                try FileManager.default.createDirectory(at: path, withIntermediateDirectories: true)
-            }
-            
-            try writer.write(log: experiment, configurations: configuration, toFolder: path)
-        } catch {
-            viewStateSubject.send(.error("write log data failed..."))
+        
+        let fileExisted = FileManager.default.fileExists(atPath: folderURL.path(), isDirectory: &isDirectory)
+        if !(fileExisted && isDirectory.boolValue) {
+            try FileManager.default.createDirectory(at: folderURL, withIntermediateDirectories: true)
         }
+        
+        //snapshots
+        for snapshot in experiment.snapshots {
+            guard let imageData = snapshot.image.jpegData(compressionQuality: 0.5) else {
+                continue
+            }
+            let filename = String(describing: "\(Int(snapshot.timestamp)).png")
+            try imageData.write(to: folderURL.appending(path: filename))
+            experiment.finalSnapshotName = filename
+        }
+        
+        
+        //raw data
+        let configurationData = try JSONEncoder().encode(experiment)
+        try configurationData.write(to: folderURL.appendingPathComponent(InteractLogModel.filename))
+        //log
+        try writer.write(log: experiment, configurations: configuration, toFolder: folderURL)
+    }
+    
+    func saveExperiment(toFolder folderURL: URL) throws {
+        //encode configurations
+        let configurationData = try JSONEncoder().encode(experiment)
+        try configurationData.write(to: folderURL.appendingPathComponent(experiment.id))
     }
 }
 

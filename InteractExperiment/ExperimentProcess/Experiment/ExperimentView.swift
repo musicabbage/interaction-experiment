@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct ExperimentView: View {
+    typealias LogAction = InteractLogModel.ActionModel.Action
     
     @State private var image: UIImage?
     @State private var showDrawing: Bool = false
@@ -16,8 +17,11 @@ struct ExperimentView: View {
     @State private var stimulus: [UIImage] = []
     @State private var stimulusTabIndex: Int = 0
     @State private var drawingActions: [LineAction] = []
+    @State private var showLoading: Bool = false
+    @Environment(\.displayScale) var displayScale
     
     private let viewModel: ExperimentViewModelProtocol
+    private let gesture = MagnificationGesture()
     var finishClosure: (() -> Void) = { }
     
     init(viewModel: ExperimentViewModelProtocol) {
@@ -26,37 +30,50 @@ struct ExperimentView: View {
     
     var body: some View {
         ZStack {
+            if showLoading {
+                ProgressView("saving...")
+                    .padding(12)
+                    .background(Color.white)
+                    .clipShape(RoundedRectangle(cornerSize: .init(width: 8, height: 8)))
+                    .shadow(radius: 8)
+            }
             if showDrawing {
-                ZStack {
-                    InputPane(lines: $lines, drawingActions: $drawingActions, selectedColour: $strokeColour)
-                    ExperimentGestureView()
-                        .onDrag { state, point in
-                            switch state {
-                            case .began:
-                                lines.append(Line(points: [point], color: strokeColour))
-                            case .update:
-                                guard let lastIdx = lines.indices.last else {
+                GeometryReader { geo in
+                    ZStack {
+                        InputPane(lines: $lines, drawingActions: $drawingActions, selectedColour: $strokeColour)
+                        ExperimentGestureView()
+                            .onDrag { state, point in
+                                switch state {
+                                case .began:
+                                    lines.append(Line(points: [point], color: strokeColour))
+                                case .update:
+                                    guard let lastIdx = lines.indices.last else {
+                                        break
+                                    }
+                                    lines[lastIdx].points.append(point)
+                                case .end:
                                     break
                                 }
-                                lines[lastIdx].points.append(point)
-                            case .end:
-                                break
                             }
-                        }
-                        .onTwoFingersSwipe { direction in
-                            showDrawing = false
-                            switch direction {
-                            case .left:
-                                //next stimulus
-                                viewModel.showNextStimulus()
-                            case .right:
-                                //previous stimulus
-                                stimulusTabIndex -= 1
-                            case .up:
-                                //do nothing
-                                break
+                            .onTwoFingersSwipe { direction in
+                                showDrawing = false
+                                switch direction {
+                                case .left:
+                                    //next stimulus
+                                    viewModel.showNextStimulus()
+                                case .right:
+                                    //previous stimulus
+                                    stimulusTabIndex -= 1
+                                case .up:
+                                    //do nothing
+                                    guard let lastDrawing = lines.last?.points.last else { return }
+                                    let action = LogAction.drawing(false, lastDrawing.x, lastDrawing.y)
+                                    viewModel.appendLogAction(action)
+                                    snapShot(size: geo.size)
+                                    break
+                                }
                             }
-                        }
+                    }
                 }
             } else if stimulus.count > 0 {
                 TabView(selection: $stimulusTabIndex) {
@@ -92,12 +109,17 @@ struct ExperimentView: View {
         .onReceive(viewModel.viewState) { viewState in
             switch viewState {
             case let .showStimulus(image):
+                showLoading = false
                 showDrawing = false
                 stimulus.append(image)
                 stimulusTabIndex = stimulus.count - 1
             case .endFamiliarisation, .endTrial:
+                showLoading = false
                 finishClosure()
+            case .loading:
+                showLoading = true
             default:
+                showLoading = false
                 break
             }
         }
@@ -109,6 +131,22 @@ extension ExperimentView {
         var copy = self
         copy.finishClosure = action
         return copy
+    }
+}
+
+private extension ExperimentView {
+    @MainActor
+    func snapShot(size: CGSize) {
+        let canvas = InputPane(lines: $lines, drawingActions: $drawingActions, selectedColour: $strokeColour)
+            .frame(width: size.width, height: size.height)
+        let renderer = ImageRenderer(content: canvas)
+
+        // make sure and use the correct display scale for this device
+        renderer.scale = displayScale
+
+        if let snapshot = renderer.uiImage {
+            viewModel.appendSnapshot(image: snapshot)
+        }
     }
 }
 

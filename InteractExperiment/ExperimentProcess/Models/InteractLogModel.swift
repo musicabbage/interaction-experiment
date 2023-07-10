@@ -6,8 +6,10 @@
 //
 
 import Foundation
+import UIKit
 
 struct InteractLogModel: Codable, Identifiable, Hashable {
+    static let filename: String = "InteractLog.json"
     
     struct ActionModel: Codable, Hashable {
         enum Action: Codable, Hashable {
@@ -30,18 +32,53 @@ struct InteractLogModel: Codable, Identifiable, Hashable {
             }
         }
         
-        let timestamp: Date
+        let timestamp: TimeInterval
         let action: Action
         
         init(action: Action) {
-            self.timestamp = .now
+            self.timestamp = Date.timestamp
             self.action = action
         }
         
         init(from decoder: Decoder) throws {
             let container = try decoder.container(keyedBy: InteractLogModel.ActionModel.CodingKeys.self)
-            self.timestamp = try container.decode(Date.self, forKey: .timestamp)
+            self.timestamp = try container.decode(TimeInterval.self, forKey: .timestamp)
             self.action = try container.decode(Action.self, forKey: .action)
+        }
+    }
+    
+    struct ImageModel: Codable, Hashable {
+        let timestamp: TimeInterval
+        let image: UIImage
+        
+        enum Keys: String, CodingKey {
+            case timestamp, image
+        }
+        
+        init(image: UIImage) throws {
+            self.timestamp = Date.timestamp
+            self.image = image
+        }
+        
+        init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: Keys.self)
+            self.timestamp = try container.decode(TimeInterval.self, forKey: .timestamp)
+            if let imageData = try? container.decode(Data.self, forKey: .image),
+               let image = UIImage(data: imageData) {
+                self.image = image
+            } else {
+                throw NSError(domain: "decode image for ImageModel error", code: 100001)
+            }
+        }
+        
+        func encode(to encoder: Encoder) throws {
+            var container = encoder.container(keyedBy: Keys.self)
+            try container.encode(timestamp, forKey: .timestamp)
+            if let imageData = image.pngData() {
+                try container.encode(imageData, forKey: .image)
+            } else {
+                throw NSError(domain: "encode image for ImageModel error", code: 100002)
+            }
         }
     }
     
@@ -76,6 +113,10 @@ struct InteractLogModel: Codable, Identifiable, Hashable {
     var stimulusInput: [[ActionModel]] = []
     var stimulusIndex: Int = 0
 
+    
+    var finalSnapshotName: String = ""
+    var snapshots: [ImageModel] = []
+    
     var state: State {
         //TODO: check return state
         if participantId.isEmpty {
@@ -107,6 +148,8 @@ struct InteractLogModel: Codable, Identifiable, Hashable {
         self.trialNumber = try container.decode(Int.self, forKey: .trialNumber)
         self.trialStart = try container.decode(Date.self, forKey: .trialStart)
         self.trialEnd = try container.decode(Date.self, forKey: .trialEnd)
+        self.snapshots = try container.decode([ImageModel].self, forKey: .snapshots)
+        self.finalSnapshotName = try container.decode(String.self, forKey: .finalSnapshotName)
     }
     
     static func == (lhs: InteractLogModel, rhs: InteractLogModel) -> Bool {

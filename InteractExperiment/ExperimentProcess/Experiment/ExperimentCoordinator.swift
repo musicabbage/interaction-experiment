@@ -31,7 +31,7 @@ struct ExperimentCoordinator: View {
                     let experiment = viewModel.experiment
                     if index == 0 {
                         state.path.append(ExperimentFlowLink.stimulus(configurations, experiment))
-                    } else if index == configurations.stimulusImages.count {
+                    } else if index >= configurations.stimulusImages.count {
                         state.path.append(ExperimentFlowLink.endTrial(configurations, experiment))
                     }
                 default:

@@ -49,7 +49,7 @@ private extension PreviousExperimentsViewModel {
         }
         let experiments = try FileManager.default.contentsOfDirectory(at: FileManager.experimentsDirectory, includingPropertiesForKeys: nil)
         let results = experiments.reduce(into: [(InteractLogModel, ConfigurationModel)]()) { partialResult, url in
-            guard let experimentData = try? Data(contentsOf: url),
+            guard let experimentData = try? Data(contentsOf: url.appending(path: InteractLogModel.filename)),
                   let experiment = try? JSONDecoder().decode(InteractLogModel.self, from: experimentData),
             let config = configs[experiment.configId] else {
                 return
