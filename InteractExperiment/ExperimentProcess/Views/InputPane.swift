@@ -15,11 +15,11 @@ struct Line {
 struct InputPane: View {
     
     @Binding private var lines: [Line]
-    @State private var selectedColor = Color.black
+    @Binding private var selectedColour: Color
     
-    init(lines: Binding<[Line]>, selectedColor: SwiftUI.Color = Color.black) {
+    init(lines: Binding<[Line]>, selectedColour: Binding<Color>) {
         _lines = .init(projectedValue: lines)
-        self.selectedColor = selectedColor
+        _selectedColour = .init(projectedValue: selectedColour)
     }
     
     var body: some View {
@@ -48,7 +48,7 @@ struct InputPane: View {
                         let position = value.location
                         
                         if value.translation == .zero {
-                            lines.append(Line(points: [position], color: selectedColor))
+                            lines.append(Line(points: [position], color: selectedColour))
                         } else {
                             guard let lastIdx = lines.indices.last else {
                                 return
@@ -64,7 +64,7 @@ struct InputPane: View {
     @ViewBuilder
     func colorButton(color: Color) -> some View {
         Button {
-            selectedColor = color
+            selectedColour = color
         } label: {
             Image(systemName: "circle.fill")
                 .font(.largeTitle)
@@ -90,7 +90,7 @@ struct InputPane: View {
 
 struct InputPane_Previews: PreviewProvider {
     static var previews: some View {
-        InputPane(lines: .constant([]))
+        InputPane(lines: .constant([]), selectedColour: .constant(.blue))
     }
 }
 

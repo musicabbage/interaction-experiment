@@ -18,6 +18,7 @@ struct InteractLogModel: Codable, Identifiable, Hashable {
     let configId: String
     var familiarisationInput: [InputDataModel] = []
     var stimulusInput: [InputDataModel] = []
+    var stimulusIndex: Int = 0
     
     var state: State {
         //TODO: check return state
@@ -26,7 +27,7 @@ struct InteractLogModel: Codable, Identifiable, Hashable {
         } else if familiarisationInput.isEmpty {
             return .familiarisation
         } else {
-            return .stimulus(stimulusInput.count)
+            return .stimulus(stimulusIndex)
         }
     }
     
@@ -38,10 +39,12 @@ struct InteractLogModel: Codable, Identifiable, Hashable {
     
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.familiarisationInput = try container.decode([InputDataModel].self, forKey: .familiarisationInput)
         self.participantId = try container.decode(String.self, forKey: .participantId)
         self.id = try container.decode(String.self, forKey: .id)
         self.configId = try container.decode(String.self, forKey: .configId)
+        self.familiarisationInput = try container.decode([InputDataModel].self, forKey: .familiarisationInput)
+        self.stimulusInput = try container.decode([InputDataModel].self, forKey: .stimulusInput)
+        self.stimulusIndex = try container.decode(Int.self, forKey: .stimulusIndex)
     }
     
     static func == (lhs: InteractLogModel, rhs: InteractLogModel) -> Bool {
