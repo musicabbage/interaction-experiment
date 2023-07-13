@@ -64,12 +64,7 @@ class ExperimentViewModel: ExperimentViewModelProtocol {
         if experiment.stimulusIndex < configuration.stimulusImages.count {
             showStimulus()
         } else {
-            do {
-                try saveExperiment()
-                viewStateSubject.send(.endTrial)
-            } catch {
-                viewStateSubject.send(.error("save experiment error...\n \(error.localizedDescription)"))
-            }
+            endTrial()
         }
     }
     
@@ -119,7 +114,6 @@ private extension ExperimentViewModel {
             }
             
             appendLogAction(.stimulus(true, configuration.stimulusImages[index]))
-            experiment.stimulusInput.append(.init())
             if let image = fetchImage(index: index) {
                 viewStateSubject.send(.showStimulus(image))
             } else {
@@ -150,19 +144,6 @@ private extension ExperimentViewModel {
         }
         
         return UIImage(data: imageData)
-    }
-    
-    func saveExperiment() throws {
-        var isDirectory = ObjCBool(false)
-        let folderURL = FileManager.experimentsDirectory
-        let fileExisted = FileManager.default.fileExists(atPath: folderURL.path(), isDirectory: &isDirectory)
-        if !(fileExisted && isDirectory.boolValue) {
-            try FileManager.default.createDirectory(at: folderURL, withIntermediateDirectories: true)
-        }
-        
-        //encode configurations
-        let configurationData = try JSONEncoder().encode(experiment)
-        try configurationData.write(to: folderURL.appendingPathComponent(experiment.id))
     }
     
     func endTrial() {
@@ -204,12 +185,6 @@ private extension ExperimentViewModel {
         try configurationData.write(to: folderURL.appendingPathComponent(InteractLogModel.filename))
         //log
         try writer.write(log: experiment, configurations: configuration, toFolder: folderURL)
-    }
-    
-    func saveExperiment(toFolder folderURL: URL) throws {
-        //encode configurations
-        let configurationData = try JSONEncoder().encode(experiment)
-        try configurationData.write(to: folderURL.appendingPathComponent(experiment.id))
     }
 }
 

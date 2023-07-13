@@ -87,7 +87,7 @@ private extension GestureView {
         switch gesture.state {
         case .began:
             panClosure(.began, translation)
-        case .cancelled:
+        case .ended:
             panClosure(.end, translation)
         case .changed:
             panClosure(.update, translation)

@@ -40,7 +40,7 @@ struct ExperimentView: View {
             if showDrawing {
                 GeometryReader { geo in
                     ZStack {
-                        InputPane(lines: $lines, drawingActions: $drawingActions, selectedColour: $strokeColour)
+                        InputPane(lines: $lines, selectedColour: $strokeColour)
                         ExperimentGestureView()
                             .onDrag { state, point in
                                 switch state {
@@ -52,7 +52,7 @@ struct ExperimentView: View {
                                     }
                                     lines[lastIdx].points.append(point)
                                 case .end:
-                                    break
+                                    snapShot(size: geo.size)
                                 }
                             }
                             .onTwoFingersSwipe { direction in
@@ -60,7 +60,13 @@ struct ExperimentView: View {
                                 switch direction {
                                 case .left:
                                     //next stimulus
-                                    viewModel.showNextStimulus()
+                                    if viewModel.experiment.state == .familiarisation {
+                                        viewModel.appendFamiliarisationInputs(drawingActions)
+                                        finishClosure()
+                                    } else {
+                                        viewModel.appendStimulusInputs(drawingActions)
+                                        viewModel.showNextStimulus()
+                                    }
                                 case .right:
                                     //previous stimulus
                                     stimulusTabIndex -= 1
@@ -69,7 +75,6 @@ struct ExperimentView: View {
                                     guard let lastDrawing = lines.last?.points.last else { return }
                                     let action = LogAction.drawing(false, lastDrawing.x, lastDrawing.y)
                                     viewModel.appendLogAction(action)
-                                    snapShot(size: geo.size)
                                     break
                                 }
                             }
@@ -137,7 +142,7 @@ extension ExperimentView {
 private extension ExperimentView {
     @MainActor
     func snapShot(size: CGSize) {
-        let canvas = InputPane(lines: $lines, drawingActions: $drawingActions, selectedColour: $strokeColour)
+        let canvas = InputPane(lines: $lines, selectedColour: $strokeColour)
             .frame(width: size.width, height: size.height)
         let renderer = ImageRenderer(content: canvas)
 
