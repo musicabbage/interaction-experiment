@@ -14,7 +14,7 @@ protocol ExperimentViewModelProtocol {
     var experiment: InteractLogModel { get }
     var viewState: AnyPublisher<ExperimentViewModel.ViewState, Never> { get }
     
-    func showStimulus()
+    func showNextStimulus()
 }
 
 class ExperimentViewModel: ExperimentViewModelProtocol {
@@ -39,33 +39,44 @@ class ExperimentViewModel: ExperimentViewModelProtocol {
         
         viewStateSubject = .init(.none)
         viewState = viewStateSubject.eraseToAnyPublisher()
-        if let image = fetchImage() {
+        if let image = fetchImage(index: experiment.stimulusIndex) {
             viewStateSubject.send(.showStimulus(image))
         } else {
             viewStateSubject.send(.error("cannot find the image..."))
         }
     }
     
-    func showStimulus() {
+    func showNextStimulus() {
+        guard case .stimulus = experiment.state else {
+            showStimulus()
+            return
+        }
         
+        experiment.stimulusIndex += 1
+        if experiment.stimulusIndex < configuration.stimulusImages.count {
+            showStimulus()
+        } else {
+            do {
+                try saveExperiment()
+                viewStateSubject.send(.endTrial)
+            } catch {
+                viewStateSubject.send(.error("save experiment error...\n \(error.localizedDescription)"))
+            }
+        }
+    }
+}
+
+private extension ExperimentViewModel {
+    
+    func showStimulus() {
         // TODO: append real InputData
         switch experiment.state {
         case .familiarisation:
             experiment.familiarisationInput.append(.init())
             viewStateSubject.send(.endFamiliarisation)
         case let .stimulus(index):
-            guard experiment.stimulusInput.count < configuration.stimulusImages.count else {
-                do {
-                    try saveExperiment()
-                    viewStateSubject.send(.endTrial)
-                } catch {
-                    viewStateSubject.send(.error("save experiment error...\n \(error.localizedDescription)"))
-                }
-                return
-            }
-            
             experiment.stimulusInput.append(.init())
-            if let image = fetchImage() {
+            if let image = fetchImage(index: index) {
                 viewStateSubject.send(.showStimulus(image))
             } else if index >= configuration.stimulusImages.count {
                 viewStateSubject.send(.endTrial)
@@ -76,18 +87,15 @@ class ExperimentViewModel: ExperimentViewModelProtocol {
             break
         }
     }
-}
-
-private extension ExperimentViewModel {
-    func fetchImage() -> UIImage? {
+    
+    func fetchImage(index: Int) -> UIImage? {
         var imageName: String?
         switch experiment.state {
         case .familiarisation:
             imageName = configuration.familiarImages.first
-        case let .stimulus(index):
-            if index < configuration.stimulusImages.count {
-                imageName = configuration.stimulusImages[index]
-            }
+        case .stimulus:
+            guard 0..<configuration.stimulusImages.count ~= index else { break }
+            imageName = configuration.stimulusImages[index]
         default:
             break
         }
