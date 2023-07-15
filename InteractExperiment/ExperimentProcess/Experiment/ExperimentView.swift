@@ -7,21 +7,23 @@
 
 import SwiftUI
 
+extension Int {
+    static let HideStimulusIndex: Int = -1
+}
+
 struct ExperimentView: View {
     typealias LogAction = InteractLogModel.ActionModel.Action
     
     @State private var image: UIImage?
-    @State private var showDrawing: Bool = false
     @State private var lines: [Line] = []
     @State private var strokeColour: Color = .black
     @State private var stimulus: [UIImage] = []
-    @State private var stimulusTabIndex: Int = 0
+    @State private var stimulusTabIndex: Int = .HideStimulusIndex
     @State private var drawingActions: [LineAction] = []
     @State private var showLoading: Bool = false
     @Environment(\.displayScale) var displayScale
     
     private let viewModel: ExperimentViewModelProtocol
-    private let gesture = MagnificationGesture()
     var finishClosure: (() -> Void) = { }
     
     init(viewModel: ExperimentViewModelProtocol) {
@@ -37,7 +39,7 @@ struct ExperimentView: View {
                     .clipShape(RoundedRectangle(cornerSize: .init(width: 8, height: 8)))
                     .shadow(radius: 8)
             }
-            if showDrawing {
+            if stimulusTabIndex == .HideStimulusIndex {
                 GeometryReader { geo in
                     ZStack {
                         InputPane(lines: $lines, selectedColour: $strokeColour)
@@ -53,10 +55,12 @@ struct ExperimentView: View {
                                     lines[lastIdx].points.append(point)
                                 case .end:
                                     snapShot(size: geo.size)
+                                    guard let lastDrawing = lines.last?.points.last else { return }
+                                    let action = LogAction.drawing(false, lastDrawing.x, lastDrawing.y)
+                                    viewModel.appendLogAction(action)
                                 }
                             }
                             .onTwoFingersSwipe { direction in
-                                showDrawing = false
                                 switch direction {
                                 case .left:
                                     //next stimulus
@@ -66,16 +70,14 @@ struct ExperimentView: View {
                                     } else {
                                         viewModel.appendStimulusInputs(drawingActions)
                                         viewModel.showNextStimulus()
+                                        stimulusTabIndex = viewModel.experiment.stimulusIndex
                                     }
                                 case .right:
                                     //previous stimulus
-                                    stimulusTabIndex -= 1
+                                    stimulusTabIndex = viewModel.experiment.stimulusIndex - 1
                                 case .up:
                                     //do nothing
-                                    guard let lastDrawing = lines.last?.points.last else { return }
-                                    let action = LogAction.drawing(false, lastDrawing.x, lastDrawing.y)
-                                    viewModel.appendLogAction(action)
-                                    break
+                                    stimulusTabIndex = viewModel.experiment.stimulusIndex
                                 }
                             }
                     }
@@ -87,8 +89,7 @@ struct ExperimentView: View {
                             .resizable()
                             .scaledToFit()
                             .onTapGesture {
-                                showDrawing = true
-                                stimulusTabIndex = viewModel.experiment.stimulusIndex
+                                stimulusTabIndex = .HideStimulusIndex
                             }
                             .tag(index)
                     }
@@ -101,21 +102,10 @@ struct ExperimentView: View {
                 viewModel.appendLogAction(.drawingEnabled)
             }
         }
-        .onChange(of: showDrawing, perform: { isShow in
-            guard isShow else { return }
-            if viewModel.experiment.state == .familiarisation {
-                let fileName = viewModel.configuration.familiarImages.first ?? ""
-                viewModel.appendLogAction(.familiarisation(false, fileName))
-            } else if case let .stimulus(index) = viewModel.experiment.state {
-                let fileName = viewModel.configuration.stimulusImages[index]
-                viewModel.appendLogAction(.stimulus(false, fileName))
-            }
-        })
         .onReceive(viewModel.viewState) { viewState in
             switch viewState {
-            case let .showStimulus(image):
+            case let .showNextStimulus(image):
                 showLoading = false
-                showDrawing = false
                 stimulus.append(image)
                 stimulusTabIndex = stimulus.count - 1
             case .endFamiliarisation, .endTrial:
@@ -126,6 +116,18 @@ struct ExperimentView: View {
             default:
                 showLoading = false
                 break
+            }
+        }
+        .onChange(of: stimulusTabIndex) { [oldIndex = stimulusTabIndex] stimulusIndex_new in
+            let isOn = stimulusIndex_new != .HideStimulusIndex
+            let imageIndex = isOn ? stimulusIndex_new : oldIndex
+            if viewModel.experiment.state == .familiarisation,
+                let filename = viewModel.configuration.familiarImages.last {
+                viewModel.appendLogAction(.familiarisation(isOn, filename))
+            } else if case .stimulus = viewModel.experiment.state,
+                      imageIndex < viewModel.configuration.stimulusImages.count {
+                let fileName = viewModel.configuration.stimulusImages[imageIndex]
+                viewModel.appendLogAction(.stimulus(isOn, fileName))
             }
         }
     }

@@ -26,7 +26,7 @@ class ExperimentViewModel: ExperimentViewModelProtocol {
     enum ViewState {
         case none
         case loading
-        case showStimulus(UIImage)
+        case showNextStimulus(UIImage)
         case endFamiliarisation
         case endTrial
         case error(String)
@@ -48,7 +48,7 @@ class ExperimentViewModel: ExperimentViewModelProtocol {
         viewStateSubject = .init(.none)
         viewState = viewStateSubject.receive(on: DispatchQueue.main).eraseToAnyPublisher()
         if let image = fetchImage(index: experiment.stimulusIndex) {
-            viewStateSubject.send(.showStimulus(image))
+            viewStateSubject.send(.showNextStimulus(image))
         } else {
             viewStateSubject.send(.error("cannot find the image..."))
         }
@@ -56,13 +56,13 @@ class ExperimentViewModel: ExperimentViewModelProtocol {
     
     func showNextStimulus() {
         guard case .stimulus = experiment.state else {
-            showStimulus()
+            fetchNextStimulus()
             return
         }
         
         experiment.stimulusIndex += 1
         if experiment.stimulusIndex < configuration.stimulusImages.count {
-            showStimulus()
+            fetchNextStimulus()
         } else {
             endTrial()
         }
@@ -101,8 +101,7 @@ class ExperimentViewModel: ExperimentViewModelProtocol {
 }
 
 private extension ExperimentViewModel {
-    
-    func showStimulus() {
+    func fetchNextStimulus() {
         // TODO: append real InputData
         switch experiment.state {
         case .familiarisation:
@@ -113,9 +112,8 @@ private extension ExperimentViewModel {
                 return
             }
             
-            appendLogAction(.stimulus(true, configuration.stimulusImages[index]))
             if let image = fetchImage(index: index) {
-                viewStateSubject.send(.showStimulus(image))
+                viewStateSubject.send(.showNextStimulus(image))
             } else {
                 viewStateSubject.send(.error("fetch image failed"))
             }
@@ -163,7 +161,6 @@ private extension ExperimentViewModel {
         let writer = InteractLogWriter()
         let folderURL = FileManager.experimentsDirectory.appending(path: experiment.id)
         var isDirectory = ObjCBool(false)
-        
         let fileExisted = FileManager.default.fileExists(atPath: folderURL.path(), isDirectory: &isDirectory)
         if !(fileExisted && isDirectory.boolValue) {
             try FileManager.default.createDirectory(at: folderURL, withIntermediateDirectories: true)
@@ -178,7 +175,6 @@ private extension ExperimentViewModel {
             try imageData.write(to: folderURL.appending(path: filename))
             experiment.finalSnapshotName = filename
         }
-        
         
         //raw data
         let configurationData = try JSONEncoder().encode(experiment)
