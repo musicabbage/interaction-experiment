@@ -16,8 +16,8 @@ protocol ExperimentViewModelProtocol {
     
     func showNextStimulus()
     func appendSnapshot(image: UIImage)
-    func appendFamiliarisationInputs(_ inputs: [LineAction])
-    func appendStimulusInputs(_ inputs: [LineAction])
+    func appendFamiliarisationInputs(_ inputs: [InteractLogModel.ActionModel])
+    func appendStimulusInputs(_ inputs: [InteractLogModel.ActionModel])
     func appendLogAction(_ action: InteractLogModel.ActionModel.Action)
 }
 
@@ -72,22 +72,12 @@ class ExperimentViewModel: ExperimentViewModelProtocol {
         experiment.append(action: .init(action: action))
     }
     
-    func appendFamiliarisationInputs(_ inputs: [LineAction]) {
-        let actions = inputs.map { input in
-            let action = InteractLogModel.ActionModel.Action.drawing(input.isStart, input.point.x, input.point.y)
-            return InteractLogModel.ActionModel(action: action)
-        }
-        experiment.familiarisationInput.append(actions)
-        actions.forEach { appendLogAction($0.action) }
+    func appendFamiliarisationInputs(_ inputs: [InteractLogModel.ActionModel]) {
+        experiment.familiarisationInput.append(inputs)
     }
     
-    func appendStimulusInputs(_ inputs: [LineAction]) {
-        let actions = inputs.map { input in
-            let action = InteractLogModel.ActionModel.Action.drawing(input.isStart, input.point.x, input.point.y)
-            return InteractLogModel.ActionModel(action: action)
-        }
-        experiment.stimulusInput.append(actions)
-        actions.forEach { appendLogAction($0.action) }
+    func appendStimulusInputs(_ inputs: [InteractLogModel.ActionModel]) {
+        experiment.stimulusInput.append(inputs)
     }
     
     func appendSnapshot(image: UIImage) {

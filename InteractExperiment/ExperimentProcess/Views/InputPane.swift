@@ -12,11 +12,6 @@ struct Line {
     var color: Color
 }
 
-struct LineAction: Equatable {
-    let isStart: Bool
-    let point: CGPoint
-}
-
 struct InputPane: View {
     typealias DrawingAction = InteractLogModel.ActionModel.Action
     

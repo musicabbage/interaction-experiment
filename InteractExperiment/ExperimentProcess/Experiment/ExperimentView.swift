@@ -19,7 +19,6 @@ struct ExperimentView: View {
     @State private var strokeColour: Color = .black
     @State private var stimulus: [UIImage] = []
     @State private var stimulusTabIndex: Int = .HideStimulusIndex
-    @State private var drawingActions: [LineAction] = []
     @State private var showLoading: Bool = false
     @Environment(\.displayScale) var displayScale
     
@@ -48,6 +47,7 @@ struct ExperimentView: View {
                                 switch state {
                                 case .began:
                                     lines.append(Line(points: [point], color: strokeColour))
+                                    viewModel.appendLogAction(.drawing(true, point.x, point.y))
                                 case .update:
                                     guard let lastIdx = lines.indices.last else {
                                         break
@@ -55,9 +55,7 @@ struct ExperimentView: View {
                                     lines[lastIdx].points.append(point)
                                 case .end:
                                     snapShot(size: geo.size)
-                                    guard let lastDrawing = lines.last?.points.last else { return }
-                                    let action = LogAction.drawing(false, lastDrawing.x, lastDrawing.y)
-                                    viewModel.appendLogAction(action)
+                                    viewModel.appendLogAction(.drawing(false, point.x, point.y))
                                 }
                             }
                             .onTwoFingersSwipe { direction in
@@ -65,10 +63,10 @@ struct ExperimentView: View {
                                 case .left:
                                     //next stimulus
                                     if viewModel.experiment.state == .familiarisation {
-                                        viewModel.appendFamiliarisationInputs(drawingActions)
+                                        viewModel.appendFamiliarisationInputs([])
                                         finishClosure()
                                     } else {
-                                        viewModel.appendStimulusInputs(drawingActions)
+                                        viewModel.appendStimulusInputs([])
                                         viewModel.showNextStimulus()
                                         stimulusTabIndex = viewModel.experiment.stimulusIndex
                                     }
