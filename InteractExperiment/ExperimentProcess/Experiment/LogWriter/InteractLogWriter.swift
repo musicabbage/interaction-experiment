@@ -33,7 +33,7 @@ struct InteractLogWriter: LogWriterProtocol {
         logString.append("Stimulus Files       :\(imageFileNames(configurations.stimulusImages))\n")
         logString.append("Familiarisation File :\(imageFileNames(configurations.familiarImages))\n")
         logString.append("Input Mask File      :\("")\n")
-        logString.append("Drawing Pad Size     :\("")\n")
+        logString.append("Drawing Pad Size     :\(log.drawingPadSize.width),\(log.drawingPadSize.height)\n")
         logString.append("Trial Number         :\(log.trialNumber)\n")
         if let trialStart = log.trialStart {
             logString.append("Trial Start          :\(dateFormatter.string(from: trialStart))\n")

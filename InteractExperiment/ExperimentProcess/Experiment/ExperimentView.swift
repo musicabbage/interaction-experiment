@@ -42,6 +42,9 @@ struct ExperimentView: View {
                 GeometryReader { geo in
                     ZStack {
                         InputPane(lines: $lines, selectedColour: $strokeColour)
+                            .onAppear {
+                                viewModel.setDrawingPadSize(geo.size)
+                            }
                         ExperimentGestureView()
                             .onDrag { state, point in
                                 switch state {

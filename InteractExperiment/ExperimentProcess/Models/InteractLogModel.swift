@@ -8,6 +8,13 @@
 import Foundation
 import UIKit
 
+extension CGSize : Hashable {
+  public func hash(into hasher: inout Hasher) {
+    hasher.combine(width)
+    hasher.combine(height)
+  }
+}
+
 struct InteractLogModel: Codable, Identifiable, Hashable {
     static let filename: String = "InteractLog.json"
     
@@ -106,13 +113,13 @@ struct InteractLogModel: Codable, Identifiable, Hashable {
     let experimentStart: Date
     private(set) var participantId: String = ""
     private(set) var actions: [ActionModel] = []
+    var drawingPadSize: CGSize = .zero
     var trialStart: Date?
     var trialEnd: Date?
     
     var familiarisationInput: [[ActionModel]] = []
     var stimulusInput: [[ActionModel]] = []
     var stimulusIndex: Int = 0
-
     
     var finalSnapshotName: String = ""
     var snapshots: [ImageModel] = []
@@ -150,6 +157,7 @@ struct InteractLogModel: Codable, Identifiable, Hashable {
         self.trialEnd = try container.decode(Date.self, forKey: .trialEnd)
         self.snapshots = try container.decode([ImageModel].self, forKey: .snapshots)
         self.finalSnapshotName = try container.decode(String.self, forKey: .finalSnapshotName)
+        self.drawingPadSize = try container.decode(CGSize.self, forKey: .drawingPadSize)
     }
     
     static func == (lhs: InteractLogModel, rhs: InteractLogModel) -> Bool {

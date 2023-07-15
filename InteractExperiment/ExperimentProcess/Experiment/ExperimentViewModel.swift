@@ -19,6 +19,7 @@ protocol ExperimentViewModelProtocol {
     func appendFamiliarisationInputs(_ inputs: [InteractLogModel.ActionModel])
     func appendStimulusInputs(_ inputs: [InteractLogModel.ActionModel])
     func appendLogAction(_ action: InteractLogModel.ActionModel.Action)
+    func setDrawingPadSize(_ size: CGSize)
 }
 
 class ExperimentViewModel: ExperimentViewModelProtocol {
@@ -87,6 +88,10 @@ class ExperimentViewModel: ExperimentViewModelProtocol {
         } catch {
             print(error)
         }
+    }
+    
+    func setDrawingPadSize(_ size: CGSize) {
+        experiment.drawingPadSize = size
     }
 }
 
