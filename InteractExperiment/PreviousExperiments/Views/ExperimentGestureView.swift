@@ -10,24 +10,24 @@ import SwiftUI
 
 struct ExperimentGestureView: UIViewRepresentable {
     
-    private var dragClosure: (GestureView.State, CGPoint) -> Void = { _, _ in }
+    private var pencilPanClosure: (GestureView.State, CGPoint) -> Void = { _, _ in }
     private var twoFingersSwipeClosure: (GestureView.SwipeDirection) -> Void = { _ in }
     
     func makeUIView(context: Context) -> GestureView {
         let gestureView = GestureView()
-        gestureView.panClosure = dragClosure
+        gestureView.pencilPanClosure = pencilPanClosure
         gestureView.swipeClosure = twoFingersSwipeClosure
         return gestureView
     }
     
     func updateUIView(_ gestureView: GestureView, context: Context) {
-        gestureView.panClosure = dragClosure
+        gestureView.pencilPanClosure = pencilPanClosure
         gestureView.swipeClosure = twoFingersSwipeClosure
     }
     
-    func onDrag(perform action: @escaping(GestureView.State, CGPoint) -> Void) -> Self {
+    func onPencilDraw(perform action: @escaping(GestureView.State, CGPoint) -> Void) -> Self {
         var copy = self
-        copy.dragClosure = action
+        copy.pencilPanClosure = action
         return copy
     }
     
@@ -47,7 +47,8 @@ class GestureView: UIView {
         case up, left, right
     }
     
-    var panClosure: (State, CGPoint) -> Void = { _, _ in }
+    private var isPencilInput: Bool = false
+    var pencilPanClosure: (State, CGPoint) -> Void = { _, _ in }
     var swipeClosure: (SwipeDirection) -> Void = { _ in }
     
     override init(frame: CGRect) {
@@ -61,6 +62,11 @@ class GestureView: UIView {
         addGestureRecognizer(createSwipeGesture(direction: .up))
         addGestureRecognizer(createSwipeGesture(direction: .right))
         addGestureRecognizer(createSwipeGesture(direction: .left))
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesBegan(touches, with: event)
+        isPencilInput = touches.first?.type == .pencil
     }
     
     required init?(coder: NSCoder) {
@@ -83,14 +89,16 @@ private extension GestureView {
     }
     
     @objc func handlePanGesture(_ gesture: UIPanGestureRecognizer) {
+        guard isPencilInput else { return }
+        
         let translation = gesture.location(in: self)
         switch gesture.state {
         case .began:
-            panClosure(.began, translation)
+            pencilPanClosure(.began, translation)
         case .ended:
-            panClosure(.end, translation)
+            pencilPanClosure(.end, translation)
         case .changed:
-            panClosure(.update, translation)
+            pencilPanClosure(.update, translation)
         default:
             break
         }

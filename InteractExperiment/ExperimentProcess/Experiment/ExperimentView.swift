@@ -46,7 +46,7 @@ struct ExperimentView: View {
                                 viewModel.setDrawingPadSize(geo.size)
                             }
                         ExperimentGestureView()
-                            .onDrag { state, point in
+                            .onPencilDraw { state, point in
                                 switch state {
                                 case .began:
                                     lines.append(Line(points: [point], color: strokeColour))
