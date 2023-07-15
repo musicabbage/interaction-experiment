@@ -55,10 +55,6 @@ class GestureView: UIView {
         super.init(frame: frame)
         backgroundColor = .clear
         
-        let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePanGesture(_:)))
-        panGesture.maximumNumberOfTouches = 1
-        addGestureRecognizer(panGesture)
-        
         addGestureRecognizer(createSwipeGesture(direction: .up))
         addGestureRecognizer(createSwipeGesture(direction: .right))
         addGestureRecognizer(createSwipeGesture(direction: .left))
@@ -66,7 +62,29 @@ class GestureView: UIView {
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesBegan(touches, with: event)
+#if targetEnvironment(simulator)
+        isPencilInput = true
+        if let window, let touchCount = event?.touches(for: window)?.count {
+            isPencilInput = touchCount == 1
+        }
+#else
         isPencilInput = touches.first?.type == .pencil
+#endif
+        if isPencilInput, let point = touches.first?.preciseLocation(in: self) {
+            pencilPanClosure(.began, point)
+        }
+    }
+    
+    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesMoved(touches, with: event)
+        guard isPencilInput, let point = touches.first?.preciseLocation(in: self) else { return }
+        pencilPanClosure(.update, point)
+    }
+    
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesMoved(touches, with: event)
+        guard isPencilInput, let point = touches.first?.preciseLocation(in: self) else { return }
+        pencilPanClosure(.end, point)
     }
     
     required init?(coder: NSCoder) {
@@ -83,22 +101,6 @@ private extension GestureView {
             swipeClosure(.right)
         case .left:
             swipeClosure(.left)
-        default:
-            break
-        }
-    }
-    
-    @objc func handlePanGesture(_ gesture: UIPanGestureRecognizer) {
-        guard isPencilInput else { return }
-        
-        let translation = gesture.location(in: self)
-        switch gesture.state {
-        case .began:
-            pencilPanClosure(.began, translation)
-        case .ended:
-            pencilPanClosure(.end, translation)
-        case .changed:
-            pencilPanClosure(.update, translation)
         default:
             break
         }
