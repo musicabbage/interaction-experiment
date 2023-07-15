@@ -10,24 +10,24 @@ import SwiftUI
 
 struct ExperimentGestureView: UIViewRepresentable {
     
-    private var dragClosure: (GestureView.State, CGPoint) -> Void = { _, _ in }
+    private var pencilPanClosure: (GestureView.State, CGPoint) -> Void = { _, _ in }
     private var twoFingersSwipeClosure: (GestureView.SwipeDirection) -> Void = { _ in }
     
     func makeUIView(context: Context) -> GestureView {
         let gestureView = GestureView()
-        gestureView.panClosure = dragClosure
+        gestureView.pencilPanClosure = pencilPanClosure
         gestureView.swipeClosure = twoFingersSwipeClosure
         return gestureView
     }
     
     func updateUIView(_ gestureView: GestureView, context: Context) {
-        gestureView.panClosure = dragClosure
+        gestureView.pencilPanClosure = pencilPanClosure
         gestureView.swipeClosure = twoFingersSwipeClosure
     }
     
-    func onDrag(perform action: @escaping(GestureView.State, CGPoint) -> Void) -> Self {
+    func onPencilDraw(perform action: @escaping(GestureView.State, CGPoint) -> Void) -> Self {
         var copy = self
-        copy.dragClosure = action
+        copy.pencilPanClosure = action
         return copy
     }
     
@@ -47,20 +47,44 @@ class GestureView: UIView {
         case up, left, right
     }
     
-    var panClosure: (State, CGPoint) -> Void = { _, _ in }
+    private var isPencilInput: Bool = false
+    var pencilPanClosure: (State, CGPoint) -> Void = { _, _ in }
     var swipeClosure: (SwipeDirection) -> Void = { _ in }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         backgroundColor = .clear
         
-        let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePanGesture(_:)))
-        panGesture.maximumNumberOfTouches = 1
-        addGestureRecognizer(panGesture)
-        
         addGestureRecognizer(createSwipeGesture(direction: .up))
         addGestureRecognizer(createSwipeGesture(direction: .right))
         addGestureRecognizer(createSwipeGesture(direction: .left))
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesBegan(touches, with: event)
+#if targetEnvironment(simulator)
+        isPencilInput = true
+        if let window, let touchCount = event?.touches(for: window)?.count {
+            isPencilInput = touchCount == 1
+        }
+#else
+        isPencilInput = touches.first?.type == .pencil
+#endif
+        if isPencilInput, let point = touches.first?.preciseLocation(in: self) {
+            pencilPanClosure(.began, point)
+        }
+    }
+    
+    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesMoved(touches, with: event)
+        guard isPencilInput, let point = touches.first?.preciseLocation(in: self) else { return }
+        pencilPanClosure(.update, point)
+    }
+    
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesMoved(touches, with: event)
+        guard isPencilInput, let point = touches.first?.preciseLocation(in: self) else { return }
+        pencilPanClosure(.end, point)
     }
     
     required init?(coder: NSCoder) {
@@ -77,20 +101,6 @@ private extension GestureView {
             swipeClosure(.right)
         case .left:
             swipeClosure(.left)
-        default:
-            break
-        }
-    }
-    
-    @objc func handlePanGesture(_ gesture: UIPanGestureRecognizer) {
-        let translation = gesture.location(in: self)
-        switch gesture.state {
-        case .began:
-            panClosure(.began, translation)
-        case .cancelled:
-            panClosure(.end, translation)
-        case .changed:
-            panClosure(.update, translation)
         default:
             break
         }

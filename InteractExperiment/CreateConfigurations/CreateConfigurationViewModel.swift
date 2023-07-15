@@ -13,6 +13,7 @@ import Combine
 struct ImageInfo: Identifiable {
     let uuid: String = UUID().uuidString
     let image: UIImage
+    let imageName: String
     var id: String { uuid }
 }
 
@@ -39,7 +40,14 @@ class ExperimentImages: ObservableObject, Equatable {
     }
     
     func add(image: UIImage) {
-        images.append(ImageInfo(image: image))
+        let name: String
+        switch type {
+        case .familiarisation:
+            name = "P\(images.count + 1)"
+        case .stimulus:
+            name = "S\(images.count + 1)"
+        }
+        images.append(ImageInfo(image: image, imageName: name))
     }
     
     func remove(indexes: IndexSet) {
@@ -137,16 +145,18 @@ class CreateConfigurationViewModel: CreateConfigurationViewModelProtocol {
             //save images
             if let familiarisationImage = self.familiarImages.images.first,
                let familiarisationImageData = familiarisationImage.image.pngData() {
-                try familiarisationImageData.write(to: folderURL.appending(component: familiarisationImage.uuid))
-                configurations.familiarImages = [familiarisationImage.uuid]
+                let fileName = "\(familiarisationImage.imageName).png"
+                try familiarisationImageData.write(to: folderURL.appending(component: fileName))
+                configurations.familiarImages = [fileName]
             }
             var stimulusList: [String] = []
             try stimulusImages.images.forEach { stimulus in
                 guard let stimulusImageData = stimulus.image.pngData() else {
                     throw CocoaError(.fileWriteUnknown)
                 }
-                try stimulusImageData.write(to: folderURL.appending(component: stimulus.uuid))
-                stimulusList.append(stimulus.uuid)
+                let fileName = "\(stimulus.imageName).png"
+                try stimulusImageData.write(to: folderURL.appending(component: fileName))
+                stimulusList.append(fileName)
             }
             configurations.stimulusImages = stimulusList
             

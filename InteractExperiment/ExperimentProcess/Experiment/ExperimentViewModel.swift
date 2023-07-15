@@ -15,13 +15,19 @@ protocol ExperimentViewModelProtocol {
     var viewState: AnyPublisher<ExperimentViewModel.ViewState, Never> { get }
     
     func showNextStimulus()
+    func appendSnapshot(image: UIImage)
+    func appendFamiliarisationInputs(_ inputs: [InteractLogModel.ActionModel])
+    func appendStimulusInputs(_ inputs: [InteractLogModel.ActionModel])
+    func appendLogAction(_ action: InteractLogModel.ActionModel.Action)
+    func setDrawingPadSize(_ size: CGSize)
 }
 
 class ExperimentViewModel: ExperimentViewModelProtocol {
     
     enum ViewState {
         case none
-        case showStimulus(UIImage)
+        case loading
+        case showNextStimulus(UIImage)
         case endFamiliarisation
         case endTrial
         case error(String)
@@ -36,11 +42,14 @@ class ExperimentViewModel: ExperimentViewModelProtocol {
     init(configuration: ConfigurationModel, experiment: InteractLogModel) {
         self.configuration = configuration
         self.experiment = experiment
+        if experiment.state == .familiarisation {
+            self.experiment.trialStart = Date.now
+        }
         
         viewStateSubject = .init(.none)
-        viewState = viewStateSubject.eraseToAnyPublisher()
+        viewState = viewStateSubject.receive(on: DispatchQueue.main).eraseToAnyPublisher()
         if let image = fetchImage(index: experiment.stimulusIndex) {
-            viewStateSubject.send(.showStimulus(image))
+            viewStateSubject.send(.showNextStimulus(image))
         } else {
             viewStateSubject.send(.error("cannot find the image..."))
         }
@@ -48,38 +57,58 @@ class ExperimentViewModel: ExperimentViewModelProtocol {
     
     func showNextStimulus() {
         guard case .stimulus = experiment.state else {
-            showStimulus()
+            fetchNextStimulus()
             return
         }
         
         experiment.stimulusIndex += 1
         if experiment.stimulusIndex < configuration.stimulusImages.count {
-            showStimulus()
+            fetchNextStimulus()
         } else {
-            do {
-                try saveExperiment()
-                viewStateSubject.send(.endTrial)
-            } catch {
-                viewStateSubject.send(.error("save experiment error...\n \(error.localizedDescription)"))
-            }
+            endTrial()
         }
+    }
+    
+    func appendLogAction(_ action: InteractLogModel.ActionModel.Action) {
+        experiment.append(action: .init(action: action))
+    }
+    
+    func appendFamiliarisationInputs(_ inputs: [InteractLogModel.ActionModel]) {
+        experiment.familiarisationInput.append(inputs)
+    }
+    
+    func appendStimulusInputs(_ inputs: [InteractLogModel.ActionModel]) {
+        experiment.stimulusInput.append(inputs)
+    }
+    
+    func appendSnapshot(image: UIImage) {
+        do {
+            let snapshot = try InteractLogModel.ImageModel(image: image)
+            experiment.snapshots.append(snapshot)
+        } catch {
+            print(error)
+        }
+    }
+    
+    func setDrawingPadSize(_ size: CGSize) {
+        experiment.drawingPadSize = size
     }
 }
 
 private extension ExperimentViewModel {
-    
-    func showStimulus() {
+    func fetchNextStimulus() {
         // TODO: append real InputData
         switch experiment.state {
         case .familiarisation:
-            experiment.familiarisationInput.append(.init())
             viewStateSubject.send(.endFamiliarisation)
         case let .stimulus(index):
-            experiment.stimulusInput.append(.init())
+            guard experiment.stimulusInput.count < configuration.stimulusImages.count else {
+                endTrial()
+                return
+            }
+            
             if let image = fetchImage(index: index) {
-                viewStateSubject.send(.showStimulus(image))
-            } else if index >= configuration.stimulusImages.count {
-                viewStateSubject.send(.endTrial)
+                viewStateSubject.send(.showNextStimulus(image))
             } else {
                 viewStateSubject.send(.error("fetch image failed"))
             }
@@ -87,7 +116,9 @@ private extension ExperimentViewModel {
             break
         }
     }
-    
+}
+
+private extension ExperimentViewModel {
     func fetchImage(index: Int) -> UIImage? {
         var imageName: String?
         switch experiment.state {
@@ -108,17 +139,43 @@ private extension ExperimentViewModel {
         return UIImage(data: imageData)
     }
     
-    func saveExperiment() throws {
+    func endTrial() {
+        viewStateSubject.send(.loading)
+        Task {
+            do {
+                experiment.trialEnd = Date.now
+                try await writeLogFiles()
+                viewStateSubject.send(.endTrial)
+            } catch {
+                viewStateSubject.send(.error("save experiment error...\n \(error.localizedDescription)"))
+            }
+        }
+    }
+    
+    func writeLogFiles() async throws {
+        let writer = InteractLogWriter()
+        let folderURL = FileManager.experimentsDirectory.appending(path: experiment.id)
         var isDirectory = ObjCBool(false)
-        let folderURL = FileManager.experimentsDirectory
         let fileExisted = FileManager.default.fileExists(atPath: folderURL.path(), isDirectory: &isDirectory)
         if !(fileExisted && isDirectory.boolValue) {
             try FileManager.default.createDirectory(at: folderURL, withIntermediateDirectories: true)
         }
         
-        //encode configurations
+        //snapshots
+        for snapshot in experiment.snapshots {
+            guard let imageData = snapshot.image.jpegData(compressionQuality: 0.5) else {
+                continue
+            }
+            let filename = String(describing: "\(Int(snapshot.timestamp)).png")
+            try imageData.write(to: folderURL.appending(path: filename))
+            experiment.finalSnapshotName = filename
+        }
+        
+        //raw data
         let configurationData = try JSONEncoder().encode(experiment)
-        try configurationData.write(to: folderURL.appendingPathComponent(experiment.id))
+        try configurationData.write(to: folderURL.appendingPathComponent(InteractLogModel.filename))
+        //log
+        try writer.write(log: experiment, configurations: configuration, toFolder: folderURL)
     }
 }
 

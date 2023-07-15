@@ -13,6 +13,7 @@ struct Line {
 }
 
 struct InputPane: View {
+    typealias DrawingAction = InteractLogModel.ActionModel.Action
     
     @Binding private var lines: [Line]
     @Binding private var selectedColour: Color
