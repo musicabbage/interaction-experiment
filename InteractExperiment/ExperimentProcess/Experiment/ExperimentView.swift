@@ -20,6 +20,7 @@ struct ExperimentView: View {
     @State private var stimulus: [UIImage] = []
     @State private var stimulusTabIndex: Int = .HideStimulusIndex
     @State private var showLoading: Bool = false
+    @StateObject private var toast: ToastObject = .init()
     @Environment(\.displayScale) var displayScale
     
     private let viewModel: ExperimentViewModelProtocol
@@ -103,6 +104,7 @@ struct ExperimentView: View {
                 viewModel.appendLogAction(.drawingEnabled)
             }
         }
+        .toast(isPresented: $toast.show, type: toast.type, message: toast.message)
         .onReceive(viewModel.viewState) { viewState in
             switch viewState {
             case let .showNextStimulus(image):
@@ -114,6 +116,9 @@ struct ExperimentView: View {
                 finishClosure()
             case .loading:
                 showLoading = true
+            case let .error(message):
+                toast.message = message
+                toast.show = true
             default:
                 showLoading = false
                 break
