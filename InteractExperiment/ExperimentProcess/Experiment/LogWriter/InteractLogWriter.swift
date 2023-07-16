@@ -30,8 +30,9 @@ struct InteractLogWriter: LogWriterProtocol {
         logString.append("Stroke Colour        :\("0,0,0,255")\n")
         logString.append("Background Colour    :\("255,255,255,255")\n")
         logString.append("Stroke Width         :\("1")\n")
-        logString.append("Stimulus Files       :\(imageFileNames(configurations.stimulusImages))\n")
-        logString.append("Familiarisation File :\(imageFileNames(configurations.familiarImages))\n")
+        for phase in configurations.phases {
+            logString.append("\(phase.name) Files       :\(imageFileNames(phase.images))\n")
+        }
         logString.append("Input Mask File      :\("")\n")
         logString.append("Drawing Pad Size     :\(log.drawingPadSize.width),\(log.drawingPadSize.height)\n")
         logString.append("Trial Number         :\(log.trialNumber)\n")
@@ -54,9 +55,9 @@ struct InteractLogWriter: LogWriterProtocol {
             let actionString: String
             switch model.action {
             case let .drawing(_, x, y):
-                actionString = String(format: "%03d;%d;%.1f;%.1f;%@\n", index, model.timestamp, x, y, model.action.key)
+                actionString = String(format: "%03d;%f;%.1f;%.1f;%@\n", index, model.timestamp, x, y, model.action.key)
             default:
-                actionString = String(format: "%03d;%d;0;0;%@\n", index, model.timestamp, model.action.key)
+                actionString = String(format: "%03d;%f;0;0;%@\n", index, model.timestamp, model.action.key)
             }
             logString.append(actionString)
         }

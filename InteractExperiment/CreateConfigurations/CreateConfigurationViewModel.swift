@@ -143,12 +143,18 @@ class CreateConfigurationViewModel: CreateConfigurationViewModelProtocol {
                 try FileManager.default.createDirectory(at: folderURL, withIntermediateDirectories: true)
             }
             //save images
+            var familiarList: [String] = []
             if let familiarisationImage = self.familiarImages.images.first,
                let familiarisationImageData = familiarisationImage.image.pngData() {
                 let fileName = "\(familiarisationImage.imageName).png"
                 try familiarisationImageData.write(to: folderURL.appending(component: fileName))
-                configurations.familiarImages = [fileName]
+                familiarList.append(fileName)
+                
+                var familiarisationPhase = ConfigurationModel.PhaseModel(name: "Familiarisation")
+                familiarisationPhase.images = familiarList
+                configurations.phases.append(familiarisationPhase)
             }
+            
             var stimulusList: [String] = []
             try stimulusImages.images.forEach { stimulus in
                 guard let stimulusImageData = stimulus.image.pngData() else {
@@ -158,7 +164,9 @@ class CreateConfigurationViewModel: CreateConfigurationViewModelProtocol {
                 try stimulusImageData.write(to: folderURL.appending(component: fileName))
                 stimulusList.append(fileName)
             }
-            configurations.stimulusImages = stimulusList
+            var stimulusPhase = ConfigurationModel.PhaseModel(name: "Stimulus")
+            stimulusPhase.images = stimulusList
+            configurations.phases.append(stimulusPhase)
             
             //encode configurations
             let configurationData = try JSONEncoder().encode(configurations)

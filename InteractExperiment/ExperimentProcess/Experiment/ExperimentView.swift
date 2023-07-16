@@ -24,7 +24,7 @@ struct ExperimentView: View {
     @Environment(\.displayScale) var displayScale
     
     private let viewModel: ExperimentViewModelProtocol
-    var finishClosure: (() -> Void) = { }
+    var finishClosure: ((ConfigurationModel, InteractLogModel) -> Void) = { _,_ in }
     
     init(viewModel: ExperimentViewModelProtocol) {
         self.viewModel = viewModel
@@ -65,15 +65,8 @@ struct ExperimentView: View {
                             .onTwoFingersSwipe { direction in
                                 switch direction {
                                 case .left:
-                                    //next stimulus
-                                    if viewModel.experiment.state == .familiarisation {
-                                        viewModel.appendFamiliarisationInputs([])
-                                        finishClosure()
-                                    } else {
-                                        viewModel.appendStimulusInputs([])
-                                        viewModel.showNextStimulus()
-                                        stimulusTabIndex = viewModel.experiment.stimulusIndex
-                                    }
+                                    viewModel.showNextStimulus()
+                                    stimulusTabIndex = viewModel.experiment.stimulusIndex
                                 case .right:
                                     //previous stimulus
                                     stimulusTabIndex = viewModel.experiment.stimulusIndex - 1
@@ -100,22 +93,22 @@ struct ExperimentView: View {
             }
         }
         .onAppear {
-            if viewModel.experiment.state == .familiarisation {
+            if viewModel.experiment.phaseIndex == 0 && viewModel.experiment.stimulusIndex == 0 {
                 viewModel.appendLogAction(.drawingEnabled)
             }
         }
         .toast(isPresented: $toast.show, type: toast.type, message: toast.message)
         .onReceive(viewModel.viewState) { viewState in
             switch viewState {
+            case .loading:
+                showLoading = true
             case let .showNextStimulus(image):
                 showLoading = false
                 stimulus.append(image)
                 stimulusTabIndex = stimulus.count - 1
-            case .endFamiliarisation, .endTrial:
+            case .endPhase, .endTrial:
                 showLoading = false
-                finishClosure()
-            case .loading:
-                showLoading = true
+                finishClosure(viewModel.configuration, viewModel.experiment)
             case let .error(message):
                 toast.message = message
                 toast.show = true
@@ -127,20 +120,14 @@ struct ExperimentView: View {
         .onChange(of: stimulusTabIndex) { [oldIndex = stimulusTabIndex] stimulusIndex_new in
             let isOn = stimulusIndex_new != .HideStimulusIndex
             let imageIndex = isOn ? stimulusIndex_new : oldIndex
-            if viewModel.experiment.state == .familiarisation,
-                let filename = viewModel.configuration.familiarImages.last {
-                viewModel.appendLogAction(.familiarisation(isOn, filename))
-            } else if case .stimulus = viewModel.experiment.state,
-                      imageIndex < viewModel.configuration.stimulusImages.count {
-                let fileName = viewModel.configuration.stimulusImages[imageIndex]
-                viewModel.appendLogAction(.stimulus(isOn, fileName))
-            }
+            guard let phase = viewModel.currentPhase, phase.images.count > imageIndex else { return }
+            viewModel.appendLogAction(.stimulusDisplay(isShow: isOn, phaseName: phase.name, fileName: phase.images[imageIndex]))
         }
     }
 }
 
 extension ExperimentView {
-    func onFinished(perform action: @escaping() -> Void) -> Self {
+    func onFinished(perform action: @escaping(ConfigurationModel, InteractLogModel) -> Void) -> Self {
         var copy = self
         copy.finishClosure = action
         return copy

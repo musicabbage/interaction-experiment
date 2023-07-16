@@ -20,22 +20,11 @@ struct ExperimentCoordinator: View {
     
     var body: some View {
         ExperimentView(viewModel: viewModel)
-            .onFinished(perform: {
-                switch viewModel.experiment.state {
-                case .instruction, .familiarisation:
-                    let configurations = viewModel.configuration
-                    let experiment = viewModel.experiment
+            .onFinished(perform: { configurations, experiment in
+                if experiment.phaseIndex >= configurations.phases.count {
+                    state.path.append(ExperimentFlowLink.endTrial(configurations, experiment))
+                } else {
                     state.path.append(ExperimentFlowLink.stimulus(configurations, experiment))
-                case let .stimulus(index):
-                    let configurations = viewModel.configuration
-                    let experiment = viewModel.experiment
-                    if index == 0 {
-                        state.path.append(ExperimentFlowLink.stimulus(configurations, experiment))
-                    } else if index >= configurations.stimulusImages.count {
-                        state.path.append(ExperimentFlowLink.endTrial(configurations, experiment))
-                    }
-                default:
-                    break
                 }
             })
             .toolbar(.hidden, for: .navigationBar)

@@ -30,9 +30,10 @@ struct PreviousExperimentItemView: View {
                         Spacer()
                         Text(experiment.participantId)
                     }
-                    PreviousExperimentImageListView(title: "Familiarisation", images: experiment.familiarisationsImages)
-                        .padding([.vertical], 2)
-                    PreviousExperimentImageListView(title: "Stimulus (\(experiment.stimulusImages.count))", images: experiment.stimulusImages)
+                    ForEach(0..<experiment.phases.count, id: \.self) { index in
+                        PreviousExperimentImageListView(title: experiment.phases[index].first!.key, images: experiment.phases[index].first!.value)
+                                                .padding([.vertical], 2)
+                    }
                 }
                 VStack {
                     Button("Use", action: {
