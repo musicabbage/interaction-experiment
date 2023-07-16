@@ -74,6 +74,8 @@ struct InteractLogWriter: LogWriterProtocol {
 
 private extension InteractLogWriter {
     func imageFileNames(_ images: [String]) -> String {
+        guard !images.isEmpty else { return "" }
+        
         var result = images.reduce("") { $0 + $1 + "," }
         result.removeLast()
         return result
