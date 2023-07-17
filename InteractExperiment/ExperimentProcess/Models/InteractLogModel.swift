@@ -120,8 +120,6 @@ struct InteractLogModel: Codable, Identifiable, Hashable {
     var trialStart: Date?
     var trialEnd: Date?
     
-    var familiarisationInput: [[ActionModel]] = []
-    var stimulusInput: [[ActionModel]] = []
     var stimulusIndex: Int = 0
     var phaseIndex: Int = 0
     
@@ -138,8 +136,6 @@ struct InteractLogModel: Codable, Identifiable, Hashable {
     
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.familiarisationInput = try container.decode([[ActionModel]].self, forKey: .familiarisationInput)
-        self.stimulusInput = try container.decode([[ActionModel]].self, forKey: .stimulusInput)
         self.participantId = try container.decode(String.self, forKey: .participantId)
         self.id = try container.decode(String.self, forKey: .id)
         self.configId = try container.decode(String.self, forKey: .configId)

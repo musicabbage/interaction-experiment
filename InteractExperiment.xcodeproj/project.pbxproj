@@ -17,7 +17,6 @@
 		8B2C0F6B2A54A04C00CE75AC /* LogWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B2C0F6A2A54A04C00CE75AC /* LogWriter.swift */; };
 		8B2C0F6D2A54A21900CE75AC /* InteractLogWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B2C0F6C2A54A21900CE75AC /* InteractLogWriter.swift */; };
 		8B2C0F6F2A54A46D00CE75AC /* DateFormatterExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B2C0F6E2A54A46D00CE75AC /* DateFormatterExtensions.swift */; };
-		8B2E59D82A33679700726D6C /* ExperimentImageListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B2E59D72A33679700726D6C /* ExperimentImageListView.swift */; };
 		8B5ACB882A2E0452002F5AA9 /* FileManagerExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B5ACB872A2E0452002F5AA9 /* FileManagerExtensions.swift */; };
 		8B604D112A587AF200E1AEE7 /* PreviousExperimentsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B604D102A587AF200E1AEE7 /* PreviousExperimentsView.swift */; };
 		8B62488E2A5CB5F4007C52F2 /* ExperimentGestureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B62488D2A5CB5F4007C52F2 /* ExperimentGestureView.swift */; };
@@ -72,7 +71,6 @@
 		8B2C0F6A2A54A04C00CE75AC /* LogWriter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogWriter.swift; sourceTree = "<group>"; };
 		8B2C0F6C2A54A21900CE75AC /* InteractLogWriter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InteractLogWriter.swift; sourceTree = "<group>"; };
 		8B2C0F6E2A54A46D00CE75AC /* DateFormatterExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFormatterExtensions.swift; sourceTree = "<group>"; };
-		8B2E59D72A33679700726D6C /* ExperimentImageListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExperimentImageListView.swift; sourceTree = "<group>"; };
 		8B5ACB872A2E0452002F5AA9 /* FileManagerExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileManagerExtensions.swift; sourceTree = "<group>"; };
 		8B604D102A587AF200E1AEE7 /* PreviousExperimentsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviousExperimentsView.swift; sourceTree = "<group>"; };
 		8B62488D2A5CB5F4007C52F2 /* ExperimentGestureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExperimentGestureView.swift; sourceTree = "<group>"; };
@@ -234,7 +232,6 @@
 			isa = PBXGroup;
 			children = (
 				8BADE4332A2D12720087C74D /* ImageItemView.swift */,
-				8B2E59D72A33679700726D6C /* ExperimentImageListView.swift */,
 				8BA143152A647986008D8AB4 /* ExperimentPhaseSectionView.swift */,
 			);
 			path = Views;
@@ -426,7 +423,6 @@
 				8BE6C0F72A4C6AE000B3C8E2 /* StartExperimentFlowState.swift in Sources */,
 				8BE8087E2A23A7820057CC35 /* ConfigurationsView.swift in Sources */,
 				8B05BE122A655CD7001220D2 /* ExperimentImagesModel.swift in Sources */,
-				8B2E59D82A33679700726D6C /* ExperimentImageListView.swift in Sources */,
 				8B2C0F6D2A54A21900CE75AC /* InteractLogWriter.swift in Sources */,
 				8B905C352A49CB68006A9A53 /* ExperimentCoordinator.swift in Sources */,
 				8BB3659E2A1F9F2400DE2B5C /* InteractExperimentApp.swift in Sources */,

@@ -17,8 +17,6 @@ protocol ExperimentViewModelProtocol {
     
     func showNextStimulus()
     func appendSnapshot(image: UIImage)
-    func appendFamiliarisationInputs(_ inputs: [InteractLogModel.ActionModel])
-    func appendStimulusInputs(_ inputs: [InteractLogModel.ActionModel])
     func appendLogAction(_ action: InteractLogModel.ActionModel.Action)
     func setDrawingPadSize(_ size: CGSize)
 }
@@ -44,7 +42,6 @@ class ExperimentViewModel: ExperimentViewModelProtocol {
             return nil
         }
         return configuration.phases[experiment.phaseIndex]
-        
     }
     
     init(configuration: ConfigurationModel, experiment: InteractLogModel) {
@@ -76,13 +73,6 @@ class ExperimentViewModel: ExperimentViewModelProtocol {
         experiment.append(action: .init(action: action))
     }
     
-    func appendFamiliarisationInputs(_ inputs: [InteractLogModel.ActionModel]) {
-        experiment.familiarisationInput.append(inputs)
-    }
-    
-    func appendStimulusInputs(_ inputs: [InteractLogModel.ActionModel]) {
-        experiment.stimulusInput.append(inputs)
-    }
     
     func appendSnapshot(image: UIImage) {
         do {

@@ -82,12 +82,6 @@ struct CreateConfigurationView<ViewModel>: View where ViewModel: CreateConfigura
             }
 #endif
         }
-        .alert("Phase Name", isPresented: $showAddPhaseAlert, actions: {
-            TextField("", text: $phaseName)
-                .textInputAutocapitalization(.never)
-            Button("OK") {
-                phases.append(.init(type: .custom(phaseName)))
-            }
         })
         .toast(isPresented: $showErrorToast, type: .error, message: viewModel.currentViewState.message)
         .onReceive(viewModel.viewState) { viewState in
