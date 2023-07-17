@@ -13,11 +13,11 @@ struct CreateConfigurationView<ViewModel>: View where ViewModel: CreateConfigura
     @State private var selectedImage: IndexSet = []
     @State private var showErrorToast: Bool = false
     @State private var instructionText: String = ""
+    @State private var phases: [ExperimentImagesModel]
+    @State private var showAddPhaseSheet: Bool = false
+    @State private var phaseName: String = ""
     @FocusState private var instructionFocused: Bool
     @ObservedObject var flowState: CreateConfigFlowState
-    @State private var phases: [ExperimentImagesModel]
-    @State private var showAddPhaseAlert: Bool = false
-    @State private var phaseName: String = ""
     
     private let viewModel: ViewModel
     
@@ -37,7 +37,7 @@ struct CreateConfigurationView<ViewModel>: View where ViewModel: CreateConfigura
                 }
                 
                 Button("Add Phase") {
-                    showAddPhaseAlert = true
+                    showAddPhaseSheet = true
                 }
                 
                 Section {
@@ -82,6 +82,11 @@ struct CreateConfigurationView<ViewModel>: View where ViewModel: CreateConfigura
             }
 #endif
         }
+        .sheet(isPresented: $showAddPhaseSheet, content: {
+            AddPhaseView()
+                .onSaveAction { phase in
+                    phases.append(phase)
+                }
         })
         .toast(isPresented: $showErrorToast, type: .error, message: viewModel.currentViewState.message)
         .onReceive(viewModel.viewState) { viewState in

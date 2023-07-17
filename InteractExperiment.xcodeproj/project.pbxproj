@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		8B05BE122A655CD7001220D2 /* ExperimentImagesModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B05BE112A655CD7001220D2 /* ExperimentImagesModel.swift */; };
+		8B05BE142A65732B001220D2 /* AddPhaseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B05BE132A65732B001220D2 /* AddPhaseView.swift */; };
 		8B119AC72A46F7900021C564 /* RootCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B119AC62A46F7900021C564 /* RootCoordinator.swift */; };
 		8B13B52D2A51CCEA004E98A8 /* InputDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B13B52C2A51CCEA004E98A8 /* InputDataModel.swift */; };
 		8B152A0E2A43191300D666AF /* CreateConfigurationCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B152A0D2A43191300D666AF /* CreateConfigurationCoordinator.swift */; };
@@ -62,6 +63,7 @@
 
 /* Begin PBXFileReference section */
 		8B05BE112A655CD7001220D2 /* ExperimentImagesModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExperimentImagesModel.swift; sourceTree = "<group>"; };
+		8B05BE132A65732B001220D2 /* AddPhaseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPhaseView.swift; sourceTree = "<group>"; };
 		8B119AC62A46F7900021C564 /* RootCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootCoordinator.swift; sourceTree = "<group>"; };
 		8B13B52C2A51CCEA004E98A8 /* InputDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputDataModel.swift; sourceTree = "<group>"; };
 		8B152A0D2A43191300D666AF /* CreateConfigurationCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateConfigurationCoordinator.swift; sourceTree = "<group>"; };
@@ -146,6 +148,15 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
+		8B2C0F692A54A01800CE75AC /* LogWriter */ = {
+			isa = PBXGroup;
+			children = (
+				8B2C0F6A2A54A04C00CE75AC /* LogWriter.swift */,
+				8B2C0F6C2A54A21900CE75AC /* InteractLogWriter.swift */,
+			);
+			path = LogWriter;
+			sourceTree = "<group>";
+		};
 		8B604D0F2A587AC100E1AEE7 /* PreviousExperiments */ = {
 			isa = PBXGroup;
 			children = (
@@ -155,15 +166,6 @@
 				8BA49F652A59799200148687 /* Models */,
 			);
 			path = PreviousExperiments;
-			sourceTree = "<group>";
-		};
-		8B2C0F692A54A01800CE75AC /* LogWriter */ = {
-			isa = PBXGroup;
-			children = (
-				8B2C0F6A2A54A04C00CE75AC /* LogWriter.swift */,
-				8B2C0F6C2A54A21900CE75AC /* InteractLogWriter.swift */,
-			);
-			path = LogWriter;
 			sourceTree = "<group>";
 		};
 		8B6477F72A267FB60071F582 /* Extensions */ = {
@@ -233,6 +235,7 @@
 			children = (
 				8BADE4332A2D12720087C74D /* ImageItemView.swift */,
 				8BA143152A647986008D8AB4 /* ExperimentPhaseSectionView.swift */,
+				8B05BE132A65732B001220D2 /* AddPhaseView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -431,6 +434,7 @@
 				8B8DFEC02A52FEBF00D8CE5D /* EndExperimentView.swift in Sources */,
 				8B905C372A49CB6F006A9A53 /* ExperimentView.swift in Sources */,
 				8BADE4372A2D18F10087C74D /* ConfigurationModel.swift in Sources */,
+				8B05BE142A65732B001220D2 /* AddPhaseView.swift in Sources */,
 				8B604D112A587AF200E1AEE7 /* PreviousExperimentsView.swift in Sources */,
 				8B19F4722A52099600433112 /* ExperimentFlowState.swift in Sources */,
 				8BADE43A2A2D1C310087C74D /* CreateConfigurationViewModel.swift in Sources */,
