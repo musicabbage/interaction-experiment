@@ -11,13 +11,13 @@ struct ExperimentImageListView: View {
     
     @State private var showPicker: Bool
     @State private var inputImage: UIImage?
-    @ObservedObject private(set) var images: ExperimentImages
+    @ObservedObject private(set) var images: ExperimentImagesModel
     @Binding private(set) var selectedIndexes: IndexSet
     
     private let multiSelect: Bool
     var newImageClosure: ((UIImage) -> Void)?
     
-    init(images: ExperimentImages, selectedImage: Binding<IndexSet>, multiSelect: Bool) {
+    init(images: ExperimentImagesModel, selectedImage: Binding<IndexSet>, multiSelect: Bool) {
         _showPicker = .init(initialValue: false)
         _selectedIndexes = .init(projectedValue: selectedImage)
         self.images = images
