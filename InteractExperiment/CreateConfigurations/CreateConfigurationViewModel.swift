@@ -22,7 +22,7 @@ protocol CreateConfigurationViewModelProtocol {
     var viewState: AnyPublisher<CreateConfigurationViewModel.ViewState, Never> { get }
     var currentViewState: CreateConfigurationViewModel.ViewState { get }
     
-    func appendPhase(images: [ImageInfo], phaseName: String)
+    func appendPhase(images: [ImageInfo], phaseName: String, showStimulusWhenDrawing show: Bool)
     func update(instruction: String)
     func save(asDraft isDraft: Bool)
 }
@@ -62,10 +62,10 @@ class CreateConfigurationViewModel: CreateConfigurationViewModelProtocol {
         self.init(configurations: .init())
     }
     
-    func appendPhase(images: [ImageInfo], phaseName: String) {
+    func appendPhase(images: [ImageInfo], phaseName: String, showStimulusWhenDrawing show: Bool) {
         self.phaseImages[phaseName] = images
         if !configurations.phases.contains(where: { $0.name == phaseName }) {
-            let phase = ConfigurationModel.PhaseModel(name: phaseName)
+            let phase = ConfigurationModel.PhaseModel(name: phaseName, showStimulusWhenDrawing: show)
             configurations.phases.append(phase)
         }
     }

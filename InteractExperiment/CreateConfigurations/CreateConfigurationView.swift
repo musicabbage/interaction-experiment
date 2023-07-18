@@ -110,7 +110,10 @@ struct CreateConfigurationView<ViewModel>: View where ViewModel: CreateConfigura
 private extension CreateConfigurationView {
     func saveConfiguration(asDraft: Bool) {
         for phase in phases {
-            viewModel.appendPhase(images: phase.images, phaseName: phase.name)
+            guard !phase.images.isEmpty else { continue }
+            viewModel.appendPhase(images: phase.images,
+                                  phaseName: phase.name,
+                                  showStimulusWhenDrawing: phase.showStimulusWhenDrawing)
         }
         viewModel.save(asDraft: asDraft)
     }

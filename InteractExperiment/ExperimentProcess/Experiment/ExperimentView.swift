@@ -23,23 +23,39 @@ struct ExperimentView: View {
     @StateObject private var toast: ToastObject = .init()
     @Environment(\.displayScale) var displayScale
     
+    private let showStimulusWhenDrawing: Bool
     private let viewModel: ExperimentViewModelProtocol
     var finishClosure: ((ConfigurationModel, InteractLogModel) -> Void) = { _,_ in }
     
     init(viewModel: ExperimentViewModelProtocol) {
         self.viewModel = viewModel
+        if viewModel.experiment.phaseIndex < viewModel.configuration.phases.count {
+            let phase = viewModel.configuration.phases[viewModel.experiment.phaseIndex]
+            self.showStimulusWhenDrawing = phase.showStimulusWhenDrawing
+        } else {
+            self.showStimulusWhenDrawing = false
+        }
     }
     
     var body: some View {
         ZStack {
-            if showLoading {
-                ProgressView("saving...")
-                    .padding(12)
-                    .background(Color.white)
-                    .clipShape(RoundedRectangle(cornerSize: .init(width: 8, height: 8)))
-                    .shadow(radius: 8)
+            if showStimulusWhenDrawing || (stimulusTabIndex != .HideStimulusIndex) {
+                TabView(selection: $stimulusTabIndex) {
+                    ForEach(0..<stimulus.count, id: \.self) { index in
+                        Image(uiImage: stimulus[index])
+                            .resizable()
+                            .scaledToFit()
+                            .onTapGesture {
+                                guard !showStimulusWhenDrawing else { return }
+                                stimulusTabIndex = .HideStimulusIndex
+                            }
+                            .tag(index)
+                    }
+                }
+                .tabViewStyle(PageTabViewStyle())
             }
-            if stimulusTabIndex == .HideStimulusIndex {
+            
+            if showStimulusWhenDrawing || stimulusTabIndex == .HideStimulusIndex {
                 GeometryReader { geo in
                     ZStack {
                         InputPane(lines: $lines, selectedColour: $strokeColour)
@@ -77,19 +93,14 @@ struct ExperimentView: View {
                             }
                     }
                 }
-            } else if stimulus.count > 0 {
-                TabView(selection: $stimulusTabIndex) {
-                    ForEach(0..<stimulus.count, id: \.self) { index in
-                        Image(uiImage: stimulus[index])
-                            .resizable()
-                            .scaledToFit()
-                            .onTapGesture {
-                                stimulusTabIndex = .HideStimulusIndex
-                            }
-                            .tag(index)
-                    }
-                }
-                .tabViewStyle(PageTabViewStyle())
+            }
+            
+            if showLoading {
+                ProgressView("saving...")
+                    .padding(12)
+                    .background(Color.white)
+                    .clipShape(RoundedRectangle(cornerSize: .init(width: 8, height: 8)))
+                    .shadow(radius: 8)
             }
         }
         .onAppear {

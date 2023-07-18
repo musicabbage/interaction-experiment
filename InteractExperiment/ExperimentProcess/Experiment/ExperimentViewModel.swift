@@ -99,8 +99,10 @@ private extension ExperimentViewModel {
             experiment.phaseIndex += 1
             if experiment.phaseIndex >= configuration.phases.count {
                 endTrial()
-            } else {
+            } else if !configuration.phases[experiment.phaseIndex].images.isEmpty {
                 viewStateSubject.send(.endPhase)
+            } else {
+                showStimulus(at: 0, phase: experiment.phaseIndex + 1)
             }
         } else {
             if let image = fetchImage(index: experiment.stimulusIndex, fromPhase: experiment.phaseIndex) {

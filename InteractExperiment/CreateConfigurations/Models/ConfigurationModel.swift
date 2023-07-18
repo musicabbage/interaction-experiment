@@ -10,13 +10,15 @@ import Foundation
 struct ConfigurationModel: Codable, Identifiable, Hashable {
 
     struct PhaseModel: Codable, Identifiable, Hashable {
-        var id: String
         let name: String
+        let showStimulusWhenDrawing: Bool
+        var id: String
         var images: [String] = []
         
-        init(id: String = UUID().uuidString, name: String) {
+        init(id: String = UUID().uuidString, name: String, showStimulusWhenDrawing: Bool = true) {
             self.id = id
             self.name = name
+            self.showStimulusWhenDrawing = showStimulusWhenDrawing
         }
     }
     

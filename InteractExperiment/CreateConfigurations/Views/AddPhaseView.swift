@@ -20,11 +20,14 @@ struct AddPhaseView: View {
             Section {
                 TextField("Name", text: $phaseName)
                 Toggle("Allow multiple images", isOn: $allowMultipleImages)
-                Toggle("Show stimulus when drawing", isOn: $showStimulusWhenDrawing)
+                if !allowMultipleImages {
+                    Toggle("Show stimulus when drawing", isOn: $showStimulusWhenDrawing)
+                }
             }
             Button(action: {
                 let phase = ExperimentImagesModel(type: .custom(phaseName))
                 phase.allowMultipleImages = allowMultipleImages
+                phase.showStimulusWhenDrawing = showStimulusWhenDrawing
                 addClosure(phase)
                 dismiss()
             }, label: {

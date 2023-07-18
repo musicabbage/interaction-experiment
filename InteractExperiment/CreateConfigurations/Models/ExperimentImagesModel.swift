@@ -17,6 +17,7 @@ class ExperimentImagesModel: ObservableObject, Equatable, Identifiable {
     @Published private(set) var images: [ImageInfo] = []
     
     private let type: ImageType
+    var showStimulusWhenDrawing: Bool = false
     
     static func == (lhs: ExperimentImagesModel, rhs: ExperimentImagesModel) -> Bool {
         guard lhs.type == rhs.type else {
