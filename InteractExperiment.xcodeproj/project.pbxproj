@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8B05BE122A655CD7001220D2 /* ExperimentImagesModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B05BE112A655CD7001220D2 /* ExperimentImagesModel.swift */; };
+		8B05BE142A65732B001220D2 /* AddPhaseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B05BE132A65732B001220D2 /* AddPhaseView.swift */; };
 		8B119AC72A46F7900021C564 /* RootCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B119AC62A46F7900021C564 /* RootCoordinator.swift */; };
 		8B13B52D2A51CCEA004E98A8 /* InputDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B13B52C2A51CCEA004E98A8 /* InputDataModel.swift */; };
 		8B152A0E2A43191300D666AF /* CreateConfigurationCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B152A0D2A43191300D666AF /* CreateConfigurationCoordinator.swift */; };
@@ -16,7 +18,6 @@
 		8B2C0F6B2A54A04C00CE75AC /* LogWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B2C0F6A2A54A04C00CE75AC /* LogWriter.swift */; };
 		8B2C0F6D2A54A21900CE75AC /* InteractLogWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B2C0F6C2A54A21900CE75AC /* InteractLogWriter.swift */; };
 		8B2C0F6F2A54A46D00CE75AC /* DateFormatterExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B2C0F6E2A54A46D00CE75AC /* DateFormatterExtensions.swift */; };
-		8B2E59D82A33679700726D6C /* ExperimentImageListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B2E59D72A33679700726D6C /* ExperimentImageListView.swift */; };
 		8B5ACB882A2E0452002F5AA9 /* FileManagerExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B5ACB872A2E0452002F5AA9 /* FileManagerExtensions.swift */; };
 		8B604D112A587AF200E1AEE7 /* PreviousExperimentsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B604D102A587AF200E1AEE7 /* PreviousExperimentsView.swift */; };
 		8B62488E2A5CB5F4007C52F2 /* ExperimentGestureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B62488D2A5CB5F4007C52F2 /* ExperimentGestureView.swift */; };
@@ -31,6 +32,7 @@
 		8B905C372A49CB6F006A9A53 /* ExperimentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B905C362A49CB6F006A9A53 /* ExperimentView.swift */; };
 		8B93F2472A4EEADD0026E41D /* InputPane.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B93F2462A4EEADD0026E41D /* InputPane.swift */; };
 		8B95C01A2A27E5B60094C925 /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B95C0192A27E5B60094C925 /* ImagePicker.swift */; };
+		8BA143162A647986008D8AB4 /* ExperimentPhaseSectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA143152A647986008D8AB4 /* ExperimentPhaseSectionView.swift */; };
 		8BA49F672A5979AB00148687 /* PreviousExperimentsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA49F662A5979AB00148687 /* PreviousExperimentsModel.swift */; };
 		8BA49F692A59857600148687 /* ViewStyleExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA49F682A59857600148687 /* ViewStyleExtensions.swift */; };
 		8BADE42D2A2C9C7F0087C74D /* PopupView in Frameworks */ = {isa = PBXBuildFile; productRef = 8BADE42C2A2C9C7F0087C74D /* PopupView */; };
@@ -60,6 +62,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		8B05BE112A655CD7001220D2 /* ExperimentImagesModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExperimentImagesModel.swift; sourceTree = "<group>"; };
+		8B05BE132A65732B001220D2 /* AddPhaseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPhaseView.swift; sourceTree = "<group>"; };
 		8B119AC62A46F7900021C564 /* RootCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootCoordinator.swift; sourceTree = "<group>"; };
 		8B13B52C2A51CCEA004E98A8 /* InputDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputDataModel.swift; sourceTree = "<group>"; };
 		8B152A0D2A43191300D666AF /* CreateConfigurationCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateConfigurationCoordinator.swift; sourceTree = "<group>"; };
@@ -69,7 +73,6 @@
 		8B2C0F6A2A54A04C00CE75AC /* LogWriter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogWriter.swift; sourceTree = "<group>"; };
 		8B2C0F6C2A54A21900CE75AC /* InteractLogWriter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InteractLogWriter.swift; sourceTree = "<group>"; };
 		8B2C0F6E2A54A46D00CE75AC /* DateFormatterExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFormatterExtensions.swift; sourceTree = "<group>"; };
-		8B2E59D72A33679700726D6C /* ExperimentImageListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExperimentImageListView.swift; sourceTree = "<group>"; };
 		8B5ACB872A2E0452002F5AA9 /* FileManagerExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileManagerExtensions.swift; sourceTree = "<group>"; };
 		8B604D102A587AF200E1AEE7 /* PreviousExperimentsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviousExperimentsView.swift; sourceTree = "<group>"; };
 		8B62488D2A5CB5F4007C52F2 /* ExperimentGestureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExperimentGestureView.swift; sourceTree = "<group>"; };
@@ -84,6 +87,7 @@
 		8B905C362A49CB6F006A9A53 /* ExperimentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExperimentView.swift; sourceTree = "<group>"; };
 		8B93F2462A4EEADD0026E41D /* InputPane.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputPane.swift; sourceTree = "<group>"; };
 		8B95C0192A27E5B60094C925 /* ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
+		8BA143152A647986008D8AB4 /* ExperimentPhaseSectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExperimentPhaseSectionView.swift; sourceTree = "<group>"; };
 		8BA49F662A5979AB00148687 /* PreviousExperimentsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviousExperimentsModel.swift; sourceTree = "<group>"; };
 		8BA49F682A59857600148687 /* ViewStyleExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewStyleExtensions.swift; sourceTree = "<group>"; };
 		8BADE42F2A2CA3650087C74D /* ToastView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastView.swift; sourceTree = "<group>"; };
@@ -144,6 +148,15 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
+		8B2C0F692A54A01800CE75AC /* LogWriter */ = {
+			isa = PBXGroup;
+			children = (
+				8B2C0F6A2A54A04C00CE75AC /* LogWriter.swift */,
+				8B2C0F6C2A54A21900CE75AC /* InteractLogWriter.swift */,
+			);
+			path = LogWriter;
+			sourceTree = "<group>";
+		};
 		8B604D0F2A587AC100E1AEE7 /* PreviousExperiments */ = {
 			isa = PBXGroup;
 			children = (
@@ -153,15 +166,6 @@
 				8BA49F652A59799200148687 /* Models */,
 			);
 			path = PreviousExperiments;
-			sourceTree = "<group>";
-		};
-		8B2C0F692A54A01800CE75AC /* LogWriter */ = {
-			isa = PBXGroup;
-			children = (
-				8B2C0F6A2A54A04C00CE75AC /* LogWriter.swift */,
-				8B2C0F6C2A54A21900CE75AC /* InteractLogWriter.swift */,
-			);
-			path = LogWriter;
 			sourceTree = "<group>";
 		};
 		8B6477F72A267FB60071F582 /* Extensions */ = {
@@ -221,6 +225,7 @@
 			isa = PBXGroup;
 			children = (
 				8BADE4362A2D18F10087C74D /* ConfigurationModel.swift */,
+				8B05BE112A655CD7001220D2 /* ExperimentImagesModel.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -229,7 +234,8 @@
 			isa = PBXGroup;
 			children = (
 				8BADE4332A2D12720087C74D /* ImageItemView.swift */,
-				8B2E59D72A33679700726D6C /* ExperimentImageListView.swift */,
+				8BA143152A647986008D8AB4 /* ExperimentPhaseSectionView.swift */,
+				8B05BE132A65732B001220D2 /* AddPhaseView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -419,7 +425,7 @@
 				8BE108012A59AA440014ECEA /* PreviousExperimentsViewModel.swift in Sources */,
 				8BE6C0F72A4C6AE000B3C8E2 /* StartExperimentFlowState.swift in Sources */,
 				8BE8087E2A23A7820057CC35 /* ConfigurationsView.swift in Sources */,
-				8B2E59D82A33679700726D6C /* ExperimentImageListView.swift in Sources */,
+				8B05BE122A655CD7001220D2 /* ExperimentImagesModel.swift in Sources */,
 				8B2C0F6D2A54A21900CE75AC /* InteractLogWriter.swift in Sources */,
 				8B905C352A49CB68006A9A53 /* ExperimentCoordinator.swift in Sources */,
 				8BB3659E2A1F9F2400DE2B5C /* InteractExperimentApp.swift in Sources */,
@@ -428,6 +434,7 @@
 				8B8DFEC02A52FEBF00D8CE5D /* EndExperimentView.swift in Sources */,
 				8B905C372A49CB6F006A9A53 /* ExperimentView.swift in Sources */,
 				8BADE4372A2D18F10087C74D /* ConfigurationModel.swift in Sources */,
+				8B05BE142A65732B001220D2 /* AddPhaseView.swift in Sources */,
 				8B604D112A587AF200E1AEE7 /* PreviousExperimentsView.swift in Sources */,
 				8B19F4722A52099600433112 /* ExperimentFlowState.swift in Sources */,
 				8BADE43A2A2D1C310087C74D /* CreateConfigurationViewModel.swift in Sources */,
@@ -436,6 +443,7 @@
 				8B17FF472A5B089100DF3B69 /* DateExtensions.swift in Sources */,
 				8BADE4302A2CA3650087C74D /* ToastView.swift in Sources */,
 				8BE16A2E2A4083F500A83B9E /* ExperimentViewModel.swift in Sources */,
+				8BA143162A647986008D8AB4 /* ExperimentPhaseSectionView.swift in Sources */,
 				8BAF3C682A1FB28E00C0A4CE /* RootView.swift in Sources */,
 				8B2C0F6B2A54A04C00CE75AC /* LogWriter.swift in Sources */,
 				8B8DFEC42A52FEE700D8CE5D /* EndExperimentCoordinator.swift in Sources */,

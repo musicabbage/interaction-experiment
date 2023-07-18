@@ -21,4 +21,11 @@ extension DateFormatter {
         dateFormatter.dateFormat = "yyyy-MM-dd - HH-mm-ss"
         return dateFormatter
     }()
+    
+    static let ReadableDateFormatter_ddMMYYYY_HHmm = {
+        let dateFormatter = DateFormatter()
+        //"dd/MM/yyyy HH:mm"
+        dateFormatter.dateFormat = "dd/MM/yyyy HH:mm"
+        return dateFormatter
+    }()
 }

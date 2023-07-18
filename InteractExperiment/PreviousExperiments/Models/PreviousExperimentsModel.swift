@@ -11,55 +11,55 @@ import UIKit
 struct PreviousExperimentsModel: Identifiable {
     
     let id: String
-    let date: Date
+    let date: Date?
     let participantId: String
     let configurationURL: URL
-    let familiarisationsImages: [UIImage]
-    let stimulusImages: [UIImage]
+    let folderURL: URL
+    let phases: [[String: [UIImage]]]
     
     init(experiment: InteractLogModel, configurations: ConfigurationModel) {
         id = experiment.id
-        date = .now
+        date = experiment.trialStart
         participantId = experiment.participantId
         configurationURL = configurations.configURL
-        familiarisationsImages = configurations.familiarImages.reduce(into: [UIImage](), { partialResult, fileName in
-            do {
-                let imageData = try Data(contentsOf: configurations.folderURL.appendingPathComponent(fileName))
-                if let image = UIImage(data: imageData) {
-                    partialResult.append(image)
+        folderURL = experiment.folderURL
+        phases = configurations.phases.reduce(into: [[String: [UIImage]]](), { partialResult, phase in
+            let images = phase.images.reduce(into: [UIImage]()) { images, fileName in
+                do {
+                    let imageData = try Data(contentsOf: configurations.folderURL.appendingPathComponent(fileName))
+                    if let image = UIImage(data: imageData) {
+                        images.append(image)
+                    }
+                } catch {
+                    print("get phase image error:")
+                    print(error)
                 }
-            } catch {
-                print("get familiarisation image error:")
-                print(error)
             }
-        })
-        
-        stimulusImages = configurations.stimulusImages.reduce(into: [UIImage](), { partialResult, fileName in
-            do {
-                let imageData = try Data(contentsOf: configurations.folderURL.appendingPathComponent(fileName))
-                if let image = UIImage(data: imageData) {
-                    partialResult.append(image)
-                }
-            } catch {
-                print("get familiarisation image error:")
-                print(error)
-            }
+            partialResult.append([phase.name: images])
         })
     }
 }
 
 extension PreviousExperimentsModel {
-    
-    init(familiarisationsImages: [UIImage], stimulusImages: [UIImage]) {
+    init(phases: [ConfigurationModel.PhaseModel]) {
         self.id = "mock_id"
         self.date = .now
         self.participantId = "mock participant"
         self.configurationURL = URL(filePath: "")
-        self.familiarisationsImages = familiarisationsImages
-        self.stimulusImages = stimulusImages
+        self.phases = phases.reduce(into: [[String: [UIImage]]](), { partialResult, phase in
+            let images = phase.images.reduce(into: [UIImage]()) { images, imageName in
+                if let image = UIImage(named: imageName) {
+                    images.append(image)
+                } else  {
+                    print("get phase image error")
+                }
+            }
+            partialResult.append([phase.name: images])
+        })
+        self.folderURL = URL(fileURLWithPath: "")
     }
     
     static var mock: PreviousExperimentsModel {
-        .init(familiarisationsImages: [.mockFamiliarisationImage], stimulusImages: [.mockFamiliarisationImage])
+        .init(phases: [.mock])
     }
 }

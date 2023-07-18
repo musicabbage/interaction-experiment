@@ -12,12 +12,11 @@ import UIKit
 protocol ExperimentViewModelProtocol {
     var configuration: ConfigurationModel { get }
     var experiment: InteractLogModel { get }
+    var currentPhase: ConfigurationModel.PhaseModel? { get }
     var viewState: AnyPublisher<ExperimentViewModel.ViewState, Never> { get }
     
     func showNextStimulus()
     func appendSnapshot(image: UIImage)
-    func appendFamiliarisationInputs(_ inputs: [InteractLogModel.ActionModel])
-    func appendStimulusInputs(_ inputs: [InteractLogModel.ActionModel])
     func appendLogAction(_ action: InteractLogModel.ActionModel.Action)
     func setDrawingPadSize(_ size: CGSize)
 }
@@ -28,7 +27,7 @@ class ExperimentViewModel: ExperimentViewModelProtocol {
         case none
         case loading
         case showNextStimulus(UIImage)
-        case endFamiliarisation
+        case endPhase
         case endTrial
         case error(String)
     }
@@ -38,48 +37,42 @@ class ExperimentViewModel: ExperimentViewModelProtocol {
     private(set) var experiment: InteractLogModel
     
     let viewState: AnyPublisher<ViewState, Never>
+    var currentPhase: ConfigurationModel.PhaseModel? {
+        guard experiment.phaseIndex < configuration.phases.count else {
+            return nil
+        }
+        return configuration.phases[experiment.phaseIndex]
+    }
     
     init(configuration: ConfigurationModel, experiment: InteractLogModel) {
         self.configuration = configuration
         self.experiment = experiment
-        if experiment.state == .familiarisation {
+        if experiment.phaseIndex == 0 && experiment.stimulusIndex == 0 {
             self.experiment.trialStart = Date.now
         }
         
         viewStateSubject = .init(.none)
         viewState = viewStateSubject.receive(on: DispatchQueue.main).eraseToAnyPublisher()
-        if let image = fetchImage(index: experiment.stimulusIndex) {
-            viewStateSubject.send(.showNextStimulus(image))
-        } else {
-            viewStateSubject.send(.error("cannot find the image..."))
+        Task {
+            var phaseIndex = experiment.phaseIndex
+            var stimulusIndex = experiment.stimulusIndex
+            while phaseIndex < configuration.phases.count &&
+                    configuration.phases[phaseIndex].images.isEmpty {
+                phaseIndex += 1
+                stimulusIndex = 0
+            }
+            showStimulus(at: stimulusIndex, phase: phaseIndex)
         }
     }
     
     func showNextStimulus() {
-        guard case .stimulus = experiment.state else {
-            fetchNextStimulus()
-            return
-        }
-        
-        experiment.stimulusIndex += 1
-        if experiment.stimulusIndex < configuration.stimulusImages.count {
-            fetchNextStimulus()
-        } else {
-            endTrial()
-        }
+        showStimulus(at: experiment.stimulusIndex + 1, phase: experiment.phaseIndex)
     }
     
     func appendLogAction(_ action: InteractLogModel.ActionModel.Action) {
         experiment.append(action: .init(action: action))
     }
     
-    func appendFamiliarisationInputs(_ inputs: [InteractLogModel.ActionModel]) {
-        experiment.familiarisationInput.append(inputs)
-    }
-    
-    func appendStimulusInputs(_ inputs: [InteractLogModel.ActionModel]) {
-        experiment.stimulusInput.append(inputs)
-    }
     
     func appendSnapshot(image: UIImage) {
         do {
@@ -96,43 +89,38 @@ class ExperimentViewModel: ExperimentViewModelProtocol {
 }
 
 private extension ExperimentViewModel {
-    func fetchNextStimulus() {
-        // TODO: append real InputData
-        switch experiment.state {
-        case .familiarisation:
-            viewStateSubject.send(.endFamiliarisation)
-        case let .stimulus(index):
-            guard experiment.stimulusInput.count < configuration.stimulusImages.count else {
+    func showStimulus(at index: Int, phase: Int) {
+        experiment.phaseIndex = phase
+        experiment.stimulusIndex = index
+        if experiment.phaseIndex >= configuration.phases.count {
+            endTrial()
+        } else if experiment.stimulusIndex >= configuration.phases[experiment.phaseIndex].images.count {
+            experiment.stimulusIndex = 0
+            experiment.phaseIndex += 1
+            if experiment.phaseIndex >= configuration.phases.count {
                 endTrial()
-                return
+            } else if !configuration.phases[experiment.phaseIndex].images.isEmpty {
+                viewStateSubject.send(.endPhase)
+            } else {
+                showStimulus(at: 0, phase: experiment.phaseIndex + 1)
             }
-            
-            if let image = fetchImage(index: index) {
+        } else {
+            if let image = fetchImage(index: experiment.stimulusIndex, fromPhase: experiment.phaseIndex) {
                 viewStateSubject.send(.showNextStimulus(image))
             } else {
                 viewStateSubject.send(.error("fetch image failed"))
             }
-        default:
-            break
         }
     }
-}
-
-private extension ExperimentViewModel {
-    func fetchImage(index: Int) -> UIImage? {
-        var imageName: String?
-        switch experiment.state {
-        case .familiarisation:
-            imageName = configuration.familiarImages.first
-        case .stimulus:
-            guard 0..<configuration.stimulusImages.count ~= index else { break }
-            imageName = configuration.stimulusImages[index]
-        default:
-            break
+    
+    func fetchImage(index: Int, fromPhase phase: Int) -> UIImage? {
+        guard phase < configuration.phases.count,
+              index < configuration.phases[phase].images.count else {
+            return nil
         }
         
-        guard let imageName,
-              let imageData = try? Data(contentsOf: configuration.folderURL.appending(path: imageName)) else {
+        let imageName = configuration.phases[phase].images[index]
+        guard let imageData = try? Data(contentsOf: configuration.folderURL.appending(path: imageName)) else {
             return nil
         }
         
@@ -154,7 +142,7 @@ private extension ExperimentViewModel {
     
     func writeLogFiles() async throws {
         let writer = InteractLogWriter()
-        let folderURL = FileManager.experimentsDirectory.appending(path: experiment.id)
+        let folderURL = experiment.folderURL
         var isDirectory = ObjCBool(false)
         let fileExisted = FileManager.default.fileExists(atPath: folderURL.path(), isDirectory: &isDirectory)
         if !(fileExisted && isDirectory.boolValue) {

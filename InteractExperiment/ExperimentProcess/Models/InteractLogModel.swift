@@ -24,6 +24,7 @@ struct InteractLogModel: Codable, Identifiable, Hashable {
             case drawing(Bool, CGFloat, CGFloat)
             case familiarisation(Bool, String)
             case stimulus(Bool, String)
+            case stimulusDisplay(isShow: Bool, phaseName: String, fileName: String)
             
             var key: String {
                 switch self {
@@ -35,6 +36,8 @@ struct InteractLogModel: Codable, Identifiable, Hashable {
                     return "Familiarisation\( isOn ? "On" : "Off" )_\(name)"
                 case let .stimulus(isOn, name):
                     return "Stimulus\( isOn ? "On" : "Off" )_\(name)"
+                case let .stimulusDisplay(isShow: isOn, phaseName: phase, fileName: file):
+                    return "\(phase)\( isOn ? "On" : "Off" )_\(file)"
                 }
             }
         }
@@ -117,22 +120,13 @@ struct InteractLogModel: Codable, Identifiable, Hashable {
     var trialStart: Date?
     var trialEnd: Date?
     
-    var familiarisationInput: [[ActionModel]] = []
-    var stimulusInput: [[ActionModel]] = []
     var stimulusIndex: Int = 0
+    var phaseIndex: Int = 0
     
     var finalSnapshotName: String = ""
     var snapshots: [ImageModel] = []
-    
-    var state: State {
-        //TODO: check return state
-        if participantId.isEmpty {
-            return .instruction
-        } else if familiarisationInput.isEmpty {
-            return .familiarisation
-        } else {
-            return .stimulus(stimulusIndex)
-        }
+    var folderURL: URL {
+        FileManager.experimentsDirectory.appending(path: id)
     }
     
     init(participantId: String, configId: String) {
@@ -145,12 +139,11 @@ struct InteractLogModel: Codable, Identifiable, Hashable {
     
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.familiarisationInput = try container.decode([[ActionModel]].self, forKey: .familiarisationInput)
-        self.stimulusInput = try container.decode([[ActionModel]].self, forKey: .stimulusInput)
         self.participantId = try container.decode(String.self, forKey: .participantId)
         self.id = try container.decode(String.self, forKey: .id)
         self.configId = try container.decode(String.self, forKey: .configId)
         self.stimulusIndex = try container.decode(Int.self, forKey: .stimulusIndex)
+        self.phaseIndex = try container.decode(Int.self, forKey: .phaseIndex)
         self.experimentStart = try container.decode(Date.self, forKey: .experimentStart)
         self.trialNumber = try container.decode(Int.self, forKey: .trialNumber)
         self.trialStart = try container.decode(Date.self, forKey: .trialStart)
@@ -161,7 +154,7 @@ struct InteractLogModel: Codable, Identifiable, Hashable {
     }
     
     static func == (lhs: InteractLogModel, rhs: InteractLogModel) -> Bool {
-        lhs.state == rhs.state && lhs.id == rhs.id
+        lhs.phaseIndex == rhs.phaseIndex && lhs.stimulusIndex == rhs.stimulusIndex && lhs.id == rhs.id
     }
     
     mutating func append(action: ActionModel) {

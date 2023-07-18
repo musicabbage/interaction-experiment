@@ -55,3 +55,9 @@ extension View {
             }
     }
 }
+
+class ToastObject: ObservableObject {
+    @Published var show: Bool = false
+    @Published var type: ToastType = .error
+    @Published var message: String = ""
+}

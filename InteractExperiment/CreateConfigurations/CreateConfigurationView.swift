@@ -13,61 +13,31 @@ struct CreateConfigurationView<ViewModel>: View where ViewModel: CreateConfigura
     @State private var selectedImage: IndexSet = []
     @State private var showErrorToast: Bool = false
     @State private var instructionText: String = ""
-    @State private var familiarImages: ExperimentImages = ExperimentImages(type: .familiarisation)
-    @State private var stimulusImages: ExperimentImages = ExperimentImages(type: .stimulus)
+    @State private var phases: [ExperimentImagesModel]
+    @State private var showAddPhaseSheet: Bool = false
+    @State private var phaseName: String = ""
     @FocusState private var instructionFocused: Bool
     @ObservedObject var flowState: CreateConfigFlowState
     
     private let viewModel: ViewModel
     
-    init(flowState: CreateConfigFlowState, viewModel: ViewModel) {
+    init(flowState: CreateConfigFlowState, viewModel: ViewModel, phases: [ExperimentImagesModel]) {
         _instructionText = .init(initialValue: viewModel.configurations.instruction)
         self.flowState = flowState
         self.viewModel = viewModel
+        _phases = .init(initialValue: phases)
     }
     
     var body: some View {
         NavigationStack {
             
             Form {
-                Section {
-                    ScrollView(.horizontal, showsIndicators: false) {
-                        //familiarisation
-                        ExperimentImageListView(images: familiarImages,
-                                                selectedImage: $selectedFamiliarisation,
-                                                multiSelect: false)
-                        .onAddNewImage { image in
-                            viewModel.append(image: image, type: .familiarisation)
-                        }
-                    }
-                } header: {
-                    Text("Familiarisation")
+                ForEach(phases) { phase in
+                    ExperimentPhaseSectionView(phase: phase)
                 }
                 
-                Section {
-                    ScrollView(.horizontal, showsIndicators: false) {
-                        //stimulus
-                        ExperimentImageListView(images: stimulusImages,
-                                                selectedImage: $selectedImage,
-                                                multiSelect: true)
-                        .onAddNewImage { image in
-                            viewModel.append(image: image, type: .stimulus)
-                        }
-                    }
-                } header: {
-                    HStack {
-                        Text("Stimulus")
-                            .padding(.init(top: 0, leading: 0, bottom: 0, trailing: 10))
-                        Button("delete") {
-                            viewModel.deleteImages(indexes: selectedImage, type: .stimulus)
-                            selectedImage.removeAll()
-                        }
-                        .padding(.init(top: 2, leading: 4, bottom: 2, trailing: 4))
-                        .font(.footnote)
-                        .background(Color.button.red)
-                        .foregroundColor(.white)
-                        .clipShape(RoundedRectangle(cornerRadius: 3))
-                    }
+                Button("Add Phase") {
+                    showAddPhaseSheet = true
                 }
                 
                 Section {
@@ -89,9 +59,6 @@ struct CreateConfigurationView<ViewModel>: View where ViewModel: CreateConfigura
                     Text("Instruction")
                 }
             }
-            .onTapGesture {
-                
-            }
 #if os(macOS)
             .frame(maxWidth: .infinity)
 #else
@@ -103,18 +70,24 @@ struct CreateConfigurationView<ViewModel>: View where ViewModel: CreateConfigura
                 }
                 ToolbarItem(placement: .primaryAction) {
                     Button("Save") {
-                        viewModel.save(asDraft: true)
+                        saveConfiguration(asDraft: true)
                     }
                 }
                 ToolbarItem(placement: .bottomBar) {
                     Button("save and start a new experiment") {
-                        viewModel.save(asDraft: false)
+                        saveConfiguration(asDraft: false)
                     }
                     .actionButtonStyle()
                 }
             }
 #endif
         }
+        .sheet(isPresented: $showAddPhaseSheet, content: {
+            AddPhaseView()
+                .onSaveAction { phase in
+                    phases.append(phase)
+                }
+        })
         .toast(isPresented: $showErrorToast, type: .error, message: viewModel.currentViewState.message)
         .onReceive(viewModel.viewState) { viewState in
             switch viewState {
@@ -122,10 +95,6 @@ struct CreateConfigurationView<ViewModel>: View where ViewModel: CreateConfigura
                 flowState.dismiss = true
             case .error:
                 showErrorToast = true
-            case let .updateFamiliarisationImages(images):
-                familiarImages = images
-            case let .updateStimulusImages(images):
-                stimulusImages = images
             default:
                 break
             }
@@ -138,8 +107,20 @@ struct CreateConfigurationView<ViewModel>: View where ViewModel: CreateConfigura
 
 }
 
+private extension CreateConfigurationView {
+    func saveConfiguration(asDraft: Bool) {
+        for phase in phases {
+            guard !phase.images.isEmpty else { continue }
+            viewModel.appendPhase(images: phase.images,
+                                  phaseName: phase.name,
+                                  showStimulusWhenDrawing: phase.showStimulusWhenDrawing)
+        }
+        viewModel.save(asDraft: asDraft)
+    }
+}
+
 struct CreateConfigurationView_Previews: PreviewProvider {
     static var previews: some View {
-        CreateConfigurationView(flowState: .mock, viewModel: CreateConfigurationViewModel())
+        CreateConfigurationView(flowState: .mock, viewModel: CreateConfigurationViewModel(), phases: [.mock])
     }
 }

@@ -20,7 +20,9 @@ struct CreateConfigurationCoordinator: View {
     }
     
     var body: some View {
-        CreateConfigurationView(flowState: state, viewModel: viewModel)
+        CreateConfigurationView(flowState: state,
+                                viewModel: viewModel,
+                                phases: .defaultExperimentImagesModels)
             .onChange(of: state.dismiss) { newValue in
                 guard newValue == true else { return }
                 dismiss()
@@ -30,5 +32,12 @@ struct CreateConfigurationCoordinator: View {
                 let configPath = viewModel.configurations.configURL.path()
                 state.path.append(RootFlowLink.configCreated(configPath))
             }
+    }
+}
+
+private extension [ExperimentImagesModel] {
+    static var defaultExperimentImagesModels: [ExperimentImagesModel] {
+        [ExperimentImagesModel(type: .familiarisation),
+         ExperimentImagesModel(type: .stimulus)]
     }
 }
