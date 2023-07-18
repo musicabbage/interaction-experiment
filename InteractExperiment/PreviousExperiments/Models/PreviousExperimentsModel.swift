@@ -11,16 +11,18 @@ import UIKit
 struct PreviousExperimentsModel: Identifiable {
     
     let id: String
-    let date: Date
+    let date: Date?
     let participantId: String
     let configurationURL: URL
+    let folderURL: URL
     let phases: [[String: [UIImage]]]
     
     init(experiment: InteractLogModel, configurations: ConfigurationModel) {
         id = experiment.id
-        date = .now
+        date = experiment.trialStart
         participantId = experiment.participantId
         configurationURL = configurations.configURL
+        folderURL = experiment.folderURL
         phases = configurations.phases.reduce(into: [[String: [UIImage]]](), { partialResult, phase in
             let images = phase.images.reduce(into: [UIImage]()) { images, fileName in
                 do {
@@ -54,6 +56,7 @@ extension PreviousExperimentsModel {
             }
             partialResult.append([phase.name: images])
         })
+        self.folderURL = URL(fileURLWithPath: "")
     }
     
     static var mock: PreviousExperimentsModel {

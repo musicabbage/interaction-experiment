@@ -125,6 +125,9 @@ struct InteractLogModel: Codable, Identifiable, Hashable {
     
     var finalSnapshotName: String = ""
     var snapshots: [ImageModel] = []
+    var folderURL: URL {
+        FileManager.experimentsDirectory.appending(path: id)
+    }
     
     init(participantId: String, configId: String) {
         self.id = UUID().uuidString

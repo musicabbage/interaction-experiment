@@ -142,7 +142,7 @@ private extension ExperimentViewModel {
     
     func writeLogFiles() async throws {
         let writer = InteractLogWriter()
-        let folderURL = FileManager.experimentsDirectory.appending(path: experiment.id)
+        let folderURL = experiment.folderURL
         var isDirectory = ObjCBool(false)
         let fileExisted = FileManager.default.fileExists(atPath: folderURL.path(), isDirectory: &isDirectory)
         if !(fileExisted && isDirectory.boolValue) {

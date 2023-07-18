@@ -24,7 +24,7 @@ struct PreviousExperimentsView: View {
             Text("Experiments (\(experiments.count))")
                 .padding([.bottom], 16)
             ScrollView {
-                LazyVStack {
+                LazyVStack(alignment: .leading, spacing: 15) {
                     ForEach(experiments) { experiment in
                         PreviousExperimentItemView(experiment: experiment)
                             .onTapAction(perform: { action in
@@ -32,8 +32,7 @@ struct PreviousExperimentsView: View {
                                 case .use:
                                     useClosure(experiment.configurationURL.path())
                                 case .delete:
-                                    let experimentPath = FileManager.experimentsDirectory.appending(path: experiment.id).path()
-                                    deleteClosure(experimentPath)
+                                    viewModel.deleteExperiment(id: experiment.id)
                                 }
                             })
                     }
