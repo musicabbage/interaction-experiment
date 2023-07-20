@@ -59,6 +59,7 @@
 		8BF743A02A4B1DBF00787997 /* InstructionCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BF7439F2A4B1DBF00787997 /* InstructionCoordinator.swift */; };
 		8BF743A22A4B1DEC00787997 /* InstructionFlowState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BF743A12A4B1DEC00787997 /* InstructionFlowState.swift */; };
 		8BF743A42A4B1E0000787997 /* InstructionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BF743A32A4B1DFF00787997 /* InstructionView.swift */; };
+		8BFA2EE82A69742F007717F3 /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BFA2EE72A69742F007717F3 /* LoadingView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -115,6 +116,7 @@
 		8BF7439F2A4B1DBF00787997 /* InstructionCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstructionCoordinator.swift; sourceTree = "<group>"; };
 		8BF743A12A4B1DEC00787997 /* InstructionFlowState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstructionFlowState.swift; sourceTree = "<group>"; };
 		8BF743A32A4B1DFF00787997 /* InstructionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InstructionView.swift; sourceTree = "<group>"; };
+		8BFA2EE72A69742F007717F3 /* LoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -204,6 +206,7 @@
 			children = (
 				8B95C0192A27E5B60094C925 /* ImagePicker.swift */,
 				8BADE42F2A2CA3650087C74D /* ToastView.swift */,
+				8BFA2EE72A69742F007717F3 /* LoadingView.swift */,
 			);
 			path = CommonViews;
 			sourceTree = "<group>";
@@ -421,6 +424,7 @@
 				8B905C332A49BA15006A9A53 /* CreateConfigurationFlowState.swift in Sources */,
 				8BF7439C2A4B1DA700787997 /* InstructionViewModel.swift in Sources */,
 				8BE808802A23A79F0057CC35 /* ExperimentsView.swift in Sources */,
+				8BFA2EE82A69742F007717F3 /* LoadingView.swift in Sources */,
 				8BE16A2C2A4076EF00A83B9E /* ParticipantIdAlertView.swift in Sources */,
 				8BE108012A59AA440014ECEA /* PreviousExperimentsViewModel.swift in Sources */,
 				8BE6C0F72A4C6AE000B3C8E2 /* StartExperimentFlowState.swift in Sources */,

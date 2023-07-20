@@ -96,11 +96,7 @@ struct ExperimentView: View {
             }
             
             if showLoading {
-                ProgressView("saving...")
-                    .padding(12)
-                    .background(Color.white)
-                    .clipShape(RoundedRectangle(cornerSize: .init(width: 8, height: 8)))
-                    .shadow(radius: 8)
+                LoadingView()
             }
         }
         .onAppear {
