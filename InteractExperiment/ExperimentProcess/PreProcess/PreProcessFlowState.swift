@@ -8,11 +8,7 @@
 import SwiftUI
 
 enum PreProcessFlowLink: Hashable, Identifiable {
-//    case familiarisation(ConfigurationModel, InteractLogModel)
-//    case stimulus(ConfigurationModel, InteractLogModel)
-//    case endTrial(ConfigurationModel, InteractLogModel)
-//    case consentForm
-    case questionnaire(URL)
+    case questionnaire
     
     var id: String { String(describing: self) }
 }

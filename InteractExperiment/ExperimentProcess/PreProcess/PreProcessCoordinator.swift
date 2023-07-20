@@ -10,6 +10,7 @@ import SwiftUI
 struct PreProcessCoordinator: View {
     
     @StateObject var state: PreProcessFlowState = .init()
+    @Environment(\.dismiss) private var dismiss
     
     private let configurations: ConfigurationModel
     private let experiment: InteractLogModel
@@ -24,7 +25,7 @@ struct PreProcessCoordinator: View {
             let viewModel = PreProcessViewModel(configurations: configurations, experiment: experiment)
             ConsentFormView(viewModel: viewModel)
                 .onFinished(perform: {
-                    state.path.append(PreProcessFlowLink.questionnaire(viewModel.questionnaireURL))
+                    state.path.append(PreProcessFlowLink.questionnaire)
                 })
                 .navigationDestination(for: PreProcessFlowLink.self, destination: preProcessDestination)
         }
@@ -36,8 +37,12 @@ private extension PreProcessCoordinator {
     @ViewBuilder
     private func preProcessDestination(process: PreProcessFlowLink) -> some View {
         switch process {
-        case let .questionnaire(url):
-            WebView(url: url)
+        case .questionnaire:
+            let viewModel = PreProcessViewModel(configurations: configurations, experiment: experiment)
+            QuestionnaireView(viewModel: viewModel)
+                .onFinished {
+                    dismiss()
+                }
         }
     }
 }

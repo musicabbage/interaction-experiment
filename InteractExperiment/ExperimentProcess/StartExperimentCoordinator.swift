@@ -14,6 +14,7 @@ struct StartExperimentCoordinator: View {
     
     private let configurations: ConfigurationModel
     
+    
     init(navigationPath: Binding<NavigationPath>, configurations: ConfigurationModel) {
         _state = .init(wrappedValue: .init(path: navigationPath))
         self.configurations = configurations
@@ -44,5 +45,9 @@ private extension StartExperimentCoordinator {
     @ViewBuilder
     func preprocessViews(_ experiment: InteractLogModel) -> some View {
         PreProcessCoordinator(configurations: configurations, experiment: experiment)
+            .onDisappear {
+                state.path.append(RootFlowLink.startExperiment(configurations, experiment))
+            }
     }
 }
+
