@@ -9,6 +9,8 @@ import SwiftUI
 
 struct StartExperimentCoordinator: View {
     @StateObject var state: StartExperimentFlowState
+    @State private var presentPreprocess: Bool = false
+    @State private var experiment: InteractLogModel? = nil
     
     private let configurations: ConfigurationModel
     
@@ -25,6 +27,7 @@ struct StartExperimentCoordinator: View {
         .onAppear {
             state.showParticipantId = true
         }
+        .sheet(item: $experiment, content: preprocessViews)
         .alert("Participant ID", isPresented: $state.showParticipantId, actions: alertView)
     }
 }
@@ -34,7 +37,12 @@ private extension StartExperimentCoordinator {
     func alertView() -> some View {
         ParticipantIdAlertView()
           .onConfirmParticipantId { participantId in
-              state.path.append(RootFlowLink.startExperiment(configurations, participantId))
+              experiment = .init(participantId: participantId, configId: configurations.id)
           }
+    }
+    
+    @ViewBuilder
+    func preprocessViews(_ experiment: InteractLogModel) -> some View {
+        PreProcessCoordinator(configurations: configurations, experiment: experiment)
     }
 }
