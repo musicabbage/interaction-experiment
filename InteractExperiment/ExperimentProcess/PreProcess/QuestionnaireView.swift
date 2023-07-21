@@ -29,17 +29,17 @@ struct QuestionnaireView: View {
         ZStack {
             webView
                 .onNavigateToURL { url in
-                    showLoading = true
                     guard let host = url.host, host != "www.surveymonkey.co.uk" else { return }
                     finishClosure()
                 }
-                .onNavigateFinished {
-                    showLoading = false
+                .onNavigate { isStart in
+                    showLoading = isStart
                 }
             if showLoading {
                 LoadingView()
             }
         }
+        .navigationBarBackButtonHidden(true)
     }
 }
 

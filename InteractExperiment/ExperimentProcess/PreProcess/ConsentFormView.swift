@@ -30,19 +30,18 @@ struct ConsentFormView: View {
         }
         .navigationTitle("Consent Form")
         .toolbar {
-            ToolbarItemGroup {
+            ToolbarItem(placement: .cancellationAction) {
                 Button("Clean", role: .cancel) {
                     pdfView.cleanCanvas()
                 }
-                Spacer()
+            }
+            ToolbarItem(placement: .primaryAction) {
                 Button("Continue") {
                     showLoading = true
                     defer {
                         showLoading = false
                     }
                     guard let fileURL = pdfView.makeNewPDFWithOverlay() else { return }
-                    
-                    print(" save signed doc > \(fileURL)")
                     viewModel.saveConsentFormFromData(dataURL: fileURL)
                 }
             }

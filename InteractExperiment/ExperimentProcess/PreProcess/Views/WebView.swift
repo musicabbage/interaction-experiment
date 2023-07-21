@@ -40,27 +40,33 @@ extension WebView {
     class Coordinator: NSObject, WKNavigationDelegate {
         
         var urlNavigationBlock: (URL) -> Void = { _ in }
-        var navigationFinishedBlock: () -> Void = { }
+        var navigationBlock: (Bool) -> Void = { _ in }
         
         func webView(_ webView: WKWebView, decidePolicyFor navigationResponse: WKNavigationResponse, decisionHandler: @escaping (WKNavigationResponsePolicy) -> Void) {
             if let url = navigationResponse.response.url {
+                print(url)
                 urlNavigationBlock(url)
             }
             decisionHandler(.allow)
         }
         
+        func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
+            print("didStartProvisionalNavigation")
+            navigationBlock(true)
+        }
+        
         func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-            navigationFinishedBlock()
+            navigationBlock(false)
         }
     }
     
     func onNavigateToURL(perform action: @escaping(URL) -> Void) -> Self {
-        self.coordinator.urlNavigationBlock = action
+        coordinator.urlNavigationBlock = action
         return self
     }
     
-    func onNavigateFinished(perform action: @escaping() -> Void) -> Self {
-        self.coordinator.navigationFinishedBlock = action
+    func onNavigate(perform action: @escaping(Bool) -> Void) -> Self {
+        coordinator.navigationBlock = action
         return self
     }
     
