@@ -8,21 +8,38 @@
 import SwiftUI
 
 struct RootCoordinator: View {
-    @State var columnVisibility: NavigationSplitViewVisibility = .automatic
-    @StateObject var state: RootFlowState = .init()
+    @StateObject private var state: RootFlowState = .init()
+    @State private var columnVisibility: NavigationSplitViewVisibility = .automatic
+    @State private var selectedMenu: Menu? = .practiceB
+    @State private var practiceANavPath: NavigationPath = .init()
+    @State private var practiceBNavPath: NavigationPath = .init()
     
     var body: some View {
         NavigationSplitView(columnVisibility: $columnVisibility) {
-            List(Menu.allCases) { item in
+            List(Menu.allCases, selection: $selectedMenu) { item in
                 NavigationLink(item.title, value: item)
             }
         } detail: {
-            NavigationStack(path: $state.path) {
-                RootView(flowState: state)
-                    .navigationDestination(for: RootFlowLink.self, destination: rootNavDestination)
-                    .navigationDestination(for: ExperimentFlowLink.self, destination: experimentNavDestination)
-                    .sheet(item: $state.presentedItem, content: presentContent)
-                    .fullScreenCover(item: $state.coverItem, content: coverContent)
+            if selectedMenu == .practiceA {
+                NavigationStack(path: $practiceANavPath) {
+                    PracticeCoordinator(navigationPath: $practiceANavPath, group: .A)
+                        .navigationDestination(for: PracticeFlowLink.self, destination: practiceNavDestination)
+                }
+            } else if selectedMenu == .practiceB {
+                NavigationStack(path: $practiceBNavPath) {
+                    PracticeCoordinator(navigationPath: $practiceBNavPath, group: .B)
+                        .navigationDestination(for: PracticeFlowLink.self, destination: practiceNavDestination)
+                }
+            } else if selectedMenu == .configurations {
+                EmptyView()
+            } else {
+                NavigationStack(path: $state.path) {
+                    RootView(flowState: state)
+                        .navigationDestination(for: RootFlowLink.self, destination: rootNavDestination)
+                        .navigationDestination(for: ExperimentFlowLink.self, destination: experimentNavDestination)
+                        .sheet(item: $state.presentedItem, content: presentContent)
+                        .fullScreenCover(item: $state.coverItem, content: coverContent)
+                }
             }
         }
     }
@@ -43,7 +60,7 @@ private extension RootCoordinator {
                 Text("instruction get config error")
             }
         case let .startExperiment(configurations, experiment):
-            InstructionCoordinator(state: .init(path: $state.path), configurations: configurations, experimentModel: experiment)
+            InstructionCoordinator(state: .init(path: $state.path), configurations: configurations, experimentModel: experiment)        
         default:
             Text("not implemented process")
         }
@@ -64,6 +81,15 @@ private extension RootCoordinator {
     }
     
     @ViewBuilder
+    private func practiceNavDestination(process: PracticeFlowLink) -> some View {
+        switch process {
+        case let .nextPhase(_, experiment):
+            let group: PracticeViewModel.Group = (selectedMenu == .practiceA) ? .A : .B
+            PracticeCoordinator(navigationPath: $state.path, group: group, experiment: experiment)
+        }
+    }
+    
+    @ViewBuilder
     private func presentContent(item: RootFlowLink) -> some View {
         switch item {
         case .createConfig:
@@ -76,5 +102,11 @@ private extension RootCoordinator {
     @ViewBuilder
     private func coverContent(item: RootFlowLink) -> some View {
         Text("undefined cover content")
+    }
+}
+
+struct RootCoordinator_Previews: PreviewProvider {
+    static var previews: some View {
+        RootCoordinator()
     }
 }
