@@ -10,8 +10,9 @@ import SwiftUI
 struct RootCoordinator: View {
     @StateObject private var state: RootFlowState = .init()
     @State private var columnVisibility: NavigationSplitViewVisibility = .automatic
-    @State private var selectedMenu: Menu? = .practice
-    @State private var practiceNavPath: NavigationPath = .init()
+    @State private var selectedMenu: Menu? = .practiceB
+    @State private var practiceANavPath: NavigationPath = .init()
+    @State private var practiceBNavPath: NavigationPath = .init()
     
     var body: some View {
         NavigationSplitView(columnVisibility: $columnVisibility) {
@@ -19,9 +20,14 @@ struct RootCoordinator: View {
                 NavigationLink(item.title, value: item)
             }
         } detail: {
-            if selectedMenu == .practice {
-                NavigationStack(path: $practiceNavPath) {
-                    PracticeCoordinator(navigationPath: $practiceNavPath)
+            if selectedMenu == .practiceA {
+                NavigationStack(path: $practiceANavPath) {
+                    PracticeCoordinator(navigationPath: $practiceANavPath, group: .A)
+                        .navigationDestination(for: PracticeFlowLink.self, destination: practiceNavDestination)
+                }
+            } else if selectedMenu == .practiceB {
+                NavigationStack(path: $practiceBNavPath) {
+                    PracticeCoordinator(navigationPath: $practiceBNavPath, group: .B)
                         .navigationDestination(for: PracticeFlowLink.self, destination: practiceNavDestination)
                 }
             } else if selectedMenu == .configurations {
@@ -78,7 +84,8 @@ private extension RootCoordinator {
     private func practiceNavDestination(process: PracticeFlowLink) -> some View {
         switch process {
         case let .nextPhase(_, experiment):
-            PracticeCoordinator(navigationPath: $state.path, experiment: experiment)
+            let group: PracticeViewModel.Group = (selectedMenu == .practiceA) ? .A : .B
+            PracticeCoordinator(navigationPath: $state.path, group: group, experiment: experiment)
         }
     }
     

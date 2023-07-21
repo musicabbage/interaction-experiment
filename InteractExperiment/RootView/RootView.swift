@@ -10,7 +10,8 @@ import SwiftUI
 enum Menu: Int, CaseIterable, Identifiable {
     case configurations
     case experiments
-    case practice
+    case practiceA
+    case practiceB
     
     var id: Int { rawValue }
     var title: String {
@@ -19,8 +20,10 @@ enum Menu: Int, CaseIterable, Identifiable {
             return "New Experiments"
         case .experiments:
             return "Previous Experiments"
-        case .practice:
-            return "Playground"
+        case .practiceA:
+            return "Playground A"
+        case .practiceB:
+            return "Playground B"
         }
     }
 }

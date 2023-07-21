@@ -11,6 +11,17 @@ import UIKit
 
 class PracticeViewModel: ExperimentViewModelProtocol {
     
+    enum Group {
+        case A, B
+        
+        var configName: String {
+            switch self {
+            case .A: return "Practice_A"
+            case .B: return "Practice_B"
+            }
+        }
+    }
+    
     enum PracticeStep {
         case tap, swipeUp, swipeRight, swipeRightTwoFingers, swipeLeft, nextPhase
     }
@@ -26,13 +37,16 @@ class PracticeViewModel: ExperimentViewModelProtocol {
     private var step: PracticeStep = .tap
     private var cancellables: Set<AnyCancellable> = []
     
-    let configuration: ConfigurationModel = PracticeViewModel.makePracticeConfiguration()
+    let group: Group
+    let configuration: ConfigurationModel
     let viewState: AnyPublisher<ExperimentViewModel.ViewState, Never>
     let stepViewState: AnyPublisher<ViewState, Never>
     private(set) var experiment: InteractLogModel
     var currentPhase: ConfigurationModel.PhaseModel? { configuration.phases.first }
     
-    init(experiment: InteractLogModel = .mock) {
+    init(group: Group, experiment: InteractLogModel = .mock) {
+        self.group = group
+        self.configuration = PracticeViewModel.makePracticeConfiguration(group: group)
         self.experiment = experiment
         viewState = viewStateSubject.receive(on: DispatchQueue.main).eraseToAnyPublisher()
         stepViewState = stepViewStateSubject.receive(on: DispatchQueue.main).eraseToAnyPublisher()
@@ -43,7 +57,7 @@ class PracticeViewModel: ExperimentViewModelProtocol {
     }
     
     func showNextStimulus() {
-        showStimulus(at: experiment.stimulusIndex + 1, phase: experiment.phaseIndex)
+         showStimulus(at: experiment.stimulusIndex + 1, phase: experiment.phaseIndex)
     }
     
     func appendSnapshot(image: UIImage) {
@@ -55,8 +69,10 @@ class PracticeViewModel: ExperimentViewModelProtocol {
         guard experiment.phaseIndex == 0 else {
             if case let .stimulusDisplay(isShow, _, _) = action, isShow && experiment.stimulusIndex == 0 {
                 stepViewStateSubject.send(.showTutorial(.tap))
-            } else {
+            } else if group == .A {
                 stepViewStateSubject.send(.hideTutorial)
+            } else {
+                stepViewStateSubject.send(.showTutorial(.swipeUp))
             }
             return
         }
@@ -93,8 +109,10 @@ class PracticeViewModel: ExperimentViewModelProtocol {
             } else {
                 stepViewStateSubject.send(.hideTutorial)
             }
-        case (_, .drawing(_, _, _)):
-            break
+        case let (_, .drawing(isStart, _, _)):
+            if !isStart && group == .B {
+                stepViewStateSubject.send(.showTutorial(.nextPhase))
+            }
         default:
             stepViewStateSubject.send(.hideTutorial)
         }
@@ -120,18 +138,22 @@ private extension PracticeViewModel {
         experiment.stimulusIndex = index
         let phaseItem = configuration.phases[experiment.phaseIndex]
         if experiment.stimulusIndex >= phaseItem.images.count,
-           (0..<configuration.phases.count - 1) ~= experiment.phaseIndex {
+           experiment.phaseIndex < configuration.phases.count - 1 {
             experiment.phaseIndex += 1
             experiment.stimulusIndex = 0
             viewStateSubject.send(.endPhase)
         } else {
             if let image = fetchImage(index: experiment.stimulusIndex, fromPhase: experiment.phaseIndex) {
                 if (phase == 0) && (experiment.stimulusIndex >= phaseItem.images.count - 1) {
-                    stepViewStateSubject.send(.endTutorial(endPracticeMessage))
+                    stepViewStateSubject.send(.endTutorial(group.endPracticeMessage))
                 }
                 viewStateSubject.send(.showNextStimulus(image))
             } else {
-                viewStateSubject.send(.error("fetch image failed"))
+                if experiment.stimulusIndex >= phaseItem.images.count {
+                    viewStateSubject.send(.error("End of practice"))
+                } else {
+                    viewStateSubject.send(.error("Fetch image failed"))
+                }
             }
         }
     }
@@ -150,12 +172,91 @@ private extension PracticeViewModel {
         return UIImage(data: imageData)
     }
     
-    static func makePracticeConfiguration() -> ConfigurationModel {
+    static func makePracticeConfiguration(group: Group) -> ConfigurationModel {
         
-        var configurations = ConfigurationModel(id: "practice")
+        
+        func createPhases() -> [ConfigurationModel.PhaseModel] {
+            var result: [ConfigurationModel.PhaseModel] = []
+            
+            switch group {
+            case .A:
+                //create phase 0
+                var phase0 = ConfigurationModel.PhaseModel(name: "P_PHASE_0", showStimulusWhenDrawing: false)
+                //make images, and then save to document folder
+                let images0 = (1...3).compactMap { index -> String? in
+                    let image: UIImage?
+                    if index < 3 {
+                        image = .init(systemName: "\(index).square")
+                    } else {
+                        let config = UIImage.SymbolConfiguration(paletteColors: [.darkGray, .tintColor])
+                        image = UIImage(systemName: "\(index).square", withConfiguration: config)
+                    }
+                    
+                    guard let image,
+                          let scaledImage = image.resizeImageTo(size: .init(width: 350, height: 300)),
+                          let imageData = scaledImage.pngData() else {
+                        return nil
+                    }
+                    
+                    do {
+                        let name = "\(group.configName)_0_\(index).png"
+                        try imageData.write(to: folderURL.appending(component: name))
+                        return name
+                    } catch {
+                        print(error)
+                        return nil
+                    }
+                }
+                phase0.images = images0
+                result.append(phase0)
+                
+                //phase 1 image
+                if let image = UIImage(systemName: "3.square"),
+                   let scaledImage = image.resizeImageTo(size: .init(width: 350, height: 300)),
+                   let imageData = scaledImage.pngData() {
+                    do {
+                        let name = "\(group.configName)_1.png"
+                        try imageData.write(to: folderURL.appending(component: name))
+                        var phase1 = ConfigurationModel.PhaseModel(name: "P_PHASE_1", showStimulusWhenDrawing: false)
+                        phase1.images = [name]
+                        result.append(phase1)
+                    } catch {
+                        print(error)
+                    }
+                }
+            case .B:
+                result = [0, 1].compactMap { phaseIndex -> ConfigurationModel.PhaseModel? in
+                    var image = UIImage(systemName: "door.french.closed")
+                    if phaseIndex == 0 {
+                        image = image?.withTintColor(.init(named: "Stimulus_line")!)
+                    }
+                    
+                    guard let image,
+                          let scaledImage = image.resizeImageTo(size: .init(width: 350, height: 300)),
+                          let imageData = scaledImage.pngData() else {
+                        return nil
+                    }
+                    
+                    do {
+                        let name = "\(group.configName)_\(phaseIndex).png"
+                        try imageData.write(to: folderURL.appending(component: name))
+                        var phase = ConfigurationModel.PhaseModel(name: "P_PHASE_\(phaseIndex)", showStimulusWhenDrawing: phaseIndex == 0)
+                        phase.images = [name]
+                        return phase
+                    } catch {
+                        print(error)
+                        return nil
+                    }
+                }
+            }
+            return result
+        }
+        
+        var configurations = ConfigurationModel(id: group.configName)
         
         var isDirectory = ObjCBool(false)
         let folderURL = configurations.folderURL
+        print(folderURL)
         let fileExisted = FileManager.default.fileExists(atPath: folderURL.path(), isDirectory: &isDirectory)
         if !(fileExisted && isDirectory.boolValue) {
             try? FileManager.default.createDirectory(at: folderURL, withIntermediateDirectories: true)
@@ -164,65 +265,34 @@ private extension PracticeViewModel {
             return configurations
         }
         
-        print(folderURL)
-        let phase1 = ConfigurationModel.PhaseModel(name: "P_PHASE_0", showStimulusWhenDrawing: false)
-        let phase2 = ConfigurationModel.PhaseModel(name: "P_PHASE_1", showStimulusWhenDrawing: false)
-        configurations.phases = [phase1, phase2]
-        let images = (1...3).map { index in
-            let name = "PRACTICE_0_\(index)"
-            if index < 3 {
-                return ImageInfo(image: .init(systemName: "\(index).square")!, imageName: name)
-            } else {
-                let config = UIImage.SymbolConfiguration(paletteColors: [.darkGray, .tintColor])
-                let lastImage = UIImage(systemName: "\(index).square", withConfiguration: config)!
-                return ImageInfo(image: lastImage, imageName: "PRACTICE_3")
-            }
-        }
-        let phaseImages = [phase1.name: images]
-        
-        for phaseName in phaseImages.keys {
-            guard let phaseImages = phaseImages[phaseName],
-                  let phaseIndex = configurations.phases.firstIndex(where: { $0.name == phaseName }) else { continue }
-            
-            for image in phaseImages {
-                
-                guard let scaledImage = image.image.resizeImageTo(size: .init(width: 350, height: 300)),
-                        let imageData = scaledImage.pngData() else {
-                    continue
-                }
-                
-                try? imageData.write(to: folderURL.appending(component: image.imageName))
-            }
-            configurations.phases[phaseIndex].images = phaseImages.map(\.imageName)
-        }
-        
-        //phase 2 image
-        let image = ImageInfo(image: UIImage(systemName: "3.square")!, imageName: "PRACTICE_1")
-        if let scaledImage = image.image.resizeImageTo(size: .init(width: 350, height: 300)),
-           let imageData = scaledImage.pngData() {
-            try? imageData.write(to: folderURL.appending(component: image.imageName))
-            let lastIndex = configurations.phases.count - 1
-            configurations.phases[lastIndex].images = [image.imageName]
-        }
-   
+        configurations.phases = createPhases()
         //encode configurations
         let configurationData = try? JSONEncoder().encode(configurations)
         try? configurationData!.write(to: configurations.configURL)
         
         return configurations
     }
+}
+
+extension PracticeViewModel.Group {
     
     var endPracticeMessage: String {
+        switch self {
+        case .A:
+            return """
+        When you see an image with a blue border, it indicates that this is the final image and the complete figure for this phase.\nIn the next phase, you will see the entire figure again and be asked to draw it from memory. If you would like to review the image again, simply swipe up using 2 fingers. Just like you did in this practice!
         """
-        When you see an image with a blue border, it indicates that this is the final image and the complete figure for this phase.\nIn the next phase, you will see the entire figure again and be asked to draw it from memory. If you would like to review the image once more, simply swipe up using two fingers.
+        case .B:
+            return """
+        During this phase, please draw the figure by following the blue outline provided. Once you have completed the drawing, swipe left with 2 fingers to proceed to the next phase. \nIn the next phase, the figure will be presented again, and you will be asked to draw it from memory. If you want to review the image again, simply swipe up using 2 fingers.
         """
+        }
     }
 }
 
 extension UIImage {
     
     func resizeImageTo(size: CGSize) -> UIImage? {
-        
         UIGraphicsBeginImageContextWithOptions(size, false, 0.0)
         self.draw(in: CGRect(origin: CGPoint.zero, size: size))
         let resizedImage = UIGraphicsGetImageFromCurrentImageContext()!

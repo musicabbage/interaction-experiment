@@ -85,6 +85,6 @@ extension PracticeView {
 
 struct PracticeView_Previews: PreviewProvider {
     static var previews: some View {
-        PracticeView(viewModel: .init())
+        PracticeView(viewModel: .init(group: .A))
     }
 }
