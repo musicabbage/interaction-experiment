@@ -17,6 +17,10 @@ struct InstructionView: View {
                 .padding(12)
             Text(viewModel.configurations.instruction)
                 .font(.title)
+                .padding(22)
+            Text(viewModel.configurations.gestureInstruction)
+                .font(.title)
+                .foregroundColor(.text.sectionTitle)
         }
     }
 }

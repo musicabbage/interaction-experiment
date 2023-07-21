@@ -25,6 +25,7 @@ struct ConfigurationModel: Codable, Identifiable, Hashable {
     static let configFilename: String = "config"
     
     let id: String
+    let gestureInstruction: String
     var isDraft: Bool = false
     var instruction: String
     var phases: [PhaseModel] = []
@@ -42,10 +43,8 @@ struct ConfigurationModel: Codable, Identifiable, Hashable {
          phases: [PhaseModel] = []) {
         self.id = id
         self.isDraft = isDraft
-        self.instruction = instruction ?? """
-When you are ready to start, press 'N' to open the recording pad.\n
-When you are finished drawing, press ESC to close the recording pad.
-"""
+        self.instruction = instruction ?? ConfigurationModel.defaultInstruction
+        self.gestureInstruction = ConfigurationModel.gestureInstruction
         self.phases = phases
     }
 }
@@ -55,6 +54,22 @@ extension ConfigurationModel {
         var mock = ConfigurationModel()
         mock.phases = [.mock, .mock]
         return mock
+    }
+    
+    static var defaultInstruction: String {
+        """
+        When you are ready to start, tap the screen to begin the drawing experiment.\n
+        Please use the Apple Pencil for drawing and your finger to show/hide images.\n
+        """
+    }
+    
+    static var gestureInstruction: String {
+        """
+        ● Show the image again → Swipe UP with TWO fingers ✌️
+        ● Hide the image → Tap with ONE finger 👆
+        ● Show the previous image → Swipe RIGHT with TWO fingers ✌️
+        ● Show the next image → Swipe LEFT with TWO fingers ✌️
+        """
     }
 }
 
