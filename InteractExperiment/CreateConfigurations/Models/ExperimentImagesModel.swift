@@ -52,7 +52,7 @@ class ExperimentImagesModel: ObservableObject, Equatable, Identifiable {
         case .stimulus:
             name = "S\(images.count + 1)"
         case let .custom(prefix):
-            name = prefix + "\(images.count + 1)"
+            name = prefix + "_\(images.count + 1)"
         }
         images.append(ImageInfo(image: image, imageName: name))
     }

@@ -28,7 +28,6 @@ struct ConsentFormView: View {
                 LoadingView()
             }
         }
-        .navigationTitle("Consent Form")
         .toolbar {
             ToolbarItem(placement: .cancellationAction) {
                 Button("Clean", role: .cancel) {

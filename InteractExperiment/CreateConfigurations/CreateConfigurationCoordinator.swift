@@ -23,6 +23,7 @@ struct CreateConfigurationCoordinator: View {
         CreateConfigurationView(flowState: state,
                                 viewModel: viewModel,
                                 phases: .defaultExperimentImagesModels)
+        .interactiveDismissDisabled()
             .onChange(of: state.dismiss) { newValue in
                 guard newValue == true else { return }
                 dismiss()

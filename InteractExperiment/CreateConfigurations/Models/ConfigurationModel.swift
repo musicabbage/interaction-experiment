@@ -25,9 +25,8 @@ struct ConfigurationModel: Codable, Identifiable, Hashable {
     static let configFilename: String = "config"
     
     let id: String
-    let gestureInstruction: String
-    var isDraft: Bool = false
     var instruction: String
+    var isDraft: Bool = false
     var phases: [PhaseModel] = []
     var folderURL: URL {
         let path = isDraft ? "draft/\(id)" : id
@@ -44,7 +43,6 @@ struct ConfigurationModel: Codable, Identifiable, Hashable {
         self.id = id
         self.isDraft = isDraft
         self.instruction = instruction ?? ConfigurationModel.defaultInstruction
-        self.gestureInstruction = ConfigurationModel.gestureInstruction
         self.phases = phases
     }
 }
@@ -60,15 +58,6 @@ extension ConfigurationModel {
         """
         When you are ready to start, tap the screen to begin the drawing experiment.\n
         Please use the Apple Pencil for drawing and your finger to show/hide images.\n
-        """
-    }
-    
-    static var gestureInstruction: String {
-        """
-        ● Show the image again → Swipe UP with TWO fingers ✌️
-        ● Hide the image → Tap with ONE finger 👆
-        ● Show the previous image → Swipe RIGHT with TWO fingers ✌️
-        ● Show the next image → Swipe LEFT with TWO fingers ✌️
         """
     }
 }
