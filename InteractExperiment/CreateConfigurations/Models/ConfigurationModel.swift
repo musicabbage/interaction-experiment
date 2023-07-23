@@ -7,26 +7,68 @@
 
 import Foundation
 
-struct ConfigurationModel: Codable {
+struct ConfigurationModel: Codable, Identifiable, Hashable {
+
+    struct PhaseModel: Codable, Identifiable, Hashable {
+        let name: String
+        let showStimulusWhenDrawing: Bool
+        var id: String
+        var images: [String] = []
+        
+        init(id: String = UUID().uuidString, name: String, showStimulusWhenDrawing: Bool = true) {
+            self.id = id
+            self.name = name
+            self.showStimulusWhenDrawing = showStimulusWhenDrawing
+        }
+    }
+    
+    static let configFilename: String = "config"
+    
     let id: String
+    var instruction: String
+    var defaultParticipantId: String
     var isDraft: Bool = false
-    var instruction: String = """
-When you are ready to start, press 'N' to open the recording pad.\n
-When you are finished drawing, press ESC to close the recording pad.
-"""
-    var familiarImages: [String] = []
-    var stimulusImages: [String] = []
+    var phases: [PhaseModel] = []
     var folderURL: URL {
         let path = isDraft ? "draft/\(id)" : id
-        return FileManager.documentsDirectory.appending(path: path, directoryHint: .isDirectory)
+        return FileManager.configsDirectory.appending(path: path, directoryHint: .isDirectory)
     }
     var configURL: URL {
-        folderURL.appending(path: "config")
+        folderURL.appending(path: ConfigurationModel.configFilename)
+    }
+    
+    init(id: String = UUID().uuidString,
+         isDraft: Bool = false,
+         instruction: String? = nil,
+         defaultParticipantId: String = "",
+         phases: [PhaseModel] = []) {
+        self.id = id
+        self.isDraft = isDraft
+        self.instruction = instruction ?? ConfigurationModel.defaultInstruction
+        self.defaultParticipantId = defaultParticipantId
+        self.phases = phases
     }
 }
 
 extension ConfigurationModel {
     static var mock: ConfigurationModel {
-        ConfigurationModel(id: UUID().uuidString)
+        var mock = ConfigurationModel()
+        mock.phases = [.mock, .mock]
+        return mock
+    }
+    
+    static var defaultInstruction: String {
+        """
+        When you are ready to start, tap the screen to begin the drawing experiment.\n
+        Please use the Apple Pencil for drawing and your finger to show/hide images.\n
+        """
+    }
+}
+
+extension ConfigurationModel.PhaseModel {
+    static var mock: ConfigurationModel.PhaseModel {
+        var mock = ConfigurationModel.PhaseModel(name: "mock")
+        mock.images = ["stimulus_1", "stimulus_2"]
+        return mock
     }
 }

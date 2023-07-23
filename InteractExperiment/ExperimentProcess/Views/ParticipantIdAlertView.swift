@@ -8,10 +8,12 @@
 import SwiftUI
 
 struct ParticipantIdAlertView: View {
-    @State private var isAuthenticating = false
-    @State private var participantId = ""
-    @State private var isConfirmCancel = false
-    @Environment(\.dismiss) private var dismiss
+    @State private var participantId: String = ""
+    private var confirmClosure: ((String) -> Void)?
+    
+    init(participantId: String = "") {
+        _participantId = .init(initialValue: participantId)
+    }
     
     var body: some View {
         VStack {
@@ -22,9 +24,18 @@ struct ParticipantIdAlertView: View {
     }
 }
 
+extension ParticipantIdAlertView {
+    func onConfirmParticipantId(perform action: @escaping(String) -> Void) -> Self {
+        var copy = self
+        copy.confirmClosure = action
+        return copy
+    }
+}
+
 private extension ParticipantIdAlertView {
     func continueProcess() {
-        
+        guard let confirmClosure else { return }
+        confirmClosure(participantId)
     }
 }
 
