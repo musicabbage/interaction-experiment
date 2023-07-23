@@ -149,7 +149,6 @@ private extension ExperimentView {
         let renderer = ImageRenderer(content: canvas)
 
         // make sure and use the correct display scale for this device
-        renderer.scale = displayScale
 
         if let snapshot = renderer.uiImage {
             viewModel.appendSnapshot(image: snapshot)
