@@ -36,7 +36,7 @@ struct StartExperimentCoordinator: View {
 private extension StartExperimentCoordinator {
     @ViewBuilder
     func alertView() -> some View {
-        ParticipantIdAlertView()
+        ParticipantIdAlertView(participantId: configurations.defaultParticipantId)
           .onConfirmParticipantId { participantId in
               experiment = .init(participantId: participantId, configId: configurations.id)
           }

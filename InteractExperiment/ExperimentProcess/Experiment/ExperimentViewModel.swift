@@ -151,13 +151,14 @@ private extension ExperimentViewModel {
         
         //snapshots
         for snapshot in experiment.snapshots {
-            guard let imageData = snapshot.image.jpegData(compressionQuality: 0.5) else {
+            guard let imageData = snapshot.image.jpegData(compressionQuality: 0.75) else {
                 continue
             }
-            let filename = String(describing: "\(Int(snapshot.timestamp)).png")
+            let filename = String(describing: "\(Int(snapshot.timestamp)).jpeg")
             try imageData.write(to: folderURL.appending(path: filename))
             experiment.finalSnapshotName = filename
         }
+        experiment.snapshots = []
         
         //raw data
         let configurationData = try JSONEncoder().encode(experiment)

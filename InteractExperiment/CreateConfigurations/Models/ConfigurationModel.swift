@@ -25,8 +25,9 @@ struct ConfigurationModel: Codable, Identifiable, Hashable {
     static let configFilename: String = "config"
     
     let id: String
-    var isDraft: Bool = false
     var instruction: String
+    var defaultParticipantId: String
+    var isDraft: Bool = false
     var phases: [PhaseModel] = []
     var folderURL: URL {
         let path = isDraft ? "draft/\(id)" : id
@@ -39,13 +40,12 @@ struct ConfigurationModel: Codable, Identifiable, Hashable {
     init(id: String = UUID().uuidString,
          isDraft: Bool = false,
          instruction: String? = nil,
+         defaultParticipantId: String = "",
          phases: [PhaseModel] = []) {
         self.id = id
         self.isDraft = isDraft
-        self.instruction = instruction ?? """
-When you are ready to start, press 'N' to open the recording pad.\n
-When you are finished drawing, press ESC to close the recording pad.
-"""
+        self.instruction = instruction ?? ConfigurationModel.defaultInstruction
+        self.defaultParticipantId = defaultParticipantId
         self.phases = phases
     }
 }
@@ -55,6 +55,13 @@ extension ConfigurationModel {
         var mock = ConfigurationModel()
         mock.phases = [.mock, .mock]
         return mock
+    }
+    
+    static var defaultInstruction: String {
+        """
+        When you are ready to start, tap the screen to begin the drawing experiment.\n
+        Please use the Apple Pencil for drawing and your finger to show/hide images.\n
+        """
     }
 }
 

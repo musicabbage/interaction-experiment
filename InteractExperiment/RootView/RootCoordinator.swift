@@ -10,7 +10,7 @@ import SwiftUI
 struct RootCoordinator: View {
     @StateObject private var state: RootFlowState = .init()
     @State private var columnVisibility: NavigationSplitViewVisibility = .automatic
-    @State private var selectedMenu: Menu? = .practiceB
+    @State private var selectedMenu: Menu? = .previousExperiments
     @State private var practiceANavPath: NavigationPath = .init()
     @State private var practiceBNavPath: NavigationPath = .init()
     
@@ -20,28 +20,40 @@ struct RootCoordinator: View {
                 NavigationLink(item.title, value: item)
             }
         } detail: {
-            if selectedMenu == .practiceA {
-                NavigationStack(path: $practiceANavPath) {
-                    PracticeCoordinator(navigationPath: $practiceANavPath, group: .A)
-                        .navigationDestination(for: PracticeFlowLink.self, destination: practiceNavDestination)
+            switch selectedMenu {
+            case .newExperiment:
+                NavigationStack(path: $state.path) {
+                    Button("start a new experiment") {
+                        state.presentedItem = .createConfig
+                    }
+                    .actionButtonStyle()
+                    .padding([.bottom], 64)
+                    .navigationDestination(for: RootFlowLink.self, destination: rootNavDestination)
+                    .navigationDestination(for: ExperimentFlowLink.self, destination: experimentNavDestination)
+                    
                 }
-            } else if selectedMenu == .practiceB {
-                NavigationStack(path: $practiceBNavPath) {
-                    PracticeCoordinator(navigationPath: $practiceBNavPath, group: .B)
-                        .navigationDestination(for: PracticeFlowLink.self, destination: practiceNavDestination)
-                }
-            } else if selectedMenu == .configurations {
-                EmptyView()
-            } else {
+            case .previousExperiments:
                 NavigationStack(path: $state.path) {
                     RootView(flowState: state)
                         .navigationDestination(for: RootFlowLink.self, destination: rootNavDestination)
                         .navigationDestination(for: ExperimentFlowLink.self, destination: experimentNavDestination)
-                        .sheet(item: $state.presentedItem, content: presentContent)
                         .fullScreenCover(item: $state.coverItem, content: coverContent)
                 }
+            case .practiceA:
+                NavigationStack(path: $practiceANavPath) {
+                    PracticeCoordinator(navigationPath: $practiceANavPath, group: .A)
+                        .navigationDestination(for: PracticeFlowLink.self, destination: practiceNavDestination)
+                }
+            case .practiceB:
+                NavigationStack(path: $practiceBNavPath) {
+                    PracticeCoordinator(navigationPath: $practiceBNavPath, group: .B)
+                        .navigationDestination(for: PracticeFlowLink.self, destination: practiceNavDestination)
+                }
+            default:
+                EmptyView()
             }
         }
+        .sheet(item: $state.presentedItem, content: presentContent)
     }
 }
 
