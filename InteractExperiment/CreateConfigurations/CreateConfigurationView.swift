@@ -16,7 +16,9 @@ struct CreateConfigurationView<ViewModel>: View where ViewModel: CreateConfigura
     @State private var phases: [ExperimentImagesModel]
     @State private var showAddPhaseSheet: Bool = false
     @State private var phaseName: String = ""
-    @FocusState private var instructionFocused: Bool
+    @State private var defaultParticipantId: String = ""
+    @FocusState private var participantIdKeyboardFocused: Bool
+    @FocusState private var instructionKeyboardFocused: Bool
     @ObservedObject var flowState: CreateConfigFlowState
     
     private let viewModel: ViewModel
@@ -30,7 +32,6 @@ struct CreateConfigurationView<ViewModel>: View where ViewModel: CreateConfigura
     
     var body: some View {
         NavigationStack {
-            
             Form {
                 ForEach(phases) { phase in
                     ExperimentPhaseSectionView(phase: phase)
@@ -42,21 +43,22 @@ struct CreateConfigurationView<ViewModel>: View where ViewModel: CreateConfigura
                 
                 Section {
                     TextEditor(text: $instructionText)
-                        .focused($instructionFocused)
-                        .toolbar {
-                            ToolbarItemGroup(placement: .keyboard) {
-                                Spacer()
-                                Button("Done") {
-                                    instructionFocused = false
-                                    viewModel.update(instruction: instructionText)
-                                }
-                            }
-                        }
+                        .focused($instructionKeyboardFocused)
                         .lineSpacing(1)
                         .padding([.top, .bottom], 10)
                         
                 } header: {
                     Text("Instruction")
+                }
+                
+                Section {
+                    TextEditor(text: $defaultParticipantId)
+                        .focused($participantIdKeyboardFocused)
+                        .lineSpacing(1)
+                        .padding([.top, .bottom], 10)
+                        
+                } header: {
+                    Text("Default Participant ID")
                 }
             }
 #if os(macOS)
@@ -79,6 +81,13 @@ struct CreateConfigurationView<ViewModel>: View where ViewModel: CreateConfigura
                     }
                     .actionButtonStyle()
                 }
+                ToolbarItemGroup(placement: .keyboard) {
+                    Spacer()
+                    Button("Done") {
+                        participantIdKeyboardFocused = false
+                        instructionKeyboardFocused = false
+                    }
+                }
             }
 #endif
         }
@@ -99,6 +108,12 @@ struct CreateConfigurationView<ViewModel>: View where ViewModel: CreateConfigura
                 break
             }
         }
+        .onChange(of: instructionKeyboardFocused) { newValue in
+            viewModel.update(instruction: instructionText)
+        }
+        .onChange(of: participantIdKeyboardFocused) { newValue in
+            viewModel.update(defaultParticipantId: defaultParticipantId)
+        }
 #if os(macOS)
         .background(Color.red)
         .frame(width: 600, height: 350)
@@ -115,6 +130,8 @@ private extension CreateConfigurationView {
                                   phaseName: phase.name,
                                   showStimulusWhenDrawing: phase.showStimulusWhenDrawing)
         }
+//        viewModel.update(instruction: instructionText)
+//        viewModel.update(defaultParticipantId: defaultParticipantId)
         viewModel.save(asDraft: asDraft)
     }
 }

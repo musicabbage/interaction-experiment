@@ -26,6 +26,7 @@ struct ConfigurationModel: Codable, Identifiable, Hashable {
     
     let id: String
     var instruction: String
+    var defaultParticipantId: String
     var isDraft: Bool = false
     var phases: [PhaseModel] = []
     var folderURL: URL {
@@ -39,10 +40,12 @@ struct ConfigurationModel: Codable, Identifiable, Hashable {
     init(id: String = UUID().uuidString,
          isDraft: Bool = false,
          instruction: String? = nil,
+         defaultParticipantId: String = "",
          phases: [PhaseModel] = []) {
         self.id = id
         self.isDraft = isDraft
         self.instruction = instruction ?? ConfigurationModel.defaultInstruction
+        self.defaultParticipantId = defaultParticipantId
         self.phases = phases
     }
 }

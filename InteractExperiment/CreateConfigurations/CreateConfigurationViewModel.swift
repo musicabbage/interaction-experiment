@@ -24,6 +24,7 @@ protocol CreateConfigurationViewModelProtocol {
     
     func appendPhase(images: [ImageInfo], phaseName: String, showStimulusWhenDrawing show: Bool)
     func update(instruction: String)
+    func update(defaultParticipantId: String)
     func save(asDraft isDraft: Bool)
 }
 
@@ -72,6 +73,10 @@ class CreateConfigurationViewModel: CreateConfigurationViewModelProtocol {
     
     func update(instruction: String) {
         configurations.instruction = instruction
+    }
+    
+    func update(defaultParticipantId: String) {
+        configurations.defaultParticipantId = defaultParticipantId
     }
     
     func save(asDraft isDraft: Bool = false) {

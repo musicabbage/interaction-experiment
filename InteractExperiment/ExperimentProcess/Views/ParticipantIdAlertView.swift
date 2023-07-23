@@ -9,7 +9,11 @@ import SwiftUI
 
 struct ParticipantIdAlertView: View {
     @State private var participantId: String = ""
-    var confirmClosure: ((String) -> Void)?
+    private var confirmClosure: ((String) -> Void)?
+    
+    init(participantId: String = "") {
+        _participantId = .init(initialValue: participantId)
+    }
     
     var body: some View {
         VStack {
