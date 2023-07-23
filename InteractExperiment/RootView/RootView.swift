@@ -8,17 +8,17 @@
 import SwiftUI
 
 enum Menu: Int, CaseIterable, Identifiable {
-    case configurations
-    case experiments
+    case newExperiment
+    case previousExperiments
     case practiceA
     case practiceB
     
     var id: Int { rawValue }
     var title: String {
         switch self {
-        case .configurations:
+        case .newExperiment:
             return "New Experiments"
-        case .experiments:
+        case .previousExperiments:
             return "Previous Experiments"
         case .practiceA:
             return "Playground A"
@@ -43,15 +43,6 @@ struct RootView: View {
             .onUseConfiguration(perform: { configPath in
                 state.path.append(RootFlowLink.configCreated(configPath))
             })
-            .toolbar {
-                ToolbarItem(placement: .bottomBar) {
-                    Button("start a new experiment") {
-                        state.presentedItem = .createConfig
-                    }
-                    .actionButtonStyle()
-                    .padding([.bottom], 64)
-                }
-            }
     }
 }
 
