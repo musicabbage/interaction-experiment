@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - master
+      
+permissions:
+  contents: write
 
 jobs:
   add-tag:
@@ -11,7 +14,7 @@ jobs:
 
     steps:
       - name: Check out code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v2
         
       - name: Get Bundle Version
         id: bundle_version
