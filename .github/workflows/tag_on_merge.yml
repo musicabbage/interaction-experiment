@@ -14,13 +14,14 @@ jobs:
 
     steps:
       - name: Check out code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         
       - name: Get Bundle Version
         id: bundle_version
         run: |
           bundle_version=$(xcodebuild -showBuildSettings | grep MARKETING_VERSION | tr -d 'MARKETING_VERSION =')
-          echo "::set-output name=version::${bundle_version}"
+          # echo "::set-output name=version::${bundle_version}"
+          echo "version=${bundle_version}" >> "$GITHUB_ENV"
       
       - name: Add Tag
         run: |
