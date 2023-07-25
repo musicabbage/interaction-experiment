@@ -25,6 +25,7 @@ struct InteractLogWriter: LogWriterProtocol {
          Trial End            :04/07/2023 - 17:29:41
          */
         let dateFormatter = DateFormatter.logDateFormatter
+        logString.append("App Version          :\(log.appVersion)\n")
         logString.append("Name                 :\(log.participantId)\n")
         logString.append("Experiment Start     :\(dateFormatter.string(from: log.experimentStart))\n")
         logString.append("Stroke Colour        :\("0,0,0,255")\n")
