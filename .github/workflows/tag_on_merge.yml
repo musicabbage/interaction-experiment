@@ -16,6 +16,9 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v3
         
+      - name: Setup xcodebuild
+        uses: mxcl/xcodebuild@v1
+          
       - name: Get Bundle Version
         id: bundle_version
         run: |
