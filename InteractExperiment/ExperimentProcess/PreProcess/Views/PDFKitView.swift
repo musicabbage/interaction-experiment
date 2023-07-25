@@ -120,6 +120,6 @@ extension PDFKitView {
 
 struct PDFKitView_Previews: PreviewProvider {
     static var previews: some View {
-        PDFKitView(url: Bundle.main.url(forResource: "consent_form", withExtension: "pdf")!)
+        PDFKitView(url: Bundle.main.url(forResource: "PIS_and_Consent_form", withExtension: "pdf")!)
     }
 }

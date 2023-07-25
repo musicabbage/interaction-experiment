@@ -87,6 +87,6 @@ extension WebView {
 
 struct WebView_Previews: PreviewProvider {
     static var previews: some View {
-        WebView(url: Bundle.main.url(forResource: "consent_form", withExtension: "pdf")!)
+        WebView(url: URL(string: "https://www.surveymonkey.co.uk/r/5ZV2MMW")!)
     }
 }
