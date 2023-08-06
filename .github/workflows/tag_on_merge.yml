@@ -30,9 +30,9 @@ jobs:
         id: bundle_version
         run: |
           # bundle_version=$(xcodebuild -showBuildSettings | grep MARKETING_VERSION | tr -d 'MARKETING_VERSION =')
-          # echo "::set-output name=version::${bundle_version}"
           bundle_version=$(cat InteractExperiment.xcodeproj/project.pbxproj | grep -m1 'MARKETING_VERSION' | cut -d'=' -f2 | tr -d ';' | tr -d ' ')
           echo "version=${bundle_version}" >> "$GITHUB_ENV"
+          echo "::set-output name=version::${bundle_version}"
       
       - name: Add Tag
         run: |
