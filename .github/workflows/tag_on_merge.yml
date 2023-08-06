@@ -20,6 +20,7 @@ jobs:
         uses: mxcl/xcodebuild@v1
           
       - name: Get Bundle Version
+        uses: mxcl/xcodebuild@v1
         id: bundle_version
         run: |
           bundle_version=$(xcodebuild -showBuildSettings | grep MARKETING_VERSION | tr -d 'MARKETING_VERSION =')
