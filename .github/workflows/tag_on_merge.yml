@@ -36,6 +36,7 @@ jobs:
       
       - name: Add Tag
         run: |
+          echo "::set-output name=version::${{steps.bundle_version.outputs.version}}"
           git config user.name "${{ github.actor }}"
           git config user.email "${{ github.actor }}@users.noreply.github.com"
           git tag -a "v${{ steps.bundle_version.outputs.version }}" -m "Version ${{ steps.bundle_version.outputs.version }}"
