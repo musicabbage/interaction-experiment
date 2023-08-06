@@ -11,18 +11,28 @@ permissions:
 jobs:
   add-tag:
     runs-on: macos-12
-    
+    strategy:
+    matrix:
+      platform:
+          - macOS
+          - watchOS
+          - tvOS
+          - iOS
+          - mac-catalyst
+          
     steps:
       - name: Check out code
         uses: actions/checkout@v3
 
-      - name: Setup Xcode
-        uses: maxim-lobanov/setup-xcode@v1
-        with:
-          xcode-version: '14.2.0'
+      # - name: Setup Xcode
+      #   uses: maxim-lobanov/setup-xcode@v1
+      #   with:
+      #     xcode-version: '14.2.0'
         
       - name: Setup xcodebuild
-        uses: mxcl/xcodebuild@v2
+        uses: mxcl/xcodebuild@v1
+        with:
+          platform: ${{ matrix.platform }}
           
       - name: Get Bundle Version
         id: bundle_version
