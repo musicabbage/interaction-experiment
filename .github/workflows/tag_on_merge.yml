@@ -11,14 +11,6 @@ permissions:
 jobs:
   add-tag:
     runs-on: macos-12
-    # strategy:
-    #   matrix:
-    #     platform:
-    #       - macOS
-    #       - watchOS
-    #       - tvOS
-    #       - iOS
-    #       - mac-catalyst
           
     steps:
       - name: Check out code
