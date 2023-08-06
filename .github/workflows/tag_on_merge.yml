@@ -10,18 +10,17 @@ permissions:
 
 jobs:
   add-tag:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
 
     steps:
       - name: Check out code
         uses: actions/checkout@v3
         
-      # - name: Setup xcodebuild
-      #   uses: mxcl/xcodebuild@v1
+      - name: Setup xcodebuild
+        uses: mxcl/xcodebuild@v1
           
       - name: Get Bundle Version
-        uses: mxcl/xcodebuild@v1
-        #id: bundle_version
+        id: bundle_version
         run: |
           bundle_version=$(xcodebuild -showBuildSettings | grep MARKETING_VERSION | tr -d 'MARKETING_VERSION =')
           # echo "::set-output name=version::${bundle_version}"
