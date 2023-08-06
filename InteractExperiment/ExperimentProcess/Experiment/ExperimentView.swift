@@ -75,6 +75,7 @@ struct ExperimentView: View {
                                     lines[lastIdx].points.append(point)
                                 case .end:
                                     snapShot(size: geo.size)
+                                    
                                     viewModel.appendLogAction(.drawing(false, point.x, point.y))
                                 }
                             }
