@@ -114,6 +114,7 @@ struct InteractLogModel: Codable, Identifiable, Hashable {
     let id: String
     let configId: String
     let experimentStart: Date
+    let appVersion: String
     private(set) var participantId: String = ""
     private(set) var actions: [ActionModel] = []
     var drawingPadSize: CGSize = .zero
@@ -135,6 +136,7 @@ struct InteractLogModel: Codable, Identifiable, Hashable {
         self.trialNumber = 1    //TODO: fixed trial number
         self.experimentStart = Date.now
         self.participantId = participantId
+        self.appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? ""
     }
     
     init(from decoder: Decoder) throws {
@@ -142,6 +144,11 @@ struct InteractLogModel: Codable, Identifiable, Hashable {
         self.participantId = try container.decode(String.self, forKey: .participantId)
         self.id = try container.decode(String.self, forKey: .id)
         self.configId = try container.decode(String.self, forKey: .configId)
+        if let appVersion = try? container.decode(String.self, forKey: .appVersion) {
+            self.appVersion = appVersion
+        } else {
+            self.appVersion = ""
+        }
         self.stimulusIndex = try container.decode(Int.self, forKey: .stimulusIndex)
         self.phaseIndex = try container.decode(Int.self, forKey: .phaseIndex)
         self.experimentStart = try container.decode(Date.self, forKey: .experimentStart)
