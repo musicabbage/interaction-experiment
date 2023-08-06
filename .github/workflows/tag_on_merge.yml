@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   add-tag:
-    runs-on: macos-11
+    runs-on: macos-12
     
     steps:
       - name: Check out code
@@ -19,7 +19,7 @@ jobs:
       - name: Setup Xcode
         uses: maxim-lobanov/setup-xcode@v1
         with:
-          xcode-version: '13.0'
+          xcode-version: '14.2.0'
         
       - name: Setup xcodebuild
         uses: mxcl/xcodebuild@v2
