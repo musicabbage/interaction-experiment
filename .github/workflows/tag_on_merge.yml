@@ -22,7 +22,7 @@ jobs:
           xcode-version: latest-stable
         
       - name: Setup xcodebuild
-        uses: mxcl/xcodebuild@v1
+        uses: mxcl/xcodebuild@v2
           
       - name: Get Bundle Version
         id: bundle_version
