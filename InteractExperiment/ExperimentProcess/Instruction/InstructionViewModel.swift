@@ -36,6 +36,6 @@ extension InstructionViewModel {
     }
     
     var cautions: String {
-        "CAUTIONS: You cannot modify or erase your drawing.\nPlease proceed carefully with every stroke."
+        "CAUTIONS: You cannot modify or erase your drawing.\nPlease draw carefully with every stroke."
     }
 }
