@@ -28,7 +28,7 @@ class PreProcessViewModel: PreProcessViewModelProtocol {
     private let experiment: InteractLogModel
     private let viewStateSubject: PassthroughSubject<ViewState, Never> = .init()
     
-    let consentFormPDF: URL = Bundle.main.url(forResource: "PIS_and_Consent_form", withExtension: "pdf")!
+    let consentFormPDF: URL = Bundle.main.url(forResource: "PIS_and_Consent_form_v3", withExtension: "pdf")!
     let questionnaireURL: URL = URL(string: "https://www.surveymonkey.co.uk/r/5ZV2MMW")!
     let viewState: AnyPublisher<ViewState, Never>
     
