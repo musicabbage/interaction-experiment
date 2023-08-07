@@ -47,6 +47,9 @@ struct InteractLogWriter: LogWriterProtocol {
         } else {
             logString.append("Trial End            :\n")
         }
+        if let appVersion = Bundle.main.releaseVersionNumber {
+            logString.append("App Version          :\(appVersion)")
+        }
         
         //action
         logString.append("\n")
@@ -82,5 +85,11 @@ private extension InteractLogWriter {
         var result = images.reduce("") { $0 + $1 + "," }
         result.removeLast()
         return result
+    }
+}
+
+extension Bundle {
+    var releaseVersionNumber: String? {
+        return infoDictionary?["CFBundleShortVersionString"] as? String
     }
 }
