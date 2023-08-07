@@ -25,7 +25,7 @@ struct ExperimentView: View {
     
     private let showStimulusWhenDrawing: Bool
     private let viewModel: ExperimentViewModelProtocol
-    var finishClosure: ((ConfigurationModel, InteractLogModel) -> Void) = { _,_ in }
+    private var finishClosure: ((ConfigurationModel, InteractLogModel) -> Void) = { _,_ in }
     
     init(viewModel: ExperimentViewModelProtocol) {
         self.viewModel = viewModel
@@ -63,19 +63,24 @@ struct ExperimentView: View {
                                 viewModel.setDrawingPadSize(geo.size)
                             }
                         ExperimentGestureView()
-                            .onPencilDraw { state, point in
+                            .onPencilDraw { state, drawing in
+                                let point = drawing.point
                                 switch state {
                                 case .began:
                                     lines.append(Line(points: [point], color: strokeColour))
-                                    viewModel.appendLogAction(.drawing(true, point.x, point.y))
+                                    viewModel.appendLogAction(.drawing(true, drawing))
+                                    viewModel.resetDrawingData()
                                 case .update:
                                     guard let lastIdx = lines.indices.last else {
                                         break
                                     }
                                     lines[lastIdx].points.append(point)
+                                    viewModel.appendDrawingData(drawing)
                                 case .end:
                                     snapShot(size: geo.size)
-                                    viewModel.appendLogAction(.drawing(false, point.x, point.y))
+                                    viewModel.appendLogAction(.drawing(false, drawing))
+                                    let avgDrawing = viewModel.collectAverageDrawingData()
+                                    viewModel.appendLogAction(.pencilDrawing(avgDrawing))
                                 }
                             }
                             .onTwoFingersSwipe { direction in

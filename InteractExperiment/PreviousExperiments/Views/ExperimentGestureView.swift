@@ -10,7 +10,7 @@ import SwiftUI
 
 struct ExperimentGestureView: UIViewRepresentable {
     
-    private var pencilPanClosure: (GestureView.State, CGPoint) -> Void = { _, _ in }
+    private var pencilPanClosure: (GestureView.State, DrawingModel) -> Void = { _, _ in }
     private var twoFingersSwipeClosure: (GestureView.SwipeDirection) -> Void = { _ in }
     
     func makeUIView(context: Context) -> GestureView {
@@ -25,7 +25,7 @@ struct ExperimentGestureView: UIViewRepresentable {
         gestureView.swipeClosure = twoFingersSwipeClosure
     }
     
-    func onPencilDraw(perform action: @escaping(GestureView.State, CGPoint) -> Void) -> Self {
+    func onPencilDraw(perform action: @escaping(GestureView.State, DrawingModel) -> Void) -> Self {
         var copy = self
         copy.pencilPanClosure = action
         return copy
@@ -48,7 +48,7 @@ class GestureView: UIView {
     }
     
     private var isPencilInput: Bool = false
-    var pencilPanClosure: (State, CGPoint) -> Void = { _, _ in }
+    var pencilPanClosure: (GestureView.State, DrawingModel) -> Void = { _, _ in }
     var swipeClosure: (SwipeDirection) -> Void = { _ in }
     
     override init(frame: CGRect) {
@@ -70,21 +70,40 @@ class GestureView: UIView {
 #else
         isPencilInput = touches.first?.type == .pencil
 #endif
-        if isPencilInput, let point = touches.first?.preciseLocation(in: self) {
-            pencilPanClosure(.began, point)
+        if isPencilInput, let touch = touches.first {
+            let drawing = DrawingModel(timestamp: Date.now.timeIntervalSince1970,
+                                       point: touch.preciseLocation(in: self),
+                                       force: touch.force / sin(touch.altitudeAngle),
+                                       azimuth: touch.azimuthAngle(in: self),
+                                       altitude: touch.altitudeAngle)
+            pencilPanClosure(.began, drawing)
         }
     }
     
+    
+    
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesMoved(touches, with: event)
-        guard isPencilInput, let point = touches.first?.preciseLocation(in: self) else { return }
-        pencilPanClosure(.update, point)
+        guard isPencilInput, let touch = touches.first else { return }
+        
+        let drawing = DrawingModel(timestamp: Date.now.timeIntervalSince1970,
+                                   point: touch.preciseLocation(in: self),
+                                   force: touch.force,
+                                   azimuth: touch.azimuthAngle(in: self),
+                                   altitude: touch.altitudeAngle)
+        pencilPanClosure(.update, drawing)
     }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesMoved(touches, with: event)
-        guard isPencilInput, let point = touches.first?.preciseLocation(in: self) else { return }
-        pencilPanClosure(.end, point)
+        guard isPencilInput, let touch = touches.first else { return }
+        
+        let drawing = DrawingModel(timestamp: Date.now.timeIntervalSince1970,
+                                   point: touch.preciseLocation(in: self),
+                                   force: touch.force,
+                                   azimuth: touch.azimuthAngle(in: self),
+                                   altitude: touch.altitudeAngle)
+        pencilPanClosure(.end, drawing)
     }
     
     required init?(coder: NSCoder) {
