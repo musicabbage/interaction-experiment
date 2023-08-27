@@ -17,6 +17,16 @@
 		8B2C0F6B2A54A04C00CE75AC /* LogWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B2C0F6A2A54A04C00CE75AC /* LogWriter.swift */; };
 		8B2C0F6D2A54A21900CE75AC /* InteractLogWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B2C0F6C2A54A21900CE75AC /* InteractLogWriter.swift */; };
 		8B2C0F6F2A54A46D00CE75AC /* DateFormatterExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B2C0F6E2A54A46D00CE75AC /* DateFormatterExtensions.swift */; };
+		8B475D842A9AD1EF00E22648 /* ConfigurationDraftsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B475D832A9AD1EF00E22648 /* ConfigurationDraftsView.swift */; };
+		8B475D862A9AD1FE00E22648 /* ConfigurationDraftsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B475D852A9AD1FE00E22648 /* ConfigurationDraftsViewModel.swift */; };
+		8B475D882A9AD21400E22648 /* ConfigurationDraftsCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B475D872A9AD21400E22648 /* ConfigurationDraftsCoordinator.swift */; };
+		8B475D8A2A9AD22700E22648 /* ConfigurationDraftsFlowState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B475D892A9AD22700E22648 /* ConfigurationDraftsFlowState.swift */; };
+		8B475D8B2A9AD32B00E22648 /* ConfigurationDraftsCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B475D872A9AD21400E22648 /* ConfigurationDraftsCoordinator.swift */; };
+		8B475D8C2A9AD32B00E22648 /* ConfigurationDraftsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B475D832A9AD1EF00E22648 /* ConfigurationDraftsView.swift */; };
+		8B475D8D2A9AD32B00E22648 /* ConfigurationDraftsFlowState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B475D892A9AD22700E22648 /* ConfigurationDraftsFlowState.swift */; };
+		8B475D8E2A9AD32B00E22648 /* ConfigurationDraftsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B475D852A9AD1FE00E22648 /* ConfigurationDraftsViewModel.swift */; };
+		8B475D912A9AD61A00E22648 /* ConfigurationItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B475D902A9AD61A00E22648 /* ConfigurationItemView.swift */; };
+		8B475D922A9AD69D00E22648 /* ConfigurationItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B475D902A9AD61A00E22648 /* ConfigurationItemView.swift */; };
 		8B4D975F2A7BFEAC001AE140 /* PIS_and_Consent_form_v3.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 8B4D975E2A7BFEAC001AE140 /* PIS_and_Consent_form_v3.pdf */; };
 		8B573FCB2A66D41E00A048F1 /* ConsentFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B573FCA2A66D41E00A048F1 /* ConsentFormView.swift */; };
 		8B573FCD2A66D43D00A048F1 /* PreProcessCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B573FCC2A66D43D00A048F1 /* PreProcessCoordinator.swift */; };
@@ -127,6 +137,7 @@
 		8BE6C0F72A4C6AE000B3C8E2 /* StartExperimentFlowState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BE6C0F62A4C6AE000B3C8E2 /* StartExperimentFlowState.swift */; };
 		8BE8087E2A23A7820057CC35 /* ConfigurationsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BE8087D2A23A7820057CC35 /* ConfigurationsView.swift */; };
 		8BE808802A23A79F0057CC35 /* ExperimentsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BE8087F2A23A79F0057CC35 /* ExperimentsView.swift */; };
+		8BEE973E2A9AC55B00C8AA0D /* ConfigurationListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BEE973D2A9AC55B00C8AA0D /* ConfigurationListView.swift */; };
 		8BF7439C2A4B1DA700787997 /* InstructionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BF7439B2A4B1DA700787997 /* InstructionViewModel.swift */; };
 		8BF743A02A4B1DBF00787997 /* InstructionCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BF7439F2A4B1DBF00787997 /* InstructionCoordinator.swift */; };
 		8BF743A22A4B1DEC00787997 /* InstructionFlowState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BF743A12A4B1DEC00787997 /* InstructionFlowState.swift */; };
@@ -149,6 +160,11 @@
 		8B2C0F6A2A54A04C00CE75AC /* LogWriter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogWriter.swift; sourceTree = "<group>"; };
 		8B2C0F6C2A54A21900CE75AC /* InteractLogWriter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InteractLogWriter.swift; sourceTree = "<group>"; };
 		8B2C0F6E2A54A46D00CE75AC /* DateFormatterExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFormatterExtensions.swift; sourceTree = "<group>"; };
+		8B475D832A9AD1EF00E22648 /* ConfigurationDraftsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigurationDraftsView.swift; sourceTree = "<group>"; };
+		8B475D852A9AD1FE00E22648 /* ConfigurationDraftsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigurationDraftsViewModel.swift; sourceTree = "<group>"; };
+		8B475D872A9AD21400E22648 /* ConfigurationDraftsCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigurationDraftsCoordinator.swift; sourceTree = "<group>"; };
+		8B475D892A9AD22700E22648 /* ConfigurationDraftsFlowState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigurationDraftsFlowState.swift; sourceTree = "<group>"; };
+		8B475D902A9AD61A00E22648 /* ConfigurationItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigurationItemView.swift; sourceTree = "<group>"; };
 		8B4D975E2A7BFEAC001AE140 /* PIS_and_Consent_form_v3.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = PIS_and_Consent_form_v3.pdf; path = InteractExperiment/Resources/PIS_and_Consent_form_v3.pdf; sourceTree = SOURCE_ROOT; };
 		8B573FCA2A66D41E00A048F1 /* ConsentFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentFormView.swift; sourceTree = "<group>"; };
 		8B573FCC2A66D43D00A048F1 /* PreProcessCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreProcessCoordinator.swift; sourceTree = "<group>"; };
@@ -196,6 +212,7 @@
 		8BE6C0F62A4C6AE000B3C8E2 /* StartExperimentFlowState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartExperimentFlowState.swift; sourceTree = "<group>"; };
 		8BE8087D2A23A7820057CC35 /* ConfigurationsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigurationsView.swift; sourceTree = "<group>"; };
 		8BE8087F2A23A79F0057CC35 /* ExperimentsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExperimentsView.swift; sourceTree = "<group>"; };
+		8BEE973D2A9AC55B00C8AA0D /* ConfigurationListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigurationListView.swift; sourceTree = "<group>"; };
 		8BF7439B2A4B1DA700787997 /* InstructionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstructionViewModel.swift; sourceTree = "<group>"; };
 		8BF7439F2A4B1DBF00787997 /* InstructionCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstructionCoordinator.swift; sourceTree = "<group>"; };
 		8BF743A12A4B1DEC00787997 /* InstructionFlowState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstructionFlowState.swift; sourceTree = "<group>"; };
@@ -241,7 +258,6 @@
 			isa = PBXGroup;
 			children = (
 				8B17FF432A5ADFE800DF3B69 /* PreviousExperimentItemView.swift */,
-				8B62488D2A5CB5F4007C52F2 /* ExperimentGestureView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -253,6 +269,26 @@
 				8B2C0F6C2A54A21900CE75AC /* InteractLogWriter.swift */,
 			);
 			path = LogWriter;
+			sourceTree = "<group>";
+		};
+		8B475D822A9AD1CE00E22648 /* ConfigurationDrafts */ = {
+			isa = PBXGroup;
+			children = (
+				8B475D832A9AD1EF00E22648 /* ConfigurationDraftsView.swift */,
+				8B475D852A9AD1FE00E22648 /* ConfigurationDraftsViewModel.swift */,
+				8B475D872A9AD21400E22648 /* ConfigurationDraftsCoordinator.swift */,
+				8B475D892A9AD22700E22648 /* ConfigurationDraftsFlowState.swift */,
+				8B475D8F2A9AD60700E22648 /* Views */,
+			);
+			path = ConfigurationDrafts;
+			sourceTree = "<group>";
+		};
+		8B475D8F2A9AD60700E22648 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				8B475D902A9AD61A00E22648 /* ConfigurationItemView.swift */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 		8B573FC92A66D3EB00A048F1 /* PreProcess */ = {
@@ -397,6 +433,8 @@
 				8B119AC52A46F77D0021C564 /* RootView */,
 				8BADE42E2A2CA34A0087C74D /* CommonViews */,
 				8BADE4322A2D11F90087C74D /* CreateConfigurations */,
+				8B475D822A9AD1CE00E22648 /* ConfigurationDrafts */,
+				8BEE973C2A9AC53500C8AA0D /* ConfigurationList */,
 				8BE16A282A406A1200A83B9E /* ExperimentProcess */,
 				8B6477F72A267FB60071F582 /* Extensions */,
 				8B604D0F2A587AC100E1AEE7 /* PreviousExperiments */,
@@ -444,6 +482,7 @@
 			isa = PBXGroup;
 			children = (
 				8BE16A2B2A4076EF00A83B9E /* ParticipantIdAlertView.swift */,
+				8B62488D2A5CB5F4007C52F2 /* ExperimentGestureView.swift */,
 				8B93F2462A4EEADD0026E41D /* InputPane.swift */,
 			);
 			path = Views;
@@ -459,6 +498,22 @@
 				8B2C0F692A54A01800CE75AC /* LogWriter */,
 			);
 			path = Experiment;
+			sourceTree = "<group>";
+		};
+		8BEE973C2A9AC53500C8AA0D /* ConfigurationList */ = {
+			isa = PBXGroup;
+			children = (
+				8BEE973D2A9AC55B00C8AA0D /* ConfigurationListView.swift */,
+				8BEE973F2A9AC56C00C8AA0D /* Views */,
+			);
+			path = ConfigurationList;
+			sourceTree = "<group>";
+		};
+		8BEE973F2A9AC56C00C8AA0D /* Views */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 		8BF7439A2A4B1D8200787997 /* Instruction */ = {
@@ -596,6 +651,7 @@
 				8BA0095F2A6D59AF0052DADF /* InstructionCoordinator.swift in Sources */,
 				8BA009602A6D59AF0052DADF /* QuestionnaireView.swift in Sources */,
 				8BA009612A6D59AF0052DADF /* CreateConfigurationFlowState.swift in Sources */,
+				8B475D8E2A9AD32B00E22648 /* ConfigurationDraftsViewModel.swift in Sources */,
 				8BA009622A6D59AF0052DADF /* InstructionViewModel.swift in Sources */,
 				8BA009632A6D59AF0052DADF /* ExperimentsView.swift in Sources */,
 				8BA009642A6D59AF0052DADF /* LoadingView.swift in Sources */,
@@ -618,6 +674,7 @@
 				8BA009752A6D59AF0052DADF /* PreviousExperimentsView.swift in Sources */,
 				8BA009762A6D59AF0052DADF /* ExperimentFlowState.swift in Sources */,
 				8BA009772A6D59AF0052DADF /* CreateConfigurationViewModel.swift in Sources */,
+				8B475D8D2A9AD32B00E22648 /* ConfigurationDraftsFlowState.swift in Sources */,
 				8BA009782A6D59AF0052DADF /* PDFKitView.swift in Sources */,
 				8BA009792A6D59AF0052DADF /* MockImages.swift in Sources */,
 				8BA0097A2A6D59AF0052DADF /* DateFormatterExtensions.swift in Sources */,
@@ -634,8 +691,10 @@
 				8BA009852A6D59AF0052DADF /* PreviousExperimentsModel.swift in Sources */,
 				8BA009862A6D59AF0052DADF /* CreateConfigurationCoordinator.swift in Sources */,
 				8BA009872A6D59AF0052DADF /* ConsentFormView.swift in Sources */,
+				8B475D8C2A9AD32B00E22648 /* ConfigurationDraftsView.swift in Sources */,
 				8BA009882A6D59AF0052DADF /* ViewStyleExtensions.swift in Sources */,
 				8BA009892A6D59AF0052DADF /* ExperimentGestureView.swift in Sources */,
+				8B475D922A9AD69D00E22648 /* ConfigurationItemView.swift in Sources */,
 				8BA0098A2A6D59AF0052DADF /* InteractLogModel.swift in Sources */,
 				8BA0098B2A6D59AF0052DADF /* EndExperimentFlowState.swift in Sources */,
 				8BA0098C2A6D59AF0052DADF /* ImagePicker.swift in Sources */,
@@ -652,6 +711,7 @@
 				8BA009982A6D59AF0052DADF /* WebView.swift in Sources */,
 				8BA009992A6D59AF0052DADF /* PreviousExperimentItemView.swift in Sources */,
 				8BA0099A2A6D59AF0052DADF /* RootCoordinator.swift in Sources */,
+				8B475D8B2A9AD32B00E22648 /* ConfigurationDraftsCoordinator.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -664,6 +724,7 @@
 				8BFA2EEA2A69A2EF007717F3 /* QuestionnaireView.swift in Sources */,
 				8B905C332A49BA15006A9A53 /* CreateConfigurationFlowState.swift in Sources */,
 				8BF7439C2A4B1DA700787997 /* InstructionViewModel.swift in Sources */,
+				8B475D882A9AD21400E22648 /* ConfigurationDraftsCoordinator.swift in Sources */,
 				8BE808802A23A79F0057CC35 /* ExperimentsView.swift in Sources */,
 				8BFA2EE82A69742F007717F3 /* LoadingView.swift in Sources */,
 				8BE16A2C2A4076EF00A83B9E /* ParticipantIdAlertView.swift in Sources */,
@@ -683,9 +744,11 @@
 				8BADE4372A2D18F10087C74D /* ConfigurationModel.swift in Sources */,
 				8B05BE142A65732B001220D2 /* AddPhaseView.swift in Sources */,
 				8B604D112A587AF200E1AEE7 /* PreviousExperimentsView.swift in Sources */,
+				8B475D862A9AD1FE00E22648 /* ConfigurationDraftsViewModel.swift in Sources */,
 				8B19F4722A52099600433112 /* ExperimentFlowState.swift in Sources */,
 				8BADE43A2A2D1C310087C74D /* CreateConfigurationViewModel.swift in Sources */,
 				8B573FD22A66ECB300A048F1 /* PDFKitView.swift in Sources */,
+				8BEE973E2A9AC55B00C8AA0D /* ConfigurationListView.swift in Sources */,
 				8BE107FF2A599C180014ECEA /* MockImages.swift in Sources */,
 				8B2C0F6F2A54A46D00CE75AC /* DateFormatterExtensions.swift in Sources */,
 				8B17FF472A5B089100DF3B69 /* DateExtensions.swift in Sources */,
@@ -695,10 +758,12 @@
 				8BFA2EE62A697331007717F3 /* PreProcessViewModel.swift in Sources */,
 				8BA143162A647986008D8AB4 /* ExperimentPhaseSectionView.swift in Sources */,
 				8BAF3C682A1FB28E00C0A4CE /* RootView.swift in Sources */,
+				8B475D8A2A9AD22700E22648 /* ConfigurationDraftsFlowState.swift in Sources */,
 				8B2C0F6B2A54A04C00CE75AC /* LogWriter.swift in Sources */,
 				8B8DFEC42A52FEE700D8CE5D /* EndExperimentCoordinator.swift in Sources */,
 				8B76F9312A6AC501006719E2 /* PracticeFlowState.swift in Sources */,
 				8BA49F672A5979AB00148687 /* PreviousExperimentsModel.swift in Sources */,
+				8B475D842A9AD1EF00E22648 /* ConfigurationDraftsView.swift in Sources */,
 				8B152A0E2A43191300D666AF /* CreateConfigurationCoordinator.swift in Sources */,
 				8B573FCB2A66D41E00A048F1 /* ConsentFormView.swift in Sources */,
 				8BA49F692A59857600148687 /* ViewStyleExtensions.swift in Sources */,
@@ -711,6 +776,7 @@
 				8BF743A42A4B1E0000787997 /* InstructionView.swift in Sources */,
 				8BE6C0F52A4C613B00B3C8E2 /* StartExperimentCoordinator.swift in Sources */,
 				8B6477F92A267FD60071F582 /* ColorExtensions.swift in Sources */,
+				8B475D912A9AD61A00E22648 /* ConfigurationItemView.swift in Sources */,
 				8B5ACB882A2E0452002F5AA9 /* FileManagerExtensions.swift in Sources */,
 				8BADE4342A2D12720087C74D /* ImageItemView.swift in Sources */,
 				8B93F2472A4EEADD0026E41D /* InputPane.swift in Sources */,

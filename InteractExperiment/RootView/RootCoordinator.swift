@@ -10,7 +10,7 @@ import SwiftUI
 struct RootCoordinator: View {
     @StateObject private var state: RootFlowState = .init()
     @State private var columnVisibility: NavigationSplitViewVisibility = .automatic
-    @State private var selectedMenu: Menu? = .previousExperiments
+    @State private var selectedMenu: Menu? = .drafts
     @State private var practiceANavPath: NavigationPath = .init()
     @State private var practiceBNavPath: NavigationPath = .init()
     
@@ -30,7 +30,13 @@ struct RootCoordinator: View {
                     .padding([.bottom], 64)
                     .navigationDestination(for: RootFlowLink.self, destination: rootNavDestination)
                     .navigationDestination(for: ExperimentFlowLink.self, destination: experimentNavDestination)
-                    
+                }
+            case .drafts:
+                NavigationStack(path: $state.path) {                    
+                    ConfigurationDraftsCoordinator(state: state)
+                        .navigationDestination(for: RootFlowLink.self, destination: rootNavDestination)
+                        .navigationDestination(for: ExperimentFlowLink.self, destination: experimentNavDestination)
+                        .fullScreenCover(item: $state.coverItem, content: coverContent)
                 }
             case .previousExperiments:
                 NavigationStack(path: $state.path) {
@@ -106,6 +112,8 @@ private extension RootCoordinator {
         switch item {
         case .createConfig:
             CreateConfigurationCoordinator(navigationPath: $state.path)
+        case let .editConfig(configurationModel):
+            CreateConfigurationCoordinator(navigationPath: $state.path, configuration: configurationModel)
         default:
             Text("undefined present content")
         }

@@ -38,7 +38,6 @@ struct PreviousExperimentItemView: View {
                                                 .padding([.vertical], 2)
                     }
                 }
-                .frame(maxWidth: .infinity)
                 VStack {
                     HStack {
                         Button("Use", action: {
@@ -61,7 +60,7 @@ struct PreviousExperimentItemView: View {
     }
 }
 
-fileprivate struct PreviousExperimentImageListView: View {
+struct PreviousExperimentImageListView: View {
     
     let title: String
     let images: [UIImage]
@@ -70,7 +69,7 @@ fileprivate struct PreviousExperimentImageListView: View {
         VStack(alignment: .leading) {
             Text(title)
                 .foregroundColor(.text.sectionTitle)
-            ScrollView {
+            ScrollView(.horizontal) {
                 LazyHStack {
                     ForEach(images, id: \.self) { image in
                         ImageItemView(selectedIndexes: .constant([]), index: 0, image: image, allowMultiSelect: false)

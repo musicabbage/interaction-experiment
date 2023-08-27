@@ -25,13 +25,17 @@ struct ConfigurationModel: Codable, Identifiable, Hashable {
     static let configFilename: String = "config"
     
     let id: String
+    var date: Date?
     var instruction: String
     var defaultParticipantId: String
     var isDraft: Bool = false
     var phases: [PhaseModel] = []
     var folderURL: URL {
-        let path = isDraft ? "draft/\(id)" : id
-        return FileManager.configsDirectory.appending(path: path, directoryHint: .isDirectory)
+        if isDraft {
+            return FileManager.configDraftsDirectory.appending(path: id, directoryHint: .isDirectory)
+        } else {
+            return FileManager.configsDirectory.appending(path: id, directoryHint: .isDirectory)
+        }
     }
     var configURL: URL {
         folderURL.appending(path: ConfigurationModel.configFilename)
@@ -47,6 +51,7 @@ struct ConfigurationModel: Codable, Identifiable, Hashable {
         self.instruction = instruction ?? ConfigurationModel.defaultInstruction
         self.defaultParticipantId = defaultParticipantId
         self.phases = phases
+        self.date = .now
     }
 }
 

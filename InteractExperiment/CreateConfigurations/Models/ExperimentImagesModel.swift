@@ -10,6 +10,31 @@ import UIKit
 class ExperimentImagesModel: ObservableObject, Equatable, Identifiable {
     enum ImageType: Equatable {
         case familiarisation, stimulus, custom(String)
+        
+        private static let familiarisationValue = "Familiarisation"
+        private static let stimulusValue = "Stimulus"
+        
+        init(name: String) {
+            switch name {
+            case ImageType.familiarisationValue:
+                self = .familiarisation
+            case ImageType.stimulusValue:
+                self = .stimulus
+            default:
+                self = .custom(name)
+            }
+        }
+        
+        var name: String {
+            switch self {
+            case .familiarisation:
+                return ImageType.familiarisationValue
+            case .stimulus:
+                return ImageType.stimulusValue
+            case let .custom(phaseName):
+                return phaseName
+            }
+        }
     }
     
     @Published var name: String = ""
@@ -33,10 +58,10 @@ class ExperimentImagesModel: ObservableObject, Equatable, Identifiable {
         self.type = type
         switch type {
         case .familiarisation:
-            name = "Familiarisation"
+            name = type.name
             allowMultipleImages = false
         case .stimulus:
-            name = "Stimulus"
+            name = type.name
             allowMultipleImages = true
         case let .custom(customName):
             name = customName
