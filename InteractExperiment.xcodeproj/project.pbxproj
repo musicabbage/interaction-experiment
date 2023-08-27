@@ -137,7 +137,6 @@
 		8BE6C0F72A4C6AE000B3C8E2 /* StartExperimentFlowState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BE6C0F62A4C6AE000B3C8E2 /* StartExperimentFlowState.swift */; };
 		8BE8087E2A23A7820057CC35 /* ConfigurationsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BE8087D2A23A7820057CC35 /* ConfigurationsView.swift */; };
 		8BE808802A23A79F0057CC35 /* ExperimentsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BE8087F2A23A79F0057CC35 /* ExperimentsView.swift */; };
-		8BEE973E2A9AC55B00C8AA0D /* ConfigurationListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BEE973D2A9AC55B00C8AA0D /* ConfigurationListView.swift */; };
 		8BF7439C2A4B1DA700787997 /* InstructionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BF7439B2A4B1DA700787997 /* InstructionViewModel.swift */; };
 		8BF743A02A4B1DBF00787997 /* InstructionCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BF7439F2A4B1DBF00787997 /* InstructionCoordinator.swift */; };
 		8BF743A22A4B1DEC00787997 /* InstructionFlowState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BF743A12A4B1DEC00787997 /* InstructionFlowState.swift */; };
@@ -214,7 +213,6 @@
 		8BE6C0F62A4C6AE000B3C8E2 /* StartExperimentFlowState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartExperimentFlowState.swift; sourceTree = "<group>"; };
 		8BE8087D2A23A7820057CC35 /* ConfigurationsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigurationsView.swift; sourceTree = "<group>"; };
 		8BE8087F2A23A79F0057CC35 /* ExperimentsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExperimentsView.swift; sourceTree = "<group>"; };
-		8BEE973D2A9AC55B00C8AA0D /* ConfigurationListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigurationListView.swift; sourceTree = "<group>"; };
 		8BF7439B2A4B1DA700787997 /* InstructionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstructionViewModel.swift; sourceTree = "<group>"; };
 		8BF7439F2A4B1DBF00787997 /* InstructionCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstructionCoordinator.swift; sourceTree = "<group>"; };
 		8BF743A12A4B1DEC00787997 /* InstructionFlowState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstructionFlowState.swift; sourceTree = "<group>"; };
@@ -438,7 +436,6 @@
 				8BADE42E2A2CA34A0087C74D /* CommonViews */,
 				8BADE4322A2D11F90087C74D /* CreateConfigurations */,
 				8B475D822A9AD1CE00E22648 /* ConfigurationDrafts */,
-				8BEE973C2A9AC53500C8AA0D /* ConfigurationList */,
 				8BE16A282A406A1200A83B9E /* ExperimentProcess */,
 				8B6477F72A267FB60071F582 /* Extensions */,
 				8B604D0F2A587AC100E1AEE7 /* PreviousExperiments */,
@@ -502,22 +499,6 @@
 				8B2C0F692A54A01800CE75AC /* LogWriter */,
 			);
 			path = Experiment;
-			sourceTree = "<group>";
-		};
-		8BEE973C2A9AC53500C8AA0D /* ConfigurationList */ = {
-			isa = PBXGroup;
-			children = (
-				8BEE973D2A9AC55B00C8AA0D /* ConfigurationListView.swift */,
-				8BEE973F2A9AC56C00C8AA0D /* Views */,
-			);
-			path = ConfigurationList;
-			sourceTree = "<group>";
-		};
-		8BEE973F2A9AC56C00C8AA0D /* Views */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Views;
 			sourceTree = "<group>";
 		};
 		8BF7439A2A4B1D8200787997 /* Instruction */ = {
@@ -753,7 +734,6 @@
 				8B19F4722A52099600433112 /* ExperimentFlowState.swift in Sources */,
 				8BADE43A2A2D1C310087C74D /* CreateConfigurationViewModel.swift in Sources */,
 				8B573FD22A66ECB300A048F1 /* PDFKitView.swift in Sources */,
-				8BEE973E2A9AC55B00C8AA0D /* ConfigurationListView.swift in Sources */,
 				8BE107FF2A599C180014ECEA /* MockImages.swift in Sources */,
 				8BF903082A9BFFA800D1B5D1 /* ActivityViewController.swift in Sources */,
 				8B2C0F6F2A54A46D00CE75AC /* DateFormatterExtensions.swift in Sources */,
