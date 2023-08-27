@@ -10,7 +10,7 @@ import SwiftUI
 struct PreviousExperimentItemView: View {
     
     enum Action {
-        case use, delete
+        case use, delete, export
     }
     
     private let dateFormatter: DateFormatter = .ReadableDateFormatter_ddMMYYYY_HHmm
@@ -44,12 +44,16 @@ struct PreviousExperimentItemView: View {
                             actionClosure(.use)
                         })
                         .actionButtonStyle()
-                        Spacer()
                         Button("Delete", action: {
                             actionClosure(.delete)
                         })
                         .actionButtonStyle()
-                        Spacer()
+                        Button {
+                            actionClosure(.export)
+                        } label: {
+                            Image(systemName: "square.and.arrow.up")
+                        }
+                        .actionButtonStyle()
                     }
                 }
                 .frame(width: 220)

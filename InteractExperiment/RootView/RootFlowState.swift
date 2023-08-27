@@ -12,6 +12,7 @@ enum RootFlowLink: Hashable, Identifiable {
     case editConfig(ConfigurationModel)
     case configCreated(String) //config path
     case startExperiment(ConfigurationModel, InteractLogModel) //configurations, InteractLogModel
+    case exportExperiment(URL)
     
     var id: String { String(describing: self) }
 }

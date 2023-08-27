@@ -142,6 +142,8 @@
 		8BF743A02A4B1DBF00787997 /* InstructionCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BF7439F2A4B1DBF00787997 /* InstructionCoordinator.swift */; };
 		8BF743A22A4B1DEC00787997 /* InstructionFlowState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BF743A12A4B1DEC00787997 /* InstructionFlowState.swift */; };
 		8BF743A42A4B1E0000787997 /* InstructionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BF743A32A4B1DFF00787997 /* InstructionView.swift */; };
+		8BF903082A9BFFA800D1B5D1 /* ActivityViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BF903072A9BFFA800D1B5D1 /* ActivityViewController.swift */; };
+		8BF903092A9C044900D1B5D1 /* ActivityViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BF903072A9BFFA800D1B5D1 /* ActivityViewController.swift */; };
 		8BFA2EE62A697331007717F3 /* PreProcessViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BFA2EE52A697331007717F3 /* PreProcessViewModel.swift */; };
 		8BFA2EE82A69742F007717F3 /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BFA2EE72A69742F007717F3 /* LoadingView.swift */; };
 		8BFA2EEA2A69A2EF007717F3 /* QuestionnaireView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BFA2EE92A69A2EE007717F3 /* QuestionnaireView.swift */; };
@@ -217,6 +219,7 @@
 		8BF7439F2A4B1DBF00787997 /* InstructionCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstructionCoordinator.swift; sourceTree = "<group>"; };
 		8BF743A12A4B1DEC00787997 /* InstructionFlowState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstructionFlowState.swift; sourceTree = "<group>"; };
 		8BF743A32A4B1DFF00787997 /* InstructionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InstructionView.swift; sourceTree = "<group>"; };
+		8BF903072A9BFFA800D1B5D1 /* ActivityViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityViewController.swift; sourceTree = "<group>"; };
 		8BFA2EE52A697331007717F3 /* PreProcessViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreProcessViewModel.swift; sourceTree = "<group>"; };
 		8BFA2EE72A69742F007717F3 /* LoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
 		8BFA2EE92A69A2EE007717F3 /* QuestionnaireView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionnaireView.swift; sourceTree = "<group>"; };
@@ -369,6 +372,7 @@
 				8B95C0192A27E5B60094C925 /* ImagePicker.swift */,
 				8BADE42F2A2CA3650087C74D /* ToastView.swift */,
 				8BFA2EE72A69742F007717F3 /* LoadingView.swift */,
+				8BF903072A9BFFA800D1B5D1 /* ActivityViewController.swift */,
 			);
 			path = CommonViews;
 			sourceTree = "<group>";
@@ -690,6 +694,7 @@
 				8BA009842A6D59AF0052DADF /* PracticeFlowState.swift in Sources */,
 				8BA009852A6D59AF0052DADF /* PreviousExperimentsModel.swift in Sources */,
 				8BA009862A6D59AF0052DADF /* CreateConfigurationCoordinator.swift in Sources */,
+				8BF903092A9C044900D1B5D1 /* ActivityViewController.swift in Sources */,
 				8BA009872A6D59AF0052DADF /* ConsentFormView.swift in Sources */,
 				8B475D8C2A9AD32B00E22648 /* ConfigurationDraftsView.swift in Sources */,
 				8BA009882A6D59AF0052DADF /* ViewStyleExtensions.swift in Sources */,
@@ -750,6 +755,7 @@
 				8B573FD22A66ECB300A048F1 /* PDFKitView.swift in Sources */,
 				8BEE973E2A9AC55B00C8AA0D /* ConfigurationListView.swift in Sources */,
 				8BE107FF2A599C180014ECEA /* MockImages.swift in Sources */,
+				8BF903082A9BFFA800D1B5D1 /* ActivityViewController.swift in Sources */,
 				8B2C0F6F2A54A46D00CE75AC /* DateFormatterExtensions.swift in Sources */,
 				8B17FF472A5B089100DF3B69 /* DateExtensions.swift in Sources */,
 				8BFA2EEF2A69B96E007717F3 /* PracticeViewModel.swift in Sources */,

@@ -46,6 +46,9 @@ struct RootView: View {
             .onUseConfiguration(perform: { configPath in
                 state.path.append(RootFlowLink.configCreated(configPath))
             })
+            .onExportExperiment(perform: { zipUrl in
+                state.presentedItem = .exportExperiment(zipUrl)
+            })
     }
 }
 

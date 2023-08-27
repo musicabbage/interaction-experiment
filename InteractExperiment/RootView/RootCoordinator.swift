@@ -114,6 +114,8 @@ private extension RootCoordinator {
             CreateConfigurationCoordinator(navigationPath: $state.path)
         case let .editConfig(configurationModel):
             CreateConfigurationCoordinator(navigationPath: $state.path, configuration: configurationModel)
+        case let .exportExperiment(zipURL):
+            ActivityViewController(activityItems: [zipURL])
         default:
             Text("undefined present content")
         }
