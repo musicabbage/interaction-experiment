@@ -46,7 +46,6 @@ struct CreateConfigurationView<ViewModel>: View where ViewModel: CreateConfigura
                         .focused($instructionKeyboardFocused)
                         .lineSpacing(1)
                         .padding([.top, .bottom], 10)
-                        
                 } header: {
                     Text("Instruction")
                 }
@@ -130,8 +129,6 @@ private extension CreateConfigurationView {
                                   phaseName: phase.name,
                                   showStimulusWhenDrawing: phase.showStimulusWhenDrawing)
         }
-//        viewModel.update(instruction: instructionText)
-//        viewModel.update(defaultParticipantId: defaultParticipantId)
         viewModel.save(asDraft: asDraft)
     }
 }

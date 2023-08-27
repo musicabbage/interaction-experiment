@@ -10,7 +10,6 @@
 		8B05BE122A655CD7001220D2 /* ExperimentImagesModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B05BE112A655CD7001220D2 /* ExperimentImagesModel.swift */; };
 		8B05BE142A65732B001220D2 /* AddPhaseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B05BE132A65732B001220D2 /* AddPhaseView.swift */; };
 		8B119AC72A46F7900021C564 /* RootCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B119AC62A46F7900021C564 /* RootCoordinator.swift */; };
-		8B13B52D2A51CCEA004E98A8 /* InputDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B13B52C2A51CCEA004E98A8 /* InputDataModel.swift */; };
 		8B152A0E2A43191300D666AF /* CreateConfigurationCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B152A0D2A43191300D666AF /* CreateConfigurationCoordinator.swift */; };
 		8B17FF442A5ADFE800DF3B69 /* PreviousExperimentItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B17FF432A5ADFE800DF3B69 /* PreviousExperimentItemView.swift */; };
 		8B17FF472A5B089100DF3B69 /* DateExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B17FF462A5B089100DF3B69 /* DateExtensions.swift */; };
@@ -87,7 +86,6 @@
 		8BA0098A2A6D59AF0052DADF /* InteractLogModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BE16A312A4084F300A83B9E /* InteractLogModel.swift */; };
 		8BA0098B2A6D59AF0052DADF /* EndExperimentFlowState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B8DFEC52A52FF0600D8CE5D /* EndExperimentFlowState.swift */; };
 		8BA0098C2A6D59AF0052DADF /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B95C0192A27E5B60094C925 /* ImagePicker.swift */; };
-		8BA0098D2A6D59AF0052DADF /* InputDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B13B52C2A51CCEA004E98A8 /* InputDataModel.swift */; };
 		8BA0098E2A6D59AF0052DADF /* InstructionFlowState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BF743A12A4B1DEC00787997 /* InstructionFlowState.swift */; };
 		8BA0098F2A6D59AF0052DADF /* CreateConfigurationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B6477F52A2674570071F582 /* CreateConfigurationView.swift */; };
 		8BA009902A6D59AF0052DADF /* InstructionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BF743A32A4B1DFF00787997 /* InstructionView.swift */; };
@@ -144,7 +142,6 @@
 		8B05BE112A655CD7001220D2 /* ExperimentImagesModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExperimentImagesModel.swift; sourceTree = "<group>"; };
 		8B05BE132A65732B001220D2 /* AddPhaseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPhaseView.swift; sourceTree = "<group>"; };
 		8B119AC62A46F7900021C564 /* RootCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootCoordinator.swift; sourceTree = "<group>"; };
-		8B13B52C2A51CCEA004E98A8 /* InputDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputDataModel.swift; sourceTree = "<group>"; };
 		8B152A0D2A43191300D666AF /* CreateConfigurationCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateConfigurationCoordinator.swift; sourceTree = "<group>"; };
 		8B17FF432A5ADFE800DF3B69 /* PreviousExperimentItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviousExperimentItemView.swift; sourceTree = "<group>"; };
 		8B17FF462A5B089100DF3B69 /* DateExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateExtensions.swift; sourceTree = "<group>"; };
@@ -439,7 +436,6 @@
 			isa = PBXGroup;
 			children = (
 				8BE16A312A4084F300A83B9E /* InteractLogModel.swift */,
-				8B13B52C2A51CCEA004E98A8 /* InputDataModel.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -643,7 +639,6 @@
 				8BA0098A2A6D59AF0052DADF /* InteractLogModel.swift in Sources */,
 				8BA0098B2A6D59AF0052DADF /* EndExperimentFlowState.swift in Sources */,
 				8BA0098C2A6D59AF0052DADF /* ImagePicker.swift in Sources */,
-				8BA0098D2A6D59AF0052DADF /* InputDataModel.swift in Sources */,
 				8BA0098E2A6D59AF0052DADF /* InstructionFlowState.swift in Sources */,
 				8BA0098F2A6D59AF0052DADF /* CreateConfigurationView.swift in Sources */,
 				8BA009902A6D59AF0052DADF /* InstructionView.swift in Sources */,
@@ -711,7 +706,6 @@
 				8BE16A322A4084F300A83B9E /* InteractLogModel.swift in Sources */,
 				8B8DFEC62A52FF0600D8CE5D /* EndExperimentFlowState.swift in Sources */,
 				8B95C01A2A27E5B60094C925 /* ImagePicker.swift in Sources */,
-				8B13B52D2A51CCEA004E98A8 /* InputDataModel.swift in Sources */,
 				8BF743A22A4B1DEC00787997 /* InstructionFlowState.swift in Sources */,
 				8B6477F62A2674570071F582 /* CreateConfigurationView.swift in Sources */,
 				8BF743A42A4B1E0000787997 /* InstructionView.swift in Sources */,
