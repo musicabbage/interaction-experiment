@@ -8,17 +8,14 @@
 import SwiftUI
 
 enum Menu: Int, CaseIterable, Identifiable {
-    case newExperiment
-    case drafts
     case previousExperiments
+    case drafts
     case practiceA
     case practiceB
     
     var id: Int { rawValue }
     var title: String {
         switch self {
-        case .newExperiment:
-            return "New Experiments"
         case .previousExperiments:
             return "Previous Experiments"
         case .drafts:

@@ -20,21 +20,34 @@ struct ConfigurationDraftsView: View {
     
     var body: some View {
         VStack {
-            ScrollView(.vertical) {
-                LazyVStack(alignment: .leading, spacing: 15) {
-                    ForEach(configurations) { configuration in
-                        ConfigurationItemView(configuration: configuration)
-                            .onTapAction { action in
-                                switch action {
-                                case .use:
-                                    break
-                                case .edit:
-                                    flowState.presentedItem = .editConfig(configuration)
-                                }
-                            }
-                    }
+            if configurations.count == 0 {
+                Image(systemName: "list.dash.header.rectangle")
+                    .resizable()
+                    .scaledToFill()
+                    .foregroundColor(Color.button.lightgray)
+                    .frame(width: 88, height: 88, alignment: .center)
+                    .padding(32)
+                Button("start a new experiment") {
+                    flowState.presentedItem = .createConfig
                 }
-                .padding(22)
+                .actionButtonStyle()
+            } else {
+                ScrollView(.vertical) {
+                    LazyVStack(alignment: .leading, spacing: 15) {
+                        ForEach(configurations) { configuration in
+                            ConfigurationItemView(configuration: configuration)
+                                .onTapAction { action in
+                                    switch action {
+                                    case .use:
+                                        break
+                                    case .edit:
+                                        flowState.presentedItem = .editConfig(configuration)
+                                    }
+                                }
+                        }
+                    }
+                    .padding(22)
+                }
             }
         }
         .onReceive(viewModel.viewState) { viewState in

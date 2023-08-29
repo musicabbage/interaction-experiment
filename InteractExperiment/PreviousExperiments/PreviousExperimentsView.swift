@@ -25,7 +25,7 @@ struct PreviousExperimentsView: View {
         ZStack {
             VStack {
                 Text("Experiments (\(experiments.count))")
-                    .padding([.bottom], 16)
+                    .padding([.bottom], 2)
                 ScrollView {
                     LazyVStack(alignment: .leading, spacing: 15) {
                         ForEach(experiments) { experiment in
@@ -83,38 +83,43 @@ extension PreviousExperimentsView {
 
 private extension PreviousExperimentsView {
     func exportExperiment(_ experiment: PreviousExperimentsModel) {
-        //https://recoursive.com/2021/02/25/create_zip_archive_using_only_foundation/
-        // this will hold the URL of the zip file
-        var archiveUrl: URL?
-        // if we encounter an error, store it here
-        var error: NSError?
+        DispatchQueue.global(qos: .background).async {
+            //https://recoursive.com/2021/02/25/create_zip_archive_using_only_foundation/
+            // this will hold the URL of the zip file
+            var archiveUrl: URL?
+            // if we encounter an error, store it here
+            var error: NSError?
 
-        let coordinator = NSFileCoordinator()
-        // zip up the documents directory
-        // this method is synchronous and the block will be executed before it returns
-        // if the method fails, the block will not be executed though
-        // if you expect the archiving process to take long, execute it on another queue
-        coordinator.coordinate(readingItemAt: experiment.folderURL, options: [.forUploading], error: &error) { (zipUrl) in
-            // zipUrl points to the zip file created by the coordinator
-            // zipUrl is valid only until the end of this block, so we move the file to a temporary folder
-            let tmpUrl = try! FileManager.default.url(
-                for: .itemReplacementDirectory,
-                in: .userDomainMask,
-                appropriateFor: zipUrl,
-                create: true
-            ).appendingPathComponent("archive.zip")
-            try? FileManager.default.moveItem(at: zipUrl, to: tmpUrl)
-            print(tmpUrl)
-            // store the URL so we can use it outside the block
-            archiveUrl = tmpUrl
-        }
+            let coordinator = NSFileCoordinator()
+            // zip up the documents directory
+            // this method is synchronous and the block will be executed before it returns
+            // if the method fails, the block will not be executed though
+            // if you expect the archiving process to take long, execute it on another queue
+            coordinator.coordinate(readingItemAt: experiment.folderURL, options: [.forUploading], error: &error) { (zipUrl) in
+                // zipUrl points to the zip file created by the coordinator
+                // zipUrl is valid only until the end of this block, so we move the file to a temporary folder
+                let tmpUrl = try! FileManager.default.url(
+                    for: .itemReplacementDirectory,
+                    in: .userDomainMask,
+                    appropriateFor: zipUrl,
+                    create: true
+                ).appendingPathComponent("experiment_log_\(experiment.participantId).zip")
+                try? FileManager.default.moveItem(at: zipUrl, to: tmpUrl)
+                print(tmpUrl)
+                // store the URL so we can use it outside the block
+                archiveUrl = tmpUrl
+            }
 
-        if let archiveUrl {
-            // bring up the share sheet so we can send the archive with AirDrop for example
-            print(archiveUrl)
-            exportClosure(archiveUrl)
-        } else {
-            print(error)
+            if let archiveUrl {
+                // bring up the share sheet so we can send the archive with AirDrop for example
+                print(archiveUrl)
+                DispatchQueue.main.async {
+                    showLoading = false
+                    exportClosure(archiveUrl)
+                }
+            } else {
+                print(error)
+            }
         }
     }
 }

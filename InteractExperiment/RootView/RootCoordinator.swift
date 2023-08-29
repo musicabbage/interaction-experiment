@@ -10,27 +10,31 @@ import SwiftUI
 struct RootCoordinator: View {
     @StateObject private var state: RootFlowState = .init()
     @State private var columnVisibility: NavigationSplitViewVisibility = .automatic
-    @State private var selectedMenu: Menu? = .drafts
+    @State private var selectedMenu: Menu? = .previousExperiments
     @State private var practiceANavPath: NavigationPath = .init()
     @State private var practiceBNavPath: NavigationPath = .init()
     
     var body: some View {
         NavigationSplitView(columnVisibility: $columnVisibility) {
-            List(Menu.allCases, selection: $selectedMenu) { item in
-                NavigationLink(item.title, value: item)
-            }
-        } detail: {
-            switch selectedMenu {
-            case .newExperiment:
-                NavigationStack(path: $state.path) {
+            ZStack {
+                List(Menu.allCases, selection: $selectedMenu) { item in
+                    NavigationLink(item.title, value: item)
+                }
+                
+                VStack {
+                    Spacer()
                     Button("start a new experiment") {
                         state.presentedItem = .createConfig
                     }
                     .actionButtonStyle()
                     .padding([.bottom], 64)
+                    .backgroundStyle(Color.clear)
                     .navigationDestination(for: RootFlowLink.self, destination: rootNavDestination)
                     .navigationDestination(for: ExperimentFlowLink.self, destination: experimentNavDestination)
                 }
+            }
+        } detail: {
+            switch selectedMenu {
             case .drafts:
                 NavigationStack(path: $state.path) {                    
                     ConfigurationDraftsCoordinator(state: state)
