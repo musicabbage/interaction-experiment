@@ -27,10 +27,9 @@ struct ConfigurationDraftsView: View {
                     .foregroundColor(Color.button.lightgray)
                     .frame(width: 88, height: 88, alignment: .center)
                     .padding(32)
-                Button("start a new experiment") {
-                    flowState.presentedItem = .createConfig
-                }
-                .actionButtonStyle()
+                Text("No draft at the moment")
+                    .font(.subheadline)
+                    .foregroundColor(Color.gray)
             } else {
                 ScrollView(.vertical) {
                     LazyVStack(alignment: .leading, spacing: 15) {
