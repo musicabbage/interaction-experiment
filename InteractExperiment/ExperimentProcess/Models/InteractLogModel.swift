@@ -107,10 +107,6 @@ struct InteractLogModel: Codable, Identifiable, Hashable {
         }
     }
     
-    enum State: Codable, Hashable {
-        case none, instruction, familiarisation, stimulus(Int)
-    }
-    
     /**
     > Name                 :Anonymous Participant
     > Experiment Start     :04/07/2023 - 16:29:49
@@ -151,7 +147,7 @@ struct InteractLogModel: Codable, Identifiable, Hashable {
         self.trialNumber = 1    //TODO: fixed trial number
         self.experimentStart = Date.now
         self.participantId = participantId
-        self.appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? ""
+        self.appVersion = Bundle.main.releaseVersionNumber ?? ""
     }
     
     init(from decoder: Decoder) throws {

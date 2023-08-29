@@ -126,7 +126,6 @@ struct ExperimentView: View {
                 toast.show = true
             default:
                 showLoading = false
-                break
             }
         }
         .onChange(of: stimulusTabIndex) { [oldIndex = stimulusTabIndex] stimulusIndex_new in

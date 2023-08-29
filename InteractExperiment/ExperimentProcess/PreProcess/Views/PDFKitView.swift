@@ -22,7 +22,7 @@ struct PDFKitView: UIViewRepresentable {
     }
     
     func makeUIView(context: UIViewRepresentableContext<PDFKitView>) -> PDFView {
-        // Creating a new PDFVIew and adding a document to it
+        // Creating a new PDFView and adding a document to it
         let document = PDFDocument(url: url)
         
         pdfView.displaysPageBreaks = false

@@ -10,7 +10,7 @@ import SwiftUI
 struct PreviousExperimentItemView: View {
     
     enum Action {
-        case use, delete
+        case use, delete, export
     }
     
     private let dateFormatter: DateFormatter = .ReadableDateFormatter_ddMMYYYY_HHmm
@@ -38,19 +38,22 @@ struct PreviousExperimentItemView: View {
                                                 .padding([.vertical], 2)
                     }
                 }
-                .frame(maxWidth: .infinity)
                 VStack {
                     HStack {
                         Button("Use", action: {
                             actionClosure(.use)
                         })
                         .actionButtonStyle()
-                        Spacer()
                         Button("Delete", action: {
                             actionClosure(.delete)
                         })
                         .actionButtonStyle()
-                        Spacer()
+                        Button {
+                            actionClosure(.export)
+                        } label: {
+                            Image(systemName: "square.and.arrow.up")
+                        }
+                        .actionButtonStyle()
                     }
                 }
                 .frame(width: 220)
@@ -61,7 +64,7 @@ struct PreviousExperimentItemView: View {
     }
 }
 
-fileprivate struct PreviousExperimentImageListView: View {
+struct PreviousExperimentImageListView: View {
     
     let title: String
     let images: [UIImage]
@@ -70,7 +73,7 @@ fileprivate struct PreviousExperimentImageListView: View {
         VStack(alignment: .leading) {
             Text(title)
                 .foregroundColor(.text.sectionTitle)
-            ScrollView {
+            ScrollView(.horizontal) {
                 LazyHStack {
                     ForEach(images, id: \.self) { image in
                         ImageItemView(selectedIndexes: .constant([]), index: 0, image: image, allowMultiSelect: false)

@@ -12,6 +12,10 @@ extension FileManager {
         .documentsDirectory.appendingPathComponent("configs")
     }
     
+    static var configDraftsDirectory: URL {
+        FileManager.configsDirectory.appendingPathComponent("draft")
+    }
+    
     static var experimentsDirectory: URL {
         .documentsDirectory.appendingPathComponent("experiments")
     }

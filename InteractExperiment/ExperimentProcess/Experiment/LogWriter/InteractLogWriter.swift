@@ -48,9 +48,6 @@ struct InteractLogWriter: LogWriterProtocol {
         } else {
             logString.append("Trial End            :\n")
         }
-        if let appVersion = Bundle.main.releaseVersionNumber {
-            logString.append("App Version          :\(appVersion)")
-        }
         
         //action
         logString.append("\n")

@@ -13,10 +13,15 @@ struct CreateConfigurationCoordinator: View {
     @Environment(\.dismiss) private var dismiss
     @StateObject var state: CreateConfigFlowState
     
-    private let viewModel: CreateConfigurationViewModel = .init()
+    private let viewModel: CreateConfigurationViewModel
 
-    init(navigationPath: Binding<NavigationPath>) {
+    init(navigationPath: Binding<NavigationPath>, configuration: ConfigurationModel? = nil) {
         _state = .init(wrappedValue: .init(path: navigationPath))
+        if let configuration {
+            viewModel = .init(configurations: configuration)
+        } else {
+            viewModel = .init()
+        }
     }
     
     var body: some View {
@@ -24,15 +29,15 @@ struct CreateConfigurationCoordinator: View {
                                 viewModel: viewModel,
                                 phases: .defaultExperimentImagesModels)
         .interactiveDismissDisabled()
-            .onChange(of: state.dismiss) { newValue in
-                guard newValue == true else { return }
-                dismiss()
-            }
-            .onDisappear {
-                guard viewModel.currentViewState == .savedAndContinue else { return }
-                let configPath = viewModel.configurations.configURL.path()
-                state.path.append(RootFlowLink.configCreated(configPath))
-            }
+        .onChange(of: state.dismiss) { newValue in
+            guard newValue == true else { return }
+            dismiss()
+        }
+        .onDisappear {
+            guard viewModel.currentViewState == .savedAndContinue else { return }
+            let configPath = viewModel.configurations.configURL.path()
+            state.path.append(RootFlowLink.configCreated(configPath))
+        }
     }
 }
 

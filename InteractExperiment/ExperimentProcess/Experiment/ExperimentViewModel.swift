@@ -113,7 +113,7 @@ class ExperimentViewModel: ExperimentViewModelProtocol {
                      point: meanPoint,
                      force: meanForce,
                      azimuth: meanAzimuth,
-                     altitude: meanAzimuth)
+                     altitude: meanAltitude)
     }
     
     func appendSnapshot(image: UIImage) {
