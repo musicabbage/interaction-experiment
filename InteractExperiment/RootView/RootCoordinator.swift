@@ -16,21 +16,31 @@ struct RootCoordinator: View {
     
     var body: some View {
         NavigationSplitView(columnVisibility: $columnVisibility) {
-            List(Menu.allCases, selection: $selectedMenu) { item in
-                NavigationLink(item.title, value: item)
-            }
-        } detail: {
-            switch selectedMenu {
-            case .newExperiment:
-                NavigationStack(path: $state.path) {
+            ZStack {
+                List(Menu.allCases, selection: $selectedMenu) { item in
+                    NavigationLink(item.title, value: item)
+                }
+                
+                VStack {
+                    Spacer()
                     Button("start a new experiment") {
                         state.presentedItem = .createConfig
                     }
                     .actionButtonStyle()
                     .padding([.bottom], 64)
+                    .backgroundStyle(Color.clear)
                     .navigationDestination(for: RootFlowLink.self, destination: rootNavDestination)
                     .navigationDestination(for: ExperimentFlowLink.self, destination: experimentNavDestination)
-                    
+                }
+            }
+        } detail: {
+            switch selectedMenu {
+            case .drafts:
+                NavigationStack(path: $state.path) {                    
+                    ConfigurationDraftsCoordinator(state: state)
+                        .navigationDestination(for: RootFlowLink.self, destination: rootNavDestination)
+                        .navigationDestination(for: ExperimentFlowLink.self, destination: experimentNavDestination)
+                        .fullScreenCover(item: $state.coverItem, content: coverContent)
                 }
             case .previousExperiments:
                 NavigationStack(path: $state.path) {
@@ -106,6 +116,10 @@ private extension RootCoordinator {
         switch item {
         case .createConfig:
             CreateConfigurationCoordinator(navigationPath: $state.path)
+        case let .editConfig(configurationModel):
+            CreateConfigurationCoordinator(navigationPath: $state.path, configuration: configurationModel)
+        case let .exportExperiment(zipURL):
+            ActivityViewController(activityItems: [zipURL])
         default:
             Text("undefined present content")
         }

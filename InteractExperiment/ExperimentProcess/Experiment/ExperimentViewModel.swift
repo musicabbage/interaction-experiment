@@ -8,6 +8,7 @@
 import Foundation
 import Combine
 import UIKit
+import Accelerate
 
 protocol ExperimentViewModelProtocol {
     var configuration: ConfigurationModel { get }
@@ -19,6 +20,10 @@ protocol ExperimentViewModelProtocol {
     func appendSnapshot(image: UIImage)
     func appendLogAction(_ action: InteractLogModel.ActionModel.Action)
     func setDrawingPadSize(_ size: CGSize)
+    //calculate drawing data from apple pencil
+    func resetDrawingData()
+    func appendDrawingData(_ drawing: DrawingModel)
+    func collectAverageDrawingData() -> DrawingModel
 }
 
 class ExperimentViewModel: ExperimentViewModelProtocol {
@@ -33,6 +38,7 @@ class ExperimentViewModel: ExperimentViewModelProtocol {
     }
     
     private let viewStateSubject: CurrentValueSubject<ViewState, Never>
+    private var drawingData: [DrawingModel] = []
     private(set) var configuration: ConfigurationModel
     private(set) var experiment: InteractLogModel
     
@@ -73,6 +79,42 @@ class ExperimentViewModel: ExperimentViewModelProtocol {
         experiment.append(action: .init(action: action))
     }
     
+    func resetDrawingData() {
+        drawingData = []
+    }
+    
+    func appendDrawingData(_ drawing: DrawingModel) {
+        drawingData.append(drawing)
+    }
+    
+    func collectAverageDrawingData() -> DrawingModel {
+        /**
+         let timestamp: TimeInterval
+         let point: CGPoint
+         let force: CGFloat
+         let azimuth: CGFloat
+         let altitude: CGFloat
+         */
+        let forceData = drawingData.map { Double($0.force) }
+        let meanForce = vDSP.mean(forceData)
+        
+        let azimuthData = drawingData.map { Double($0.azimuth) }
+        let meanAzimuth = vDSP.mean(azimuthData)
+        
+        let altitudeData = drawingData.map { Double($0.altitude) }
+        let meanAltitude = vDSP.mean(altitudeData)
+        
+        let pointXData = drawingData.map { Double($0.point.x) }
+        let meanPointX = vDSP.mean(pointXData)
+        let pointYData = drawingData.map { Double($0.point.y) }
+        let meanPointY = vDSP.mean(pointYData)
+        let meanPoint = CGPoint(x: meanPointX, y: meanPointY)
+        return .init(timestamp: Date.now.timeIntervalSince1970,
+                     point: meanPoint,
+                     force: meanForce,
+                     azimuth: meanAzimuth,
+                     altitude: meanAltitude)
+    }
     
     func appendSnapshot(image: UIImage) {
         do {

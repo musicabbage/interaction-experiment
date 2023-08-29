@@ -15,13 +15,26 @@ extension CGSize : Hashable {
   }
 }
 
+struct DrawingModel: Codable, Hashable {
+    let timestamp: TimeInterval
+    let point: CGPoint
+    let force: CGFloat
+    let azimuth: CGFloat
+    let altitude: CGFloat
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(timestamp)
+    }
+}
+
 struct InteractLogModel: Codable, Identifiable, Hashable {
     static let filename: String = "InteractLog.json"
     
     struct ActionModel: Codable, Hashable {
         enum Action: Codable, Hashable {
             case drawingEnabled
-            case drawing(Bool, CGFloat, CGFloat)
+            case drawing(Bool, DrawingModel)
+            case pencilDrawing(DrawingModel)
             case familiarisation(Bool, String)
             case stimulus(Bool, String)
             case stimulusDisplay(isShow: Bool, phaseName: String, fileName: String)
@@ -30,7 +43,7 @@ struct InteractLogModel: Codable, Identifiable, Hashable {
                 switch self {
                 case .drawingEnabled:
                     return "DrawingEnabled"
-                case let .drawing(isStart, _, _):
+                case let .drawing(isStart, _):
                     return "Button\( isStart ? "Down" : "Released" )"
                 case let .familiarisation(isOn, name):
                     return "Familiarisation\( isOn ? "On" : "Off" )_\(name)"
@@ -38,6 +51,8 @@ struct InteractLogModel: Codable, Identifiable, Hashable {
                     return "Stimulus\( isOn ? "On" : "Off" )_\(name)"
                 case let .stimulusDisplay(isShow: isOn, phaseName: phase, fileName: file):
                     return "\(phase)\( isOn ? "On" : "Off" )_\(file)"
+                case .pencilDrawing:
+                    return "Pencil"
                 }
             }
         }
@@ -92,10 +107,6 @@ struct InteractLogModel: Codable, Identifiable, Hashable {
         }
     }
     
-    enum State: Codable, Hashable {
-        case none, instruction, familiarisation, stimulus(Int)
-    }
-    
     /**
     > Name                 :Anonymous Participant
     > Experiment Start     :04/07/2023 - 16:29:49
@@ -136,7 +147,7 @@ struct InteractLogModel: Codable, Identifiable, Hashable {
         self.trialNumber = 1    //TODO: fixed trial number
         self.experimentStart = Date.now
         self.participantId = participantId
-        self.appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? ""
+        self.appVersion = Bundle.main.releaseVersionNumber ?? ""
     }
     
     init(from decoder: Decoder) throws {

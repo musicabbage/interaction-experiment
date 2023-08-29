@@ -55,8 +55,10 @@ struct InteractLogWriter: LogWriterProtocol {
         log.actions.enumerated().forEach { (index, model) in
             let actionString: String
             switch model.action {
-            case let .drawing(_, x, y):
-                actionString = String(format: "%03d;%f;%.1f;%.1f;%@\n", index, model.timestamp, x, y, model.action.key)
+            case .pencilDrawing:
+                return  //don't put pencil drawing into log
+            case let .drawing(_, drawing):
+                actionString = String(format: "%03d;%f;%.1f;%.1f;%@\n", index, model.timestamp, drawing.point.x, drawing.point.y, model.action.key)
             default:
                 actionString = String(format: "%03d;%f;0;0;%@\n", index, model.timestamp, model.action.key)
             }
@@ -81,5 +83,11 @@ private extension InteractLogWriter {
         var result = images.reduce("") { $0 + $1 + "," }
         result.removeLast()
         return result
+    }
+}
+
+extension Bundle {
+    var releaseVersionNumber: String? {
+        return infoDictionary?["CFBundleShortVersionString"] as? String
     }
 }

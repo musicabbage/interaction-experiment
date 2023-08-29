@@ -109,7 +109,7 @@ class PracticeViewModel: ExperimentViewModelProtocol {
             } else {
                 stepViewStateSubject.send(.hideTutorial)
             }
-        case let (_, .drawing(isStart, _, _)):
+        case let (_, .drawing(isStart, _)):
             if !isStart && group == .B {
                 stepViewStateSubject.send(.showTutorial(.nextPhase))
             }
@@ -120,6 +120,18 @@ class PracticeViewModel: ExperimentViewModelProtocol {
     
     func setDrawingPadSize(_ size: CGSize) {
         
+    }
+    
+    func resetDrawingData() {
+        
+    }
+    
+    func appendDrawingData(_ drawing: DrawingModel) {
+        
+    }
+    
+    func collectAverageDrawingData() -> DrawingModel {
+        return .init(timestamp: 0, point: .zero, force: 0, azimuth: 0, altitude: 0)
     }
 }
 

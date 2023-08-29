@@ -30,5 +30,6 @@ extension Color {
     
     struct Background {
         let lightgray = Color("LightGrayBackground")
+        let lightRed = Color("LightRedBackground")
     }
 }

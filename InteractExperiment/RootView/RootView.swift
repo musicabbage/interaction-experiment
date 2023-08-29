@@ -8,18 +8,18 @@
 import SwiftUI
 
 enum Menu: Int, CaseIterable, Identifiable {
-    case newExperiment
     case previousExperiments
+    case drafts
     case practiceA
     case practiceB
     
     var id: Int { rawValue }
     var title: String {
         switch self {
-        case .newExperiment:
-            return "New Experiments"
         case .previousExperiments:
             return "Previous Experiments"
+        case .drafts:
+            return "Drafts"
         case .practiceA:
             return "Playground A"
         case .practiceB:
@@ -42,6 +42,9 @@ struct RootView: View {
         PreviousExperimentsView(viewModel: PreviousExperimentsViewModel())
             .onUseConfiguration(perform: { configPath in
                 state.path.append(RootFlowLink.configCreated(configPath))
+            })
+            .onExportExperiment(perform: { zipUrl in
+                state.presentedItem = .exportExperiment(zipUrl)
             })
     }
 }

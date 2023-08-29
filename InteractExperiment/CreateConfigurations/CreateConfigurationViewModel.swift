@@ -31,6 +31,7 @@ protocol CreateConfigurationViewModelProtocol {
 class CreateConfigurationViewModel: CreateConfigurationViewModelProtocol {
     enum ViewState: Equatable {
         case none
+        case loadDraft(ConfigurationModel)
         case draftSaved
         case savedAndContinue
         case error(String)
@@ -82,10 +83,17 @@ class CreateConfigurationViewModel: CreateConfigurationViewModelProtocol {
     func save(asDraft isDraft: Bool = false) {
         do {
             var isDirectory = ObjCBool(false)
+            let wasDraft = configurations.isDraft
+            let oldFolderURL = configurations.folderURL
+            configurations.isDraft = isDraft
             let folderURL = configurations.folderURL
             let fileExisted = FileManager.default.fileExists(atPath: folderURL.path(), isDirectory: &isDirectory)
             if !(fileExisted && isDirectory.boolValue) {
                 try FileManager.default.createDirectory(at: folderURL, withIntermediateDirectories: true)
+            } else if let files = try? FileManager.default.contentsOfDirectory(atPath: folderURL.path) {
+                for filePath in files {
+                    try? FileManager.default.removeItem(atPath: folderURL.appending(path: filePath).path)
+                }
             }
             
             for phaseName in phaseImages.keys {
@@ -105,6 +113,9 @@ class CreateConfigurationViewModel: CreateConfigurationViewModelProtocol {
             //encode configurations
             let configurationData = try JSONEncoder().encode(configurations)
             try configurationData.write(to: configurations.configURL)
+            if wasDraft && !isDraft {
+                try FileManager.default.removeItem(at: oldFolderURL)
+            }
             
             viewStateSubject.send(isDraft ? .draftSaved : .savedAndContinue)
         } catch {
