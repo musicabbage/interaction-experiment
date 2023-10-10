@@ -1,6 +1,12 @@
 # Development documentation
 ## ViewModel
-TBD
+### 1. Define as protocol
+### 2. Create from coordinator
+### 3. Define `ViewState` to update view state.
+> Such as loading / load text or images / display error message
+### 4. Using `Publisher` to notify views
+> To make the view model can be reuse between SwiftUI and UIKit
+
 ## Coordinator
 Coordinators are responsible for routing between different views, such as pushing a view to the navigation stack or presenting a modal view or a cover view. There are three things that coordinators have to do:
 
@@ -141,7 +147,6 @@ class ChildFlowState: ObservableObject {
 }
 
 struct ChildCoordinator: View {
-    
     @StateObject var state: ChildFlowState
     
     init(navigationPath: Binding<NavigationPath>) {
