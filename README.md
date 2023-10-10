@@ -1,4 +1,154 @@
 # Development documentation
+
+## Install instructions
+
+### What you need?
+- Devices
+    - Mac
+    - iPad
+
+- Software
+    - [Apple ID](https://appleid.apple.com/)
+    - Xcode
+        - macOS Ventura 13.5 or higher version: [Xcode v15](https://developer.apple.com/xcode/)
+        - Before macOS Ventura 13.5: [Xcode v14.3.1.zip](https://download.developer.apple.com/Developer_Tools/Xcode_14.3.1/Xcode_14.3.1.xip)
+        - Minimum requirements and supported SDKs: https://developer.apple.com/support/xcode/
+        - All Xcode downloads page: https://developer.apple.com/download/all/?q=xcode
+- Source code
+    - https://github.com/musicabbage/interaction-experiment
+
+### Overview
+
+Apple has strict rules for installing apps on real devices. Basically, everyone should download apps from the App Store so that they can get commissions from developers. A valid IPA([iOS App Store package](https://en.wikipedia.org/wiki/.ipa)) which can run on devices should contain a valid certification authenticated by Apple. The certification is generated from Apple and signed with an Apple ID.
+
+To create a valid IPA, we need an Apple ID. By logging in to the account using Xcode, the source code can be compiled along with the certification downloaded from Apple. Once this is done, the API can be authorized by Apple and installed on devices.
+
+![](https://hackmd.io/_uploads/BJZ4RzXWp.png)
+
+
+### Setup Xcode
+> With Xcode v15
+
+**Step 1.** Log in with your Apple ID on Xcode
+
+Open Xcode `Setting > Accounts > ➕ ` 
+
+Press `Command` + `,` to open Xcode Settings.
+
+![](https://hackmd.io/_uploads/rkMin4xWT.png)
+
+Choose `Apple ID`
+
+![](https://hackmd.io/_uploads/SJS8RExW6.png)
+
+Then log in with your Apple ID.
+
+Your account should appear in the list after successfully logging in with your Apple ID.
+
+![](https://hackmd.io/_uploads/H183JBeWT.png)
+
+**Step 2.** Download the source code at https://github.com/musicabbage/interaction-experiment. The latest version is [v1.1](https://github.com/musicabbage/interaction-experiment/releases/tag/v1.1)
+
+**Step 3.** Setup signing
+
+Select the project file > In the TARGETS list, choose `InteractExperiment` > Select `Signing & Capabilities` > Expand the `Signing` section
+
+![](https://hackmd.io/_uploads/SJ7YSBxbT.png)
+
+Check `Automatically manage signing` ✅ and select the team related to the Apple ID you just logged in to.
+
+![](https://hackmd.io/_uploads/B1DUHHxZp.png)
+
+If everything is set, you should see the `Signing` setting like this:
+
+![](https://hackmd.io/_uploads/H1tyDBgbp.png)
+
+**Trouble shooting:**
+
+![](https://hackmd.io/_uploads/B1KNcHgb6.png)
+
+If you see the error in the `Signing Certificate` field with the following message: 
+
+> Failed to register bundle identifier
+> 
+> The app identifier "ac.sussex.InteractExperiment" cannot be registered to your development team because it is not available. Change your bundle identifier to a unique string to try again.
+
+Which means others used this ID. (The Bundle Identifier must be unique across **ALL app IDs worldwide**.) Therefore, change the `Bundle Identifier` to another unique id, ex: *ac.{your_sussex_id}.InteractExperiment*.
+
+**Step 4.** Ensure iOS SDK is downloaded.
+
+![](https://hackmd.io/_uploads/SkGE-fzW6.png)
+
+### Setup the iPad
+**Step1.** Enable **Developer Mode**. Open your iPad Settings.
+
+Select `Privacy & Security`. In the SECURITY sections, tap `Developer Mode`.
+
+![](https://hackmd.io/_uploads/ByApCSe-6.jpg)
+
+Switch on `Developer Mode`
+
+![](https://hackmd.io/_uploads/ryDC0Slba.png)
+
+You will receive a warning that enabling Developer Mode will decrease your device's security and ask you to restart the iPad. Tap the Restart button to continue to open Developer Mode.
+
+![](https://hackmd.io/_uploads/Bk4Genl-a.jpg)
+
+You can find Apple's official documentation on enabling Developer Mode with the following link: https://developer.apple.com/documentation/xcode/enabling-developer-mode-on-a-device.
+
+**Step 2.** Ensure the iPad is connected to the internet.
+
+**Step 3.** Connect the iPad to the Mac. If it connects successfully, the device will show in the list of running target devices.
+
+![](https://hackmd.io/_uploads/rkT7jzM-p.png)
+
+**Trouble shooting:**
+
+If you can't see the iPad on the device list, please check:
+
+1. Ensure the iPad is connected to the Mac by checking Finder's Sidebar. (The iPad would show in the Sidebar if it connect to the Mac correctly.) https://support.apple.com/en-gb/guide/mac-help/mchld88ac7da/mac
+2. Ensure the iOS SDK is Downloaded.
+3. Ensure Xcode supports the iOS version. https://developer.apple.com/support/xcode 
+
+### Running the app on the iPad
+
+**Step 1.** [Xcode] Select the running scheme `InteractExperiment`.
+
+![](https://hackmd.io/_uploads/rJp5sfzb6.png)
+
+**Step 2.** [Xcode] Select the target device.
+
+![](https://hackmd.io/_uploads/HkUTiGzZp.png)
+
+**Step 3.** [Xcode] Tap the run button in Xcode.
+
+![](https://hackmd.io/_uploads/HkNQ2GMW6.png)
+
+**Step 4.** [iPad] Trust the profile for the app on the iPad.
+
+You need to trust the developer profile if you receive an `Untrusted Developer` alert on your iPad.
+
+![](https://hackmd.io/_uploads/rJVNEMz-T.png)
+
+Open iPad `Settings > General > VPN & Device Management`. 
+
+![](https://hackmd.io/_uploads/BkhjBGzW6.png)
+
+In the `DEVELOPER APP` section, tap `Apple Development: {your_Apple_ID}`.
+
+![](https://hackmd.io/_uploads/H1b3SMzWp.png)
+
+Trust `Apple Development: {your_Apple_ID}`.
+
+![](https://hackmd.io/_uploads/Hy_3HfMZT.jpg)
+
+**Step 5.** [Xcode] Run the app again. (as the same with Step 3)
+
+**That's it!!! 🎉 I hope that the app runs smoothly on your iPad.❤️**
+
+### References:
+- Running your app in Simulator or on a device:  https://developer.apple.com/documentation/xcode/running-your-app-in-simulator-or-on-a-device
+
 ## ViewModel
 ### 1. Define as protocol
 ### 2. Create from coordinator
@@ -168,3 +318,102 @@ Put them together, the architecture with coordinators can be described by the fo
 > - [SwiftUI Flow Coordinator pattern to coordinate navigation between views](https://medium.com/macoclock/swiftui-flow-coordinator-pattern-to-coordinate-navigation-between-views-8fa6ac487585)
 > - [SwiftUI Flow Coordinator pattern with NavigationStack to coordinate navigation between views (iOS 16 +)](https://medium.com/macoclock/swiftui-flow-coordinator-pattern-with-navigationstack-to-coordinate-navigation-between-views-ios-1a2b6cd239d7)
 > 
+
+# Experiment Log Data
+### File name
+{Name} (Trial {trial number}){experiment start date}
+> ex. Anonymous Participant (Trial 1) 2023-07-04 - 18-48-10.txt
+```
+outputFileString = InteractLog.filepath+" (Trial "+trial.getTrialnr()+") "+filedate.format(expStartDate)+".txt";
+```
+
+### Experient Data
+```
+Name                 :Anonymous Participant
+Experiment Start     :04/07/2023 - 17:29:30
+Stroke Colour        :0,0,0,255
+Background Colour    :255,255,255,255
+Stroke Width         :2.0
+Stimulus Files       :S1.png,S2.png,S3.png,S4.png,S5.png,S6.png,S7.png,S8.png
+Familiarisation File :P1.png
+Input Mask File      :
+Drawing Pad Size     :1260,600
+Trial Number         :1
+Trial Start          :04/07/2023 - 17:29:34
+Trial End            :04/07/2023 - 17:29:41
+```
+
+
+| Field                |  | 
+| -------------------- | -------- | 
+| Name                 |      | 
+| Experiment Start     | After inputting participant id (instruction) | 
+| Stroke Colour        |      | 
+| Background Colour    |      | 
+| Stroke Width         |      | 
+| Stimulus Files       |      | 
+| Familiarisation File |      | 
+| Input Mask File      |      | 
+| Drawing Pad Size     |      | 
+| Trial Number         |      | 
+| Trial Start          | Experiment startNextTrial (InputPad init) | 
+| Trial End            | KeyEvent.VK_ESCAPE (trial ended, before end message) | 
+
+
+
+### Event Data
+| Code | Callstack |
+| -------- | -------- |
+|`("0;0","KeyPressed_"+kc+"("+InteractLog.data_separator_descr+":"+e.getKeyLocation()+")")`| |
+|`("0;0","KeyPressed_"+kc+"(RETURN"+e.getKeyLocation()+")")`| |
+|`("0;0","KeyPressed_"+kc+"("+InteractLog.repstim_keyname+":"+e.getKeyLocation()+")")`| |
+|`("0;0","KeyPressed_"+kc+"("+InteractLog.nextstim_keyname+":"+e.getKeyLocation()+")")`| |
+|`("0;0","KeyPressed_"+kc+"("+InteractLog.prevstim_keyname+":"+e.getKeyLocation()+")")`| |
+|`("0;0","KeyPressed_"+kc+"("+InteractLog.hidestim_keyname+":"+e.getKeyLocation()+")")`| |
+|`("0;0","KeyPressed_"+kc+"("+InteractLog.endexp_keyname+":"+e.getKeyLocation()+")")`| |
+|`("0;0","KeyPressed_"+kc+"("+e.getKeyChar()+":"+e.getKeyLocation()+")")`| |
+|  |  |
+|`("0;0","KeyReleased_"+kc+"("+InteractLog.data_separator_descr+":"+e.getKeyLocation()+")")`| |
+|`("0;0","KeyReleased_"+kc+"(RETURN"+e.getKeyLocation()+")")`| |
+|`("0;0","KeyReleased_"+kc+"("+InteractLog.repstim_keyname+":"+e.getKeyLocation()+")")`| |
+|`("0;0","KeyReleased_"+kc+"("+InteractLog.nextstim_keyname+":"+e.getKeyLocation()+")")`| |
+|`("0;0","KeyReleased_"+kc+"("+InteractLog.prevstim_keyname+":"+e.getKeyLocation()+")")`| |
+|`("0;0","KeyReleased_"+kc+"("+InteractLog.hidestim_keyname+":"+e.getKeyLocation()+")")`| |
+|`("0;0","KeyReleased_"+kc+"("+InteractLog.endexp_keyname+":"+e.getKeyLocation()+")")`| |
+|`("0;0","KeyReleased_"+kc+"("+e.getKeyChar()+":"+e.getKeyLocation()+")")`| |
+| | |
+|`eventCount+";"+System.nanoTime()+";"+x2+";"+y2+";ButtonReleased"+newline;` | mouseReleased |
+|`eventCount+";"+System.nanoTime()+";"+x1+";"+y1+";ButtonDown"+newline;` | mousePressed |
+| | |
+|`("0;0","DrawingEnabled")`| InputPane init |
+|`("0;0","FamiliarisationOff_"+InteractLog.famfilename)`| InputPane removeStim (firststim) |
+|`("0;0","StimulusOff_"+InteractLog.stimfilename)`| InputPane removeStim (stimpresent) |
+|`("0;0","StimulusOn_"+InteractLog.stimfilename)`| InputPane showStim |
+|`("0;0","FamiliarisationOn_"+InteractLog.famfilename)`| StimPanel init |
+| | |
+
+
+- `ButtonDown/ButtonReleased`: strokesData
+    - ButtonDown:  get `x1`, `y1` 
+        - mousePressed
+    - ButtonReleased: add to strokesData `strokesData+= ";"+temp[1]+";"+x1+";"+y1+";"+temp[2]+";"+temp[3]+newline;`
+        - mouseReleased
+```
+temp = {String[5]@3809} ["6", "24912044833416", "373", "175", "ButtonDown"]
+ 0 = "6"
+ 1 = "24912044833416"
+ 2 = "373" //x1
+ 3 = "175" //y1
+ 4 = "ButtonDown"
+ 
+["7", "24913597758916", "326", "366", "ButtonReleased"]
+```
+- `KeyReleased`: keyData
+
+
+InputPad line.170
+```
+if(kc == KeyEvent.VK_ESCAPE || (e.isControlDown() && kc == KeyEvent.VK_ENTER)) {
+			if(writeFile()) ex.endTrial();
+		}
+```
