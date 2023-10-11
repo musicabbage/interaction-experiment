@@ -4,9 +4,8 @@
 
 Apple has strict rules for installing apps on real devices. Basically, everyone should download apps from the App Store so that they can get commissions from developers. A valid IPA([iOS App Store package](https://en.wikipedia.org/wiki/.ipa)) which can run on devices should contain a valid certification authenticated by Apple. The certification is generated from Apple and signed with an Apple ID.
 
-To create a valid IPA, we need an Apple ID. By logging in to the account using Xcode, the source code can be compiled along with the certification downloaded from Apple. Once this is done, the API can be authorized by Apple and installed on devices.
+To create a valid IPA, we need an **Apple ID**. By logging in to the account using Xcode, the source code can be compiled along with the **certification** downloaded from Apple. Once this is done, the API can be authorized by Apple and installed on devices.
 
-# ![](https://hackmd.io/_uploads/BJZ4RzXWp.png)
 ![overall_diagram](https://github.com/musicabbage/interaction-experiment/assets/8994570/90e4b1b8-4f31-45e6-9949-fad70594b1c7)
 
 ### What you need?
@@ -25,18 +24,16 @@ To create a valid IPA, we need an Apple ID. By logging in to the account using X
     - https://github.com/musicabbage/interaction-experiment
 
 ### Setup Xcode
-> With Xcode v15
+> The given instruction is for using Xcode v15.0.
 
 **Step 1.** Log in with your Apple ID on Xcode
 
 Open Xcode, press `Command` + `,` to open Xcode Settings. `Setting > Accounts > ➕ ` 
 
-![](https://hackmd.io/_uploads/rkMin4xWT.png)
 <img width="942" alt="1_setup_xcode_1_1" src="https://github.com/musicabbage/interaction-experiment/assets/8994570/9b63cb5f-4a28-4268-8f44-e67b64fa31c3">
 
 Choose `Apple ID`
 
-![](https://hackmd.io/_uploads/SJS8RExW6.png)
 <img width="942" alt="1_setup_xcode_1_2" src="https://github.com/musicabbage/interaction-experiment/assets/8994570/0d72edae-0919-435b-b2f4-3ddece331520">
 
 
@@ -44,7 +41,6 @@ Then log in with your Apple ID.
 
 Your account should appear in the list after successfully logging in with your Apple ID.
 
-![](https://hackmd.io/_uploads/H183JBeWT.png)
 <img width="942" alt="1_setup_xcode_1_3" src="https://github.com/musicabbage/interaction-experiment/assets/8994570/e81c5512-ebe6-4e4e-b48d-80d8bbd66d5b">
 
 
@@ -54,22 +50,18 @@ Your account should appear in the list after successfully logging in with your A
 
 Select the project file > Choose `InteractExperiment` in the TARGETS list, > Select `Signing & Capabilities` > Expand the `Signing` section
 
-![](https://hackmd.io/_uploads/SJ7YSBxbT.png)
 <img width="1072" alt="1_setup_xcode_2_2" src="https://github.com/musicabbage/interaction-experiment/assets/8994570/a5d08b27-d92d-4d7f-beac-09c04eaf95f5">
 
 Check `Automatically manage signing` ✅ and select the team related to the Apple ID you just logged in to.
 
-![](https://hackmd.io/_uploads/B1DUHHxZp.png)
 <img width="1072" alt="1_setup_xcode_2_1" src="https://github.com/musicabbage/interaction-experiment/assets/8994570/ae20c0d9-8f7e-4144-b824-459e5623d21c">
 
 If everything is set, you should see the `Signing` setting like this:
 
-![](https://hackmd.io/_uploads/H1tyDBgbp.png)
 <img width="1011" alt="1_setup_xcode_2_3" src="https://github.com/musicabbage/interaction-experiment/assets/8994570/460e4d2d-9def-4865-a27d-628bded326d9">
 
 **Trouble shooting:**
 
-![](https://hackmd.io/_uploads/B1KNcHgb6.png)
 <img width="1032" alt="1_setup_xcode_2_ts" src="https://github.com/musicabbage/interaction-experiment/assets/8994570/d26dbabc-faa4-4f95-bea0-d01877240add">
 
 If you see the error in the `Signing Certificate` field with the following message: 
@@ -82,7 +74,6 @@ Which means others used this ID. (The Bundle Identifier must be unique across **
 
 **Step 4.** Ensure iOS SDK is downloaded.
 
-![](https://hackmd.io/_uploads/SkGE-fzW6.png)
 <img width="1401" alt="1_setup_xcode_2_4" src="https://github.com/musicabbage/interaction-experiment/assets/8994570/ab655e51-dbcd-47f9-aa00-615915d0bc57">
 
 ### Setup the iPad
@@ -90,17 +81,14 @@ Which means others used this ID. (The Bundle Identifier must be unique across **
 
 Select `Privacy & Security`. In the SECURITY sections, tap `Developer Mode`.
 
-![](https://hackmd.io/_uploads/ByApCSe-6.jpg)
 ![2_setup_ipad_1_1](https://github.com/musicabbage/interaction-experiment/assets/8994570/a081fd5b-7386-4d80-9d50-df8a1b46d770)
 
 Switch on `Developer Mode`
 
-![](https://hackmd.io/_uploads/ryDC0Slba.png)
 ![2_setup_ipad_1_2](https://github.com/musicabbage/interaction-experiment/assets/8994570/18144b9f-0c6a-4df4-ba69-9ca3e7c6564a)
 
 You will receive a warning that enabling Developer Mode will decrease your device's security and ask you to restart the iPad. Tap the Restart button to continue to open Developer Mode.
 
-![](https://hackmd.io/_uploads/Bk4Genl-a.jpg)
 ![2_setup_ipad_1_3](https://github.com/musicabbage/interaction-experiment/assets/8994570/7504483e-fb66-4a13-9ca7-aab4c60296bb)
 
 You can find Apple's official documentation on enabling Developer Mode with the following link: https://developer.apple.com/documentation/xcode/enabling-developer-mode-on-a-device.
@@ -109,7 +97,6 @@ You can find Apple's official documentation on enabling Developer Mode with the 
 
 **Step 3.** Connect the iPad to the Mac. If it connects successfully, the device will show in the list of running target devices.
 
-![](https://hackmd.io/_uploads/rkT7jzM-p.png)
 <img width="650" alt="2_setup_ipad_3_1" src="https://github.com/musicabbage/interaction-experiment/assets/8994570/67699a3e-c736-477d-bcca-72532556df49">
 
 **Trouble shooting:**
@@ -124,29 +111,24 @@ If you can't see the iPad on the device list, please check:
 
 **Step 1.** [Xcode] Select the running scheme `InteractExperiment`.
 
-![](https://hackmd.io/_uploads/rJp5sfzb6.png)
 <img width="1155" alt="3_running_1_1" src="https://github.com/musicabbage/interaction-experiment/assets/8994570/23e01e94-e586-4534-ae12-770b5c7ef39c">
 
 **Step 2.** [Xcode] Select the target device.
 
-![](https://hackmd.io/_uploads/HkUTiGzZp.png)
 <img width="1155" alt="3_running_2_1" src="https://github.com/musicabbage/interaction-experiment/assets/8994570/354831f1-a534-4d27-a0ca-a9d795602ddb">
 
 **Step 3.** [Xcode] Tap the run button in Xcode.
 
-![](https://hackmd.io/_uploads/HkNQ2GMW6.png)
 <img width="1156" alt="3_running_3_1" src="https://github.com/musicabbage/interaction-experiment/assets/8994570/b24e14ed-5058-40d1-8d91-dced79ee3f4e">
 
 **Step 4.** [iPad] Trust the profile for the app on the iPad.
 
 You need to trust the developer profile if you receive an `Untrusted Developer` alert on your iPad.
 
-![](https://hackmd.io/_uploads/rJVNEMz-T.png)
 ![3_running_4_1](https://github.com/musicabbage/interaction-experiment/assets/8994570/9b1ebb2a-5aac-4c2f-9693-f3317f73dc6d)
 
 Open iPad `Settings > General > VPN & Device Management`. 
 
-![](https://hackmd.io/_uploads/BkhjBGzW6.png)
 ![3_running_4_2](https://github.com/musicabbage/interaction-experiment/assets/8994570/a0a42d7f-19fa-450f-9a3e-cd74eedca49a)
 
 In the `DEVELOPER APP` section, tap `Apple Development: {your_Apple_ID}`.
@@ -156,7 +138,6 @@ In the `DEVELOPER APP` section, tap `Apple Development: {your_Apple_ID}`.
 Trust `Apple Development: {your_Apple_ID}`.
 ![3_running_4_3](https://github.com/musicabbage/interaction-experiment/assets/8994570/34f9ad69-9f5c-4fef-b0b1-4ecac5c89036)
 
-![](https://hackmd.io/_uploads/Hy_3HfMZT.jpg)
 ![3_running_4_4](https://github.com/musicabbage/interaction-experiment/assets/8994570/5e33b526-fa94-4640-86b2-561bd5bfacd6)
 
 **Step 5.** [Xcode] Run the app again. (as the same with Step 3)
